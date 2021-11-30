@@ -1,0 +1,31 @@
+{
+    "name": "@cura/contracts",
+    "version": "0.0.3",
+    "description": "Contract to deploy on NEAR blockchain",
+    "main": "index.js",
+    "bin": {
+        "curasc": "index.js"
+    },
+    "scripts": {
+        "build-ft": "asb -d ./as/FT",
+        "build-market": "asb -d ./as/Market",
+        "build-nft": "asb -d ./as/NFT",
+        "build-generator": "asb -d ./as/Generator",
+        "test": "asp -f unit.spec"
+    },
+    "author": "Yassine",
+    "license": "MIT",
+    "dependencies": {
+        "async": "^3.2.0",
+        "bn.js": "^5.2.0",
+        "chalk": "^4.1.1",
+        "commander": "^7.2.0",
+        "inquirer": "^8.1.2",
+        "near-api-js": "^0.43.1",
+        "ora": "^5.4.0"
+    },
+    "devDependencies": {
+        "near-sdk-as": "^3.1.0",
+        "prettier": "2.3.0"
+    }
+}

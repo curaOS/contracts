@@ -1,0 +1,3 @@
+{
+    "workspaces": ["contracts/SHARE", "contracts/YSN"]
+}
