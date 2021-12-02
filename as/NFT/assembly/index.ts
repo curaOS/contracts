@@ -16,6 +16,7 @@ import {
     FT_CONTRACT,
     GAS_FOR_NFT_APPROVE,
     NFTOnApprovedArgs,
+    token_metadata_by_id,
 } from './models'
 import { NFTContractMetadata, TokenMetadata } from './metadata'
 import {
@@ -410,6 +411,10 @@ export function init(
     )
 
     storage.set('init', 'done')
+}
+
+export function nft_token_metadata(token_id: string): TokenMetadata {
+    return token_metadata_by_id.getSome(token_id)
 }
 
 export function nft_metadata(): NFTContractMetadata {
