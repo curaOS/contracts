@@ -25,7 +25,6 @@ export class Media {
     owner_id: string
     creator: string
     prev_owner: string
-    metadata: TokenMetadata
     royalty: Royalty
     approvals: Map<string, number>
     next_approval_id: number
@@ -46,13 +45,14 @@ export class Media {
         const issued_at = context.blockTimestamp.toString()
         const copies: u8 = 1
 
-        this.metadata = new TokenMetadata(
+        const metadata = new TokenMetadata(
             title,
             issued_at,
             copies,
             media,
             extra
         )
+        token_metadata_by_id.set(this.id, metadata)
         this.approvals = new Map()
         this.next_approval_id = 1
     }
@@ -65,6 +65,7 @@ export class NFTOnApprovedArgs {
     msg: string
 }
 
+export const token_metadata_by_id = new PersistentUnorderedMap<string, TokenMetadata>('tmbi')
 export const designs = new PersistentUnorderedMap<AccountId, Media>('md')
 export const owners = new PersistentSet<AccountId>('onrs')
 
