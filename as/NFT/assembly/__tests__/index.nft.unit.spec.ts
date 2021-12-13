@@ -47,6 +47,7 @@ describe('- MEDIA -', () => {
             '',
             'reference_example',
             'reference_hash_example',
+            'media_animation_example',
         )
 
         VMContext.setAttached_deposit(DESIGN_PRICE)
@@ -71,5 +72,6 @@ describe('- MEDIA -', () => {
         expect(newDesign.metadata.starts_at).toStrictEqual('10')
         expect(newDesign.metadata.reference).toStrictEqual('reference_example')
         expect(newDesign.metadata.reference_hash).toStrictEqual('reference_hash_example')
+        expect(newDesign.metadata.media_animation).toStrictEqual('media_animation_example')
     })
 })

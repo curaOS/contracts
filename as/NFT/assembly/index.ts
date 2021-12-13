@@ -56,6 +56,7 @@ export function claim_media(tokenMetadata: TokenMetadata): Media {
         tokenMetadata.media_hash,
         tokenMetadata.reference,
         tokenMetadata.reference_hash,
+        tokenMetadata.media_animation,
     )
 
     owners.add(context.sender)

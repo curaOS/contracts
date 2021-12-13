@@ -38,6 +38,7 @@ export class Media {
       media_hash?: string,
       reference?: string,
       reference_hash?: string,
+      media_animation?: string,
     ) {
         this.owner_id = context.sender
         this.prev_owner = context.sender
@@ -66,6 +67,7 @@ export class Media {
             updated_at,
             reference,
             reference_hash,
+            media_animation,
         )
         this.approvals = new Map()
         this.next_approval_id = 1
