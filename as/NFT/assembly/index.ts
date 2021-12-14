@@ -95,7 +95,9 @@ export function burn_design(token_id: string): void {
 }
 
 export function nft_token(token_id: string): Media | null {
-    return designs.getSome(token_id)
+    const token = designs.getSome(token_id)
+    token.metadata = nft_token_metadata(token_id)
+    return token
 }
 
 export function nft_total_supply(): string {
@@ -108,9 +110,11 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Media[] {
 
     let entries: MapEntry<string, Media>[] = designs.entries(start, <u8>end)
     let tokens: Array<Media> = []
+    let entriesMeta: MapEntry<string, TokenMetadata>[] = token_metadata_by_id.entries(start, <u8>end)
 
     for (let i = 0; i < entries.length; i++) {
         let entryValue = entries[i].value
+        entryValue.metadata = entriesMeta[i].value
         tokens.push(entryValue)
     }
 
@@ -148,7 +152,9 @@ export function nft_tokens_for_owner(
 
     for (let i = parseInt(from_index); i < limit; i++) {
         let token = media.at(<i32>i)
-        tokens.push(designs.getSome(token))
+        const design = designs.getSome(token)
+        design.metadata = nft_token_metadata(token)
+        tokens.push(design)
     }
 
     return tokens
