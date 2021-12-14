@@ -25,6 +25,7 @@ export class Media {
     owner_id: string
     creator: string
     prev_owner: string
+    metadata: TokenMetadata
     royalty: Royalty
     approvals: Map<string, number>
     next_approval_id: number
