@@ -1,11 +1,13 @@
 {
   "extends": "../node_modules/assemblyscript/std/assembly.json",
   "include": ["./**/*.ts"],
-  "typedocOptions": {
+  "typedocOptions": {  
+    "exclude": "**/*/__tests__",
+    "ignoreCompilerErrors": true,
     "excludePrivate": true,
     "excludeProtected": true,
     "excludeExternals": true,
-    "entryPointStrategy": "expand",
-    "entryPoints": ["NFT", "FT", "Generator", "Market"]
+    "stripInternal": true,
+    "inputFiles": ["NFT"],
   }
 }
