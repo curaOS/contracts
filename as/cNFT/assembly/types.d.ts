@@ -4,3 +4,5 @@ export declare class Token {
 }
 
 export declare type AccountId = string
+
+export declare type TokenId = string
