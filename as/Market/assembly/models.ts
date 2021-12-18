@@ -36,10 +36,11 @@ export class BidShares {
 
 @nearBindgen
 export class Ask {
-    amount: u128 // Amount asked
-    currency: CurrencyId = 'near' // currency of ask, default is NEAR
-    sell_on_share: u16 // % to pay to previous owner on this sale
-    constructor() {}
+    constructor(
+        public amount: u128,
+        public sell_on_share: u16,
+        public currency: CurrencyId = 'near'
+    ) {}
 }
 
 /**

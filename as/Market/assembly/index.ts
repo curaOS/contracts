@@ -10,6 +10,7 @@ import {
     Bids,
     BidsByToken,
     token_asks,
+    Ask,
 } from './models'
 import { xcc_media_nft_transfer } from './xcc_media'
 import { split_share, ONE_HUNDRED_PERCENT } from '../../utils'
@@ -156,6 +157,38 @@ export function accept_bid(
 
     xcc_media_nft_transfer(token_id, bid.bidder)
 }
+
+
+/** 
+ * Set asked price of token
+ */
+export function set_ask(
+    token_id: string,
+    amount: u128,
+    sell_on_share: u16,
+    currency: CurrencyId = 'near'
+):void{
+    const new_ask = new Ask(amount, sell_on_share, currency)
+    token_asks.set(token_id, new_ask)
+}
+
+
+/**
+* Remove asked price of token
+*/
+
+export function remove_ask(token_id: string):void{
+    token_asks.delete(token_id)
+}
+
+
+/**
+ * Get asked price of token
+ */
+export function get_ask(token_id: string):Ask{
+    return token_asks.getSome(token_id)
+}
+
 
 /**
  * Burn market for token
