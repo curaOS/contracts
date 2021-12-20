@@ -46,16 +46,17 @@ export class PersistentTokens {
 
     /**
      *
-     * @param account_id ID of account to retrieve supply
+     * @param accountId ID of account to retrieve supply
      * @returns string token supply of AccountId
      */
-    supply_for_owner(account_id: string): string {
-        const accountMedia = new PersistentSet<TokenId>('_ats' + account_id)
+    supply_for_owner(accountId: string): string {
+        let accountTokenSet = this._amap.get(accountId)
 
-        if (accountMedia == null || accountMedia.size == 0) {
+        if (accountTokenSet == null || accountTokenSet.size == 0) {
             return '0'
         }
-        return accountMedia.size.toString()
+
+        return accountTokenSet.size.toString()
     }
 
     /**
@@ -68,7 +69,10 @@ export class PersistentTokens {
     add(tokenId: TokenId, token: Token, accountId: AccountId): Token {
         this._tmap.set(tokenId, token)
 
-        this._addToAccountTokenSet(tokenId, accountId)
+        this._amap.set(
+            accountId,
+            this._addToAccountTokenSet(tokenId, accountId)
+        )
 
         this._oset.add(accountId)
 
@@ -82,7 +86,8 @@ export class PersistentTokens {
         let accountTokenSet = this._amap.get(accountId)
 
         if (!accountTokenSet) {
-            accountTokenSet = new PersistentSet('_ats' + accountId)
+            /** TODO accountId name might be too long, find shorter alternative */
+            accountTokenSet = new PersistentSet<TokenId>('_ats' + accountId)
         }
 
         accountTokenSet.add(tokenId)
