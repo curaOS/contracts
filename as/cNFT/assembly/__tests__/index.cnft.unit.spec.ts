@@ -10,16 +10,19 @@ import {
 } from '../index'
 import { persistent_tokens } from '../models/persistent_tokens'
 import { Token } from '../models/token'
+import { AccountId } from '../types'
 
-const initialize = (): void => {
-    VMContext.setSigner_account_id('prova.testnet')
+const mintToken = (accountId: AccountId): Token => {
+    VMContext.setSigner_account_id(accountId)
+
+    const token_metadata = new TokenMetadata()
+    token_metadata.media = 'media'
+    token_metadata.extra = 'extra'
+    const token = mint(token_metadata)
+    return token
 }
 
 describe('- CONTRACT -', () => {
-    beforeEach(() => {
-        initialize()
-    })
-
     it('xxx returns token lenght', () => {
         const nftTotalSupply = nft_total_supply()
 
@@ -33,14 +36,14 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx mints token', () => {
-        const token_metadata = new TokenMetadata()
-        token_metadata.media = 'media'
-        token_metadata.extra = 'extra'
-        const token = mint(token_metadata)
+        const token = mintToken('prova.testnet')
+
         log(token)
     })
 
     it('xxx returns supply for owner', () => {
+        const token = mintToken('prova.testnet')
+
         const nftSupplyForOwner = nft_supply_for_owner('prova.testnet')
 
         log(nftSupplyForOwner)
