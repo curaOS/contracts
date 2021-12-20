@@ -42,7 +42,8 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx returns supply for owner', () => {
-        const token = mintToken('prova.testnet')
+        mintToken('prova.testnet')
+        mintToken('prova.testnet')
 
         const nftSupplyForOwner = nft_supply_for_owner('prova.testnet')
 
