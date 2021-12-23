@@ -4,6 +4,7 @@ import { TokenMetadata } from '../../NFT/assembly/metadata'
 import { Token } from './models/token'
 import { persistent_tokens } from './models/persistent_tokens'
 
+@nearBindgen
 export function mint(tokenMetadata: TokenMetadata): Token {
     /** TODO Assert deposit attached based on custom amount from init */
     //     assert_deposit_attached(u128.from(0))
