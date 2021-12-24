@@ -77,6 +77,23 @@ export class PersistentTokens {
     }
 
     /**
+     * Returns a range of tokens for accountId from start index to end exclusive
+     * @param accountId ID of account to retrieve tokens for
+     * @param start index of starting entries
+     * @param end index of end entries
+     * @returns an array of tokens
+     */
+    tokens_for_owner(accountId: string, start: i32, end: i32): Array<Token> {
+        let accountTokenSet = this._amap.getSome(accountId)
+        let tokens: Array<Token> = []
+        let keys: Array<string> = accountTokenSet.values()
+        for (start; start < end; start++) {
+            tokens.push(this._tmap.getSome(keys[start]))
+        }
+        return tokens
+    }
+
+    /**
      *
      * @param tokenId Id of new token
      * @param token Token to be added
