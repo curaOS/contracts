@@ -54,7 +54,7 @@ export class Media {
         const expires_at = ''
         const updated_at = issued_at
 
-        this.metadata = new TokenMetadata(
+        const metadata = new TokenMetadata(
             title,
             issued_at,
             copies,
@@ -69,6 +69,7 @@ export class Media {
             reference_hash,
             media_animation,
         )
+        token_metadata_by_id.set(this.id, metadata)
         this.approvals = new Map()
         this.next_approval_id = 1
     }
@@ -81,6 +82,7 @@ export class NFTOnApprovedArgs {
     msg: string
 }
 
+export const token_metadata_by_id = new PersistentUnorderedMap<string, TokenMetadata>('tmbi')
 export const designs = new PersistentUnorderedMap<AccountId, Media>('md')
 export const owners = new PersistentSet<AccountId>('onrs')
 

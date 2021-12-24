@@ -1,5 +1,9 @@
 import { VMContext } from 'near-mock-vm'
-import { claim_media, nft_metadata, init } from '../index'
+import {
+    claim_media,
+    nft_metadata, init, 
+    nft_token_metadata,
+    } from '../index'
 import { DESIGN_PRICE } from '../models'
 import { NFTContractMetadata, TokenMetadata } from '../metadata'
 
@@ -58,20 +62,22 @@ describe('- MEDIA -', () => {
 
         expect(newDesign).not.toBeNull()
         expect(newDesign.royalty).not.toBeNull()
-        expect(newDesign.metadata).not.toBeNull()
 
-        expect(newDesign.metadata.title).toStrictEqual('title_example')
-        expect(newDesign.metadata.issued_at).toStrictEqual('10')
-        expect(newDesign.metadata.copies).toStrictEqual(1)
-        expect(newDesign.metadata.media).toStrictEqual('media_example')
-        expect(newDesign.metadata.extra).toStrictEqual('extra_example')
-        expect(newDesign.metadata.description).toStrictEqual('description_example')
-        expect(newDesign.metadata.media_hash).toStrictEqual('media_hash_example')
-        expect(newDesign.metadata.expires_at).toStrictEqual('')
-        expect(newDesign.metadata.updated_at).toStrictEqual('10')
-        expect(newDesign.metadata.starts_at).toStrictEqual('10')
-        expect(newDesign.metadata.reference).toStrictEqual('reference_example')
-        expect(newDesign.metadata.reference_hash).toStrictEqual('reference_hash_example')
-        expect(newDesign.metadata.media_animation).toStrictEqual('media_animation_example')
+        const newDesignMetadata = nft_token_metadata(newDesign.id)
+        expect(newDesignMetadata).not.toBeNull()
+
+        expect(newDesignMetadata.title).toStrictEqual('title_example')
+        expect(newDesignMetadata.issued_at).toStrictEqual('10')
+        expect(newDesignMetadata.copies).toStrictEqual(1)
+        expect(newDesignMetadata.media).toStrictEqual('media_example')
+        expect(newDesignMetadata.extra).toStrictEqual('extra_example')
+        expect(newDesignMetadata.description).toStrictEqual('description_example')
+        expect(newDesignMetadata.media_hash).toStrictEqual('media_hash_example')
+        expect(newDesignMetadata.expires_at).toStrictEqual('')
+        expect(newDesignMetadata.updated_at).toStrictEqual('10')
+        expect(newDesignMetadata.starts_at).toStrictEqual('10')
+        expect(newDesignMetadata.reference).toStrictEqual('reference_example')
+        expect(newDesignMetadata.reference_hash).toStrictEqual('reference_hash_example')
+        expect(newDesignMetadata.media_animation).toStrictEqual('media_animation_example')
     })
 })

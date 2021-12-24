@@ -1,4 +1,13 @@
 {
     "extends": "../node_modules/assemblyscript/std/assembly.json",
-    "include": ["./**/*.ts"]
+    "include": ["./**/*.ts"],
+    "typedocOptions": {
+        "exclude": "**/*/__tests__",
+        "ignoreCompilerErrors": true,
+        "excludePrivate": true,
+        "excludeProtected": true,
+        "excludeExternals": true,
+        "stripInternal": true,
+        "inputFiles": ["as/cNFT/assembly"]
+    }
 }

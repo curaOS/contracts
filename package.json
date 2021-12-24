@@ -10,8 +10,10 @@
         "build-ft": "asb -d ./as/FT",
         "build-market": "asb -d ./as/Market",
         "build-nft": "asb -d ./as/NFT",
+        "build-cnft": "asb -d ./as/cNFT",
         "build-generator": "asb -d ./as/Generator",
-        "test": "asp -f unit.spec"
+        "test": "asp -f unit.spec",
+        "doc": "rm -rf docs; typedoc --tsconfig ./as/tsconfig.json"
     },
     "author": "Yassine",
     "license": "MIT",
@@ -26,6 +28,8 @@
     },
     "devDependencies": {
         "near-sdk-as": "^3.1.0",
-        "prettier": "2.3.0"
+        "prettier": "2.3.0",
+        "typedoc": "0.19.x",
+        "typescript": "4.0.x"
     }
 }
