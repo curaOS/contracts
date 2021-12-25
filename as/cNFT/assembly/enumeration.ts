@@ -1,4 +1,3 @@
-import { PersistentSet } from 'near-sdk-as'
 import { persistent_tokens } from './models/persistent_tokens'
 import { Token } from './models/token'
 
