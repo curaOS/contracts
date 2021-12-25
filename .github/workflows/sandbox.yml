@@ -1,8 +1,5 @@
 name: Sandbox
-on:
-    push:
-        paths:
-            - './**'
+on: [push]
 jobs:
     test-sandbox:
         runs-on: ubuntu-latest
