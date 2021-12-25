@@ -1,6 +1,4 @@
 import {
-    logging,
-    MapEntry,
     PersistentSet,
     PersistentUnorderedMap,
     u128,
@@ -47,8 +45,7 @@ export class PersistentTokens {
         let entries = this._tmap.entries(start, end)
         let tokens: Array<Token> = []
         for (let i = 0; i < entries.length; i++) {
-            let entryValue = entries[i].value
-            tokens.push(entryValue)
+            tokens.push(entries[i].value)
         }
         return tokens
     }
@@ -86,7 +83,7 @@ export class PersistentTokens {
     tokens_for_owner(accountId: string, start: i32, end: i32): Array<Token> {
         let accountTokenSet = this._amap.getSome(accountId)
         let tokens: Array<Token> = []
-        let keys: Array<string> = accountTokenSet.values()
+        let keys: Array<TokenId> = accountTokenSet.values()
         for (start; start < end; start++) {
             tokens.push(this._tmap.getSome(keys[start]))
         }
