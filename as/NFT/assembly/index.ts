@@ -142,15 +142,13 @@ export function nft_tokens_for_owner(
     }
     const media = accountMedia.values()
 
-    logging.log(media.length)
-
     let tokens: Array<Media> = []
 
     if (limit == 0) {
         limit = <u8>media.length
     }
 
-    for (let i = parseInt(from_index); i < limit; i++) {
+    for (let i = parseInt(from_index); i < (parseInt(from_index)+limit); i++) {
         let token = media.at(<i32>i)
         const design = designs.getSome(token)
         design.metadata = nft_token_metadata(token)
