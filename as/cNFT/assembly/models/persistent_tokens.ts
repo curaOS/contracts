@@ -31,7 +31,7 @@ export class PersistentTokens {
     /**
      * @param token_id ID of token to retrieve from _map
      */
-    get(token_id: string): Token | null {
+    get(token_id: TokenId): Token | null {
         return this._tmap.get(token_id)
     }
 
@@ -43,7 +43,7 @@ export class PersistentTokens {
      */
     tokens(start: i32, end: i32): Token[] {
         let entries = this._tmap.entries(start, end)
-        let tokens: Array<Token> = []
+        let tokens: Token[] = []
         for (let i = 0; i < entries.length; i++) {
             tokens.push(entries[i].value)
         }
@@ -63,7 +63,7 @@ export class PersistentTokens {
      * @param accountId ID of account to retrieve supply
      * @returns string token supply of AccountId
      */
-    supply_for_owner(accountId: string): string {
+    supply_for_owner(accountId: AccountId): string {
         let accountTokenSet = this._amap.get(accountId)
 
         if (accountTokenSet == null || accountTokenSet.size == 0) {
@@ -80,10 +80,10 @@ export class PersistentTokens {
      * @param end index of end entries
      * @returns an array of tokens
      */
-    tokens_for_owner(accountId: string, start: i32, end: i32): Array<Token> {
+    tokens_for_owner(accountId: AccountId, start: i32, end: i32): Token[] {
         let accountTokenSet = this._amap.getSome(accountId)
-        let tokens: Array<Token> = []
-        let keys: Array<TokenId> = accountTokenSet.values()
+        let tokens: Token[] = []
+        let keys: TokenId[] = accountTokenSet.values()
         for (start; start < end; start++) {
             tokens.push(this._tmap.getSome(keys[start]))
         }
@@ -111,8 +111,8 @@ export class PersistentTokens {
     }
 
     private _addToAccountTokenSet(
-        tokenId: string,
-        accountId: string
+        tokenId: TokenId,
+        accountId: AccountId
     ): PersistentSet<TokenId> {
         let accountTokenSet = this._amap.get(accountId)
 
