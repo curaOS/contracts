@@ -1,7 +1,6 @@
 import { VMContext } from 'near-mock-vm'
-import { VM, context, logging } from 'near-sdk-as'
 import { TokenMetadata } from '../../../NFT/assembly/metadata'
-import { NFTContractMetadata } from '../models/nft_contract_metadata'
+import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_metadata'
 
 import {
     nft_total_supply,
@@ -11,7 +10,6 @@ import {
     nft_metadata,
     init,
 } from '../index'
-import { persistent_tokens } from '../models/persistent_tokens'
 import { Token } from '../models/token'
 import { AccountId } from '../types'
 
@@ -26,7 +24,7 @@ const mintToken = (accountId: AccountId): Token => {
 }
 
 const initContract = (): void => {
-    const nft_contract_metadata = new NFTContractMetadata()
+    const nft_contract_metadata = defaultNFTContractMetadata()
 
     init(nft_contract_metadata)
 }
