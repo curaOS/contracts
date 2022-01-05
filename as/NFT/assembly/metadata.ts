@@ -16,7 +16,8 @@ export class TokenMetadata {
         public starts_at: string = '',
         public updated_at: string = '',
         public reference: string = '',
-        public reference_hash: string = ''
+        public reference_hash: string = '',
+        public media_animation: string = ''
     ) {}
 }
 

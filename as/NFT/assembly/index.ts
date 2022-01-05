@@ -48,8 +48,17 @@ export function claim_media(tokenMetadata: TokenMetadata): Media {
     assert_deposit_attached(DESIGN_PRICE)
 
     /** Assert uniqueId is actually unique */
-
-    let design = new Media(tokenMetadata.media, tokenMetadata.extra)
+    let design = new Media(
+        tokenMetadata.title,
+        tokenMetadata.copies,
+        tokenMetadata.media,
+        tokenMetadata.extra,
+        tokenMetadata.description,
+        tokenMetadata.media_hash,
+        tokenMetadata.reference,
+        tokenMetadata.reference_hash,
+        tokenMetadata.media_animation,
+    )
 
     owners.add(context.sender)
 
