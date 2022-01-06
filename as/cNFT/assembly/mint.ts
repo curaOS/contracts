@@ -1,8 +1,8 @@
 import { context, logging, u128 } from 'near-sdk-as'
 import { assert_deposit_attached } from './utils/asserts'
-import { TokenMetadata } from '../../NFT/assembly/metadata'
 import { Token } from './models/token'
 import { persistent_tokens } from './models/persistent_tokens'
+import { persistent_tokens_metadata, TokenMetadata } from './models/persistent_tokens_metadata'
 
 @nearBindgen
 export function mint(tokenMetadata: TokenMetadata): Token {
@@ -18,13 +18,15 @@ export function mint(tokenMetadata: TokenMetadata): Token {
     /** TODO not always */
     token.creator = context.sender
 
-    /** TODO generate valid token id */
-
+    /**@todo generate valid token id */
+    const tokenId = persistent_tokens.number_of_tokens.toString()
     persistent_tokens.add(
-        persistent_tokens.number_of_tokens.toString(),
+        tokenId,
         token,
         context.sender
     )
+
+    persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
     return token
 }

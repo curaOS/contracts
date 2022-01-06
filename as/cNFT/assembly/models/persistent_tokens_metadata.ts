@@ -47,6 +47,18 @@ export class PeristentTokenMetadata {
             '_tmmap' + prefix
         )
     }
+
+    /**
+     *
+     * @param tokenId Id of new token
+     * @param tokenMetadata TokenMetadata to be added
+     * @returns added tokenMetadata
+     */
+    add(tokenId: TokenId, tokenMetadata: TokenMetadata): TokenMetadata {
+        this._tmmap.set(tokenId, tokenMetadata)
+
+        return tokenMetadata
+    }
 }
 
 export const persistent_tokens_metadata = new PeristentTokenMetadata('ptm')

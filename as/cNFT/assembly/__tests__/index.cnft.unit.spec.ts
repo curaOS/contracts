@@ -1,6 +1,6 @@
 import { VMContext } from 'near-mock-vm'
-import { TokenMetadata } from '../../../NFT/assembly/metadata'
 import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_metadata'
+import { TokenMetadata } from '../models/persistent_tokens_metadata'
 
 import {
     nft_total_supply,
