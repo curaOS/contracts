@@ -48,8 +48,17 @@ export function claim_media(tokenMetadata: TokenMetadata): Media {
     assert_deposit_attached(DESIGN_PRICE)
 
     /** Assert uniqueId is actually unique */
-
-    let design = new Media(tokenMetadata.media, tokenMetadata.extra)
+    let design = new Media(
+        tokenMetadata.title,
+        tokenMetadata.copies,
+        tokenMetadata.media,
+        tokenMetadata.extra,
+        tokenMetadata.description,
+        tokenMetadata.media_hash,
+        tokenMetadata.reference,
+        tokenMetadata.reference_hash,
+        tokenMetadata.media_animation,
+    )
 
     owners.add(context.sender)
 
@@ -142,15 +151,13 @@ export function nft_tokens_for_owner(
     }
     const media = accountMedia.values()
 
-    logging.log(media.length)
-
     let tokens: Array<Media> = []
 
     if (limit == 0) {
         limit = <u8>media.length
     }
 
-    for (let i = parseInt(from_index); i < limit; i++) {
+    for (let i = parseInt(from_index); i < (parseInt(from_index)+limit); i++) {
         let token = media.at(<i32>i)
         const design = designs.getSome(token)
         design.metadata = nft_token_metadata(token)

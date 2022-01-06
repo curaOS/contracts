@@ -4,8 +4,10 @@ import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_me
 
 import {
     nft_total_supply,
+    nft_tokens,
     nft_token,
     nft_supply_for_owner,
+    nft_tokens_for_owner,
     mint,
     nft_metadata,
     init,
@@ -55,6 +57,27 @@ describe('- CONTRACT -', () => {
         const nftSupplyForOwner = nft_supply_for_owner('prova.testnet')
 
         log(nftSupplyForOwner)
+    })
+
+    it('xxx returns range of tokens', () => {
+        mintToken('prova.testnet')
+        mintToken('hello.testnet')
+        mintToken('yellow.testnet')
+        const nfttokens = nft_tokens('0', 3)
+        expect(nfttokens.length).toStrictEqual(3)
+
+        log(nfttokens)
+    })
+
+    it('xxx returns range of tokens for owner', () => {
+        mintToken('hello.testnet')
+        mintToken('hello.testnet')
+        mintToken('hello.testnet')
+        mintToken('hello.testnet')
+        const nfttokensforowner = nft_tokens_for_owner('hello.testnet', '1', 3)
+        expect(nfttokensforowner.length).toStrictEqual(3)
+
+        log(nfttokensforowner)
     })
 
     it('xxx returns nft contract metadata', () => {
