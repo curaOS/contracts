@@ -12,7 +12,7 @@ import {
     nft_metadata,
     init,
 } from '../index'
-import { Token } from '../models/token'
+import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 
 const mintToken = (accountId: AccountId): Token => {

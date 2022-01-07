@@ -1,4 +1,4 @@
-import { Token } from './models/token'
+import { Token } from './models/persistent_tokens'
 import { persistent_tokens } from './models/persistent_tokens'
 
 @nearBindgen
