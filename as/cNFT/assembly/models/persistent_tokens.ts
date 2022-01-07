@@ -1,10 +1,15 @@
-import {
-    PersistentSet,
-    PersistentUnorderedMap,
-    u128,
-} from 'near-sdk-as'
+import { PersistentSet, PersistentUnorderedMap, u128 } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
-import { Token } from './token'
+import { TokenMetadata } from './persistent_tokens_metadata'
+
+@nearBindgen
+export class Token {
+    id: string
+    owner_id: string
+    creator: string
+    prev_owner: string
+    metadata: TokenMetadata
+}
 
 @nearBindgen
 export class PersistentTokens {
