@@ -8,7 +8,7 @@ jobs:
               with:
                   repository: near/nearcore
                   
-            - name: Cache
+            - name: Cache-${{env.GITHUB_ACTION_PATH}}
               id: cache-packages
               uses: actions/cache@v2.1.7
               with:
