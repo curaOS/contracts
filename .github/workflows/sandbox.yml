@@ -12,8 +12,8 @@ jobs:
               id: cache-packages
               uses: actions/cache@v2.1.7
               with:
-                path: ./sandbox
-                key: ${{ runner.os }}-cargo-${{ hashFiles('./Cargo.toml') }}
+                path: sandbox
+                key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
                 
             - name: 'Make Sandbox'
               working-directory: ./
