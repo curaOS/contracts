@@ -8,19 +8,17 @@ jobs:
               with:
                   repository: near/nearcore
                   
-            - name: Cache-${{env.GITHUB_ACTION_PATH}}
+            - name: Cache
               id: cache-packages
               uses: actions/cache@v2.1.7
               with:
-                path: sandbox
+                path: ~/sandbox
                 key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
                 
             - name: 'Make Sandbox'
               working-directory: ./
               if: steps.cache-packages.outputs.cache-hit != 'true'
-              run: |
-                  echo ${{env.GITHUB_ACTION_PATH}}
-                  make sandbox
+              run: make sandbox
               
             - name: 'Building near'
               working-directory: ./
