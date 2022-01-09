@@ -12,7 +12,7 @@ jobs:
               id: cache-packages
               uses: actions/cache@v2.1.7
               with:
-                path: "*/sandbox"
+                path: ~/nearcore/sandbox
                 key: ${{ runner.os }}-sandbox
                 
             - name: 'Make Sandbox'
