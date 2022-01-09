@@ -13,11 +13,11 @@ jobs:
               uses: actions/cache@v2.1.7
               with:
                 path: "**/sandbox"
-                key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+                key: ${{ runner.os }}-sandbox
                 
             - name: 'Make Sandbox'
               working-directory: ./
-              if: steps.cache-packages.outputs.cache-hit != 'true'
+              if: hashFiles('CACHEDIR.TAG') == ''
               run: make sandbox
               
             - name: 'Building near'
