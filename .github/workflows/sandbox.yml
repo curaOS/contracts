@@ -7,9 +7,17 @@ jobs:
             - uses: actions/checkout@master
               with:
                   repository: near/nearcore
+                  
+            - name: Cache
+              id: cache-packages
+              uses: actions/cache@v2.1.7
+              with:
+                path: ./sandbox
+                key: ${{ runner.os }}-cargo-${{ hashFiles('./Cargo.toml') }}
+                
             - name: 'Make Sandbox'
               working-directory: ./
-              if: steps.cache.outputs.cache-hit != 'true'
+              if: steps.cache-packages.outputs.cache-hit != 'true'
               run: make sandbox
               
             - name: 'Building near'
