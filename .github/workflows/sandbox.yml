@@ -7,10 +7,14 @@ jobs:
             - uses: actions/checkout@master
               with:
                   repository: near/nearcore
+            - name: 'Make Sandbox'
+              working-directory: ./
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: make sandbox
+              
             - name: 'Building near'
               working-directory: ./
               run: |
-                  make sandbox
                   rm -rf /tmp/near-sandbox
                   target/debug/near-sandbox --home /tmp/near-sandbox init
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
