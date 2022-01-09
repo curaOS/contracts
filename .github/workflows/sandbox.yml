@@ -8,17 +8,6 @@ jobs:
               with:
                   repository: near/nearcore
           
-            - uses: actions/checkout@v2
-            - name: Glob match
-              uses: tj-actions/glob@v3.2
-              id: glob
-              with:
-                files: |
-                    *.toml
-            - name: Show all matching files
-              run: |
-                echo "${{ steps.glob.outputs.paths }}"
-
             - name: Cache
               id: cache-packages
               uses: actions/cache@v2.1.7
