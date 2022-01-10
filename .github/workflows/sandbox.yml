@@ -18,8 +18,7 @@ jobs:
             - name: 'Make Sandbox'
               working-directory: ./
 #               if: steps.cache-packages.outputs.cache-hit != 'true'
-              run: |
-                    ls -R
+              run: make sandbox
               
             - name: 'Building near'
               working-directory: ./
@@ -41,3 +40,4 @@ jobs:
               working-directory: ./
               run: |
                   node tests/nft.js
+                  ls -R
