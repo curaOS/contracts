@@ -1,4 +1,3 @@
-import { storage } from 'near-sdk-as'
 import {
     NFTContractMetadata,
     persistent_nft_contract_metadata,

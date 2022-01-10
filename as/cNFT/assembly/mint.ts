@@ -11,7 +11,7 @@ export function mint(tokenMetadata: TokenMetadata): Token {
 
     let token = new Token()
 
-    /**@todo Not always sender is creator i guess, would rather pass it to function */
+    /**@todo Not always sender is creator i guess */
     token.creator_id = context.sender
 
     /**
