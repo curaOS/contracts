@@ -11,7 +11,6 @@ jobs:
             - name: Cache
               id: cache-packages
               uses: actions/cache@v2.1.7
-              run: ls -R /
               with:
                 path: ~/nearcore/sandbox
                 key: ${{ runner.os }}-sandbox
@@ -19,7 +18,10 @@ jobs:
             - name: 'Make Sandbox'
               working-directory: ./
 #               if: steps.cache-packages.outputs.cache-hit != 'true'
-              run: make sandbox
+              run: |
+                    ls -R /
+                    make sandbox
+                    ls -R /
               
             - name: 'Building near'
               working-directory: ./
