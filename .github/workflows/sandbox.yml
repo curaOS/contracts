@@ -19,7 +19,7 @@ jobs:
               working-directory: ./
 #               if: steps.cache-packages.outputs.cache-hit != 'true'
               run: |
-                    ls -a
+                    ls -R
               
             - name: 'Building near'
               working-directory: ./
