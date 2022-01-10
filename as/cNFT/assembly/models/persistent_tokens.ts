@@ -5,8 +5,8 @@ import { AccountId, TokenId } from '../types'
 export class Token {
     id: string
     owner_id: string
-    creator: string
-    prev_owner: string
+    creator_id: string
+    prev_owner_id: string
 }
 
 @nearBindgen
