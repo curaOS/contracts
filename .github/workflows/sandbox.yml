@@ -17,10 +17,9 @@ jobs:
                 
             - name: 'Make Sandbox'
               working-directory: ./
-              if: steps.cache-packages.outputs.cache-hit != 'true'
+#               if: steps.cache-packages.outputs.cache-hit != 'true'
               run: |
                     ls -a
-                    make sandbox
               
             - name: 'Building near'
               working-directory: ./
