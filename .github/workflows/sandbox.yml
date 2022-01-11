@@ -13,15 +13,12 @@ jobs:
               uses: actions/cache@v2.1.7
               with:
                 path: /home/runner/work/contracts/contracts/sandbox
-                key: ${{ runner.os }}-sandbox
+                key: ${{ runner.os }}-sandbox1
                 
             - name: 'Make Sandbox'
               working-directory: ./
               if: steps.cache-packages.outputs.cache-hit != 'true'
               run: make sandbox
-                    
-            - name: 'Directory Check'
-              run: ls -R ~/
               
             - name: 'Building near'
               working-directory: ./
@@ -44,3 +41,6 @@ jobs:
             - name: 'Testing contracts'
               working-directory: ./
               run: node tests/nft.js
+                              
+            - name: 'Directory Check'
+              run: ls -R ~/
