@@ -13,11 +13,11 @@ jobs:
                 path: ./target/  # what we cache: the folder
                 key: cache-sandbox
                 restore-keys: cache-sandbox
-            - name: "Building near"
-              run: make sandbox
+            - run: make sandbox
               if: steps.cache-sandbox.outputs.cache-hit != 'true'
-            - name: 'test123r'
+            - name: 'Listing near'
               working-directory: ./
+              run: ls target/
               run: |
                   ls 
             - name: 'test123'
