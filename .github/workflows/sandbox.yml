@@ -12,14 +12,14 @@ jobs:
               id: cache-packages
               uses: actions/cache@v2.1.7
               with:
-                path: ~/sandbox
+                path: /home/runner/work/contracts/contracts/sandbox
                 key: ${{ runner.os }}-sandbox
                 
             - name: 'Make Sandbox'
               working-directory: ./
-#             if: steps.cache-packages.outputs.cache-hit != 'true'
-              run: |
-                    make sandbox
+              if: steps.cache-packages.outputs.cache-hit != 'true'
+              run: make sandbox
+                    
             - name: 'Directory Check'
               run: ls -R ~/
               
@@ -33,13 +33,14 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: '15'
+                  
             - name: 'Building contracts'
               working-directory: ./
               run: |
                   yarn install
                   yarn build-market
                   yarn build-nft
+                  
             - name: 'Testing contracts'
               working-directory: ./
-              run: |
-                  node tests/nft.js
+              run: node tests/nft.js
