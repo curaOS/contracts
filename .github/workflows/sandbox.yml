@@ -18,8 +18,6 @@ jobs:
             - name: 'Listing near'
               working-directory: ./
               run: ls target/
-              run: |
-                  ls 
             - name: 'test123'
               working-directory: ./
               run: |
