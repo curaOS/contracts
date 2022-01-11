@@ -30,15 +30,15 @@ export class Media {
     approvals: Map<string, number>
     next_approval_id: number
     constructor(
-      title?: string,
-      copies: u8 = 1,
-      media?: string,
-      extra?: string,
-      description?: string,
-      media_hash?: string,
-      reference?: string,
-      reference_hash?: string,
-      media_animation?: string,
+        title?: string,
+        copies: u8 = 1,
+        media?: string,
+        extra?: string,
+        description?: string,
+        media_hash?: string,
+        reference?: string,
+        reference_hash?: string,
+        media_animation?: string
     ) {
         this.owner_id = context.sender
         this.prev_owner = context.sender
@@ -46,8 +46,11 @@ export class Media {
 
         this.royalty = new Royalty()
 
-        title = (title && title !== "") ? title : context.sender.substring(0, context.sender.lastIndexOf(".")),
-        this.id = title + '-' + context.blockIndex.toString()
+        ;(title =
+            title && title !== ''
+                ? title
+                : context.sender.substring(0, context.sender.lastIndexOf('.'))),
+            (this.id = title + '-' + context.blockIndex.toString())
 
         const issued_at = context.blockTimestamp.toString()
         const starts_at = issued_at
@@ -67,7 +70,7 @@ export class Media {
             updated_at,
             reference,
             reference_hash,
-            media_animation,
+            media_animation
         )
         token_metadata_by_id.set(this.id, metadata)
         this.approvals = new Map()
@@ -82,7 +85,10 @@ export class NFTOnApprovedArgs {
     msg: string
 }
 
-export const token_metadata_by_id = new PersistentUnorderedMap<string, TokenMetadata>('tmbi')
+export const token_metadata_by_id = new PersistentUnorderedMap<
+    string,
+    TokenMetadata
+>('tmbi')
 export const designs = new PersistentUnorderedMap<AccountId, Media>('md')
 export const owners = new PersistentSet<AccountId>('onrs')
 
