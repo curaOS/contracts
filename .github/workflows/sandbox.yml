@@ -11,7 +11,7 @@ jobs:
               id: cache-sandbox  # give it a name for checking the cache hit-or-not
               with:
                 path: ./target/  # what we cache: the folder
-                key: ${{ runner.os }}-packages-${{ hashFiles('/debug/near-sandbox') }}
+                key: ${{ runner.os }}-packages-${{ hashFiles('./target/debug/near-sandbox') }}
             - name: "Building near"
               run: make sandbox
               if: steps.cache-sandbox.outputs.cache-hit != 'true'
