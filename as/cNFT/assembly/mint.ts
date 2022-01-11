@@ -3,21 +3,24 @@ import { assert_deposit_attached } from './utils/asserts'
 import { Token } from './models/persistent_tokens'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata, TokenMetadata } from './models/persistent_tokens_metadata'
+import { persistent_tokens_royalty, TokenRoyalty } from './models/persistent_tokens_royalty'
 
 @nearBindgen
-export function mint(tokenMetadata: TokenMetadata): Token {
+export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty): Token {
     /**@todo Assert deposit attached based on custom amount from init */
     //     assert_deposit_attached(u128.from(0))
 
     let token = new Token()
 
-    /**@todo Not always sender is creator i guess */
-    token.creator_id = context.sender
-
     /**
      * @todo Assert uniqueId is actually unique
      * @todo Generate valid token id */
     const tokenId = persistent_tokens.number_of_tokens.toString()
+    token.id = tokenId
+
+    /**@todo Not always sender is creator i guess */
+    token.creator_id = context.sender
+    token.owner_id = context.sender
 
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
@@ -26,6 +29,8 @@ export function mint(tokenMetadata: TokenMetadata): Token {
         token,
         context.sender
     )
+
+    persistent_tokens_royalty.add(tokenId, token_royalty)
 
 
     return token
