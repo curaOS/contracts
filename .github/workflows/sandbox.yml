@@ -8,27 +8,13 @@ jobs:
               with:
                   repository: near/nearcore
             - uses: actions/cache@v2
-              id: cache-sandbox2  # give it a name for checking the cache hit-or-not
+              id: cache-sandbox  # give it a name for checking the cache hit-or-not
               with:
-                path: ~/sandbox-store/  # what we cache: the folder
-                key: cache-sandbox2
-                restore-keys: cache-sandbox2
-            - run: |
-                make sandbox
-                mkdir ~/sandbox-store
-                cp /target/debug/near-sandbox ~/sandbox-store/near-sandbox
-              if: steps.cache-sandbox2.outputs.cache-hit != 'true'
+                path: ./target/  # what we cache: the folder
+                key: cache-sandbox
+                restore-keys: cache-sandbox
+            - run: make sandbox
+              if: steps.cache-sandbox.outputs.cache-hit != 'true'
             - name: 'Listing near'
               working-directory: ./
               run: ls target/
-            - name: 'test123'
-              working-directory: ./
-              run: |
-                  ls target/
-            - name: 'Running near core'
-              working-directory: ./
-              run: |
-                  rm -rf /tmp/near-sandbox
-                  ~/sandbox-store/near-sandbox --home /tmp/near-sandbox init
-                  ~/sandbox-store/near-sandbox --home /tmp/near-sandbox run &
-  
