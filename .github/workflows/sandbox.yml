@@ -8,13 +8,13 @@ jobs:
               with:
                   repository: near/nearcore
             - uses: actions/cache@v2
-              id: cache-sandbox  # give it a name for checking the cache hit-or-not
+              id: cache-sandbox4  # give it a name for checking the cache hit-or-not
               with:
                 path: ./target/  # what we cache: the folder
-                key: cache-sandbox
-                restore-keys: cache-sandbox
+                key: cache-sandbox4
+                restore-keys: cache-sandbox4
             - run: make sandbox
-              if: steps.cache-sandbox.outputs.cache-hit != 'true'
+              if: steps.cache-sandbox4.outputs.cache-hit != 'true'
             - name: 'Listing near'
               working-directory: ./
               run: ls target/
