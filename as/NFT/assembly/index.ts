@@ -57,7 +57,7 @@ export function claim_media(tokenMetadata: TokenMetadata): Media {
         tokenMetadata.media_hash,
         tokenMetadata.reference,
         tokenMetadata.reference_hash,
-        tokenMetadata.media_animation,
+        tokenMetadata.media_animation
     )
 
     owners.add(context.sender)
@@ -119,7 +119,8 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Media[] {
 
     let entries: MapEntry<string, Media>[] = designs.entries(start, <u8>end)
     let tokens: Array<Media> = []
-    let entriesMeta: MapEntry<string, TokenMetadata>[] = token_metadata_by_id.entries(start, <u8>end)
+    let entriesMeta: MapEntry<string, TokenMetadata>[] =
+        token_metadata_by_id.entries(start, <u8>end)
 
     for (let i = 0; i < entries.length; i++) {
         let entryValue = entries[i].value
@@ -157,7 +158,7 @@ export function nft_tokens_for_owner(
         limit = <u8>media.length
     }
 
-    for (let i = parseInt(from_index); i < (parseInt(from_index)+limit); i++) {
+    for (let i = parseInt(from_index); i < parseInt(from_index) + limit; i++) {
         let token = media.at(<i32>i)
         const design = designs.getSome(token)
         design.metadata = nft_token_metadata(token)

@@ -1,6 +1,6 @@
 import { VMContext } from 'near-mock-vm'
-import { VM, context, logging } from 'near-sdk-as'
-import { TokenMetadata } from '../../../NFT/assembly/metadata'
+import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_metadata'
+import { TokenMetadata } from '../models/persistent_tokens_metadata'
 
 import {
     nft_total_supply,
@@ -9,9 +9,10 @@ import {
     nft_supply_for_owner,
     nft_tokens_for_owner,
     mint,
+    nft_metadata,
+    init,
 } from '../index'
-import { persistent_tokens } from '../models/persistent_tokens'
-import { Token } from '../models/token'
+import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 
 const mintToken = (accountId: AccountId): Token => {
@@ -22,6 +23,12 @@ const mintToken = (accountId: AccountId): Token => {
     token_metadata.extra = 'extra'
     const token = mint(token_metadata)
     return token
+}
+
+const initContract = (): void => {
+    const nft_contract_metadata = defaultNFTContractMetadata()
+
+    init(nft_contract_metadata)
 }
 
 describe('- CONTRACT -', () => {
@@ -71,5 +78,13 @@ describe('- CONTRACT -', () => {
         expect(nfttokensforowner.length).toStrictEqual(3)
 
         log(nfttokensforowner)
+    })
+
+    it('xxx returns nft contract metadata', () => {
+        initContract()
+
+        const nftContractMetadata = nft_metadata()
+
+        log(nftContractMetadata)
     })
 })
