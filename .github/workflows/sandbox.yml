@@ -4,28 +4,28 @@ jobs:
     test-sandbox:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: '15'
             - uses: actions/checkout@master
               with:
                   repository: near/nearcore
             - uses: actions/cache@v2
-              id: cache-sandbox3  # give it a name for checking the cache hit-or-not
+              id: cache-sandbox4  # give it a name for checking the cache hit-or-not
               with:
                 path: ./target/  # what we cache: the folder
-                key: cache-sandbox3
-                restore-keys: cache-sandbox3
+                key: cache-sandbox4
+                restore-keys: cache-sandbox4
             - name: "Building near"
               run: make sandbox
-              if: steps.cache-sandbox3.outputs.cache-hit != 'true'
+              if: steps.cache-sandbox4.outputs.cache-hit != 'true'
             - name: 'Building near'
               working-directory: ./
               run: |
                   rm -rf /tmp/near-sandbox
                   target/debug/near-sandbox --home /tmp/near-sandbox init
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: '15'
             - name: 'Building contracts'
               working-directory: ./
               run: |
