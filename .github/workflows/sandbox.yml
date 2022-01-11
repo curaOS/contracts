@@ -16,7 +16,7 @@ jobs:
             - name: "Building near"
               run: make sandbox
               if: steps.cache-sandbox.outputs.cache-hit != 'true'
-            - name: 'Building near'
+            - name: 'Running near core'
               working-directory: ./
               run: |
                   rm -rf /tmp/near-sandbox
