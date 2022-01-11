@@ -16,11 +16,14 @@ jobs:
             - name: "Building near"
               run: make sandbox
               if: steps.cache-sandbox.outputs.cache-hit != 'true'
+            - name: 'test123'
+              working-directory: ./
+              run: |
+                  ls target/debug/
             - name: 'Running near core'
               working-directory: ./
               run: |
                   rm -rf /tmp/near-sandbox
-                  ls target/debug/
                   target/debug/near-sandbox --home /tmp/near-sandbox init
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
             - uses: actions/checkout@v2
