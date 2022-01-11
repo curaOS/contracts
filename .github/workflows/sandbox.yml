@@ -23,7 +23,7 @@ jobs:
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
             - uses: actions/checkout@v2
               with:
-                path: '/curaos'
+                path: contracts
             - uses: actions/setup-node@v2
               with:
                   node-version: '15'
