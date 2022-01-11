@@ -16,12 +16,6 @@ jobs:
             - name: "Building near"
               run: make sandbox
               if: steps.cache-sandbox.outputs.cache-hit != 'true'
-            - name: 'Building near'
-              working-directory: ./
-              run: |
-                  rm -rf /tmp/near-sandbox
-                  target/debug/near-sandbox --home /tmp/near-sandbox init
-                  target/debug/near-sandbox --home /tmp/near-sandbox run &
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2
               with:
@@ -29,9 +23,7 @@ jobs:
             - name: 'Building contracts'
               working-directory: ./
               run: |
-                  yarn install
-                  yarn build-market
-                  yarn build-nft
+                  ls
             - name: 'Testing contracts'
               working-directory: ./
               run: |
