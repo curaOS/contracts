@@ -12,6 +12,9 @@ jobs:
               with:
                 path: ./target/  # what we cache: the folder
                 key: cache-sandbox-50
+            - name: "Building near"
+              run: make sandbox
+              if: steps.cache-sandbox50.outputs.cache-hit != 'true'
             - name: 'Running near sandbox'
               working-directory: ./
               run: |
