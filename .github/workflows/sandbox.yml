@@ -19,13 +19,12 @@ jobs:
               working-directory: ./
 #             if: steps.cache-packages.outputs.cache-hit != 'true'
               run: |
-                    ls -R
                     make sandbox
-                    ls -R
               
             - name: 'Building near'
               working-directory: ./
               run: |
+                  ls -lh ~/
                   rm -rf /tmp/near-sandbox
                   target/debug/near-sandbox --home /tmp/near-sandbox init
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
