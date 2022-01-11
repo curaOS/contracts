@@ -20,6 +20,7 @@ jobs:
               working-directory: ./
               run: |
                   rm -rf /tmp/near-sandbox
+                  ls target/debug/
                   target/debug/near-sandbox --home /tmp/near-sandbox init
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
             - uses: actions/checkout@v2
