@@ -14,7 +14,7 @@ jobs:
                 key: cache-sandbox-100
             - name: "Building near"
               run: make sandbox
-              if: steps.cache-sandbox100.outputs.cache-hit != 'true'
+              if: steps.cache-sandbox-100.outputs.cache-hit != 'true'
             - name: 'Running near sandbox'
               working-directory: ./
               run: |
