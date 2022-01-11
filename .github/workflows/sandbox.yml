@@ -12,7 +12,6 @@ jobs:
               with:
                 path: ./target/  # what we cache: the folder
                 key: cache-sandbox4
-                restore-keys: cache-sandbox4
             - name: "Building near"
               run: make sandbox
               if: steps.cache-sandbox4.outputs.cache-hit != 'true'
