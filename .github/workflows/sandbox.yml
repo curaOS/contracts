@@ -36,4 +36,5 @@ jobs:
             - name: 'Testing contracts'
               working-directory: ./contracts
               run: |
+                  node tests/cNFT.js
                   node tests/nft.js
