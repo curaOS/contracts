@@ -147,6 +147,8 @@ async function test() {
         args: {
             contract_metadata: CONTRACT_METADATA,
         },
+        gas: CONTRACT_CLAIM_GAS,
+        amount: CONTRACT_CLAIM_PRICE,
     })
 
     // 2. Mint two tokens
@@ -163,6 +165,8 @@ async function test() {
             gas: CONTRACT_CLAIM_GAS,
             amount: CONTRACT_CLAIM_PRICE,
         },
+        gas: CONTRACT_CLAIM_GAS,
+        amount: CONTRACT_CLAIM_PRICE,
     })
     console.log('Minted 2 NFTs')
 
