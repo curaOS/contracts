@@ -1,12 +1,12 @@
 import { u128 } from 'near-sdk-as'
-import { royalty_to_payout } from '../../utils'
+import { royalty_to_payout } from './utils/royalties'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
-import { Payout } from './types'
+import { Payout, TokenId } from './types'
 
 @nearBindgen
 export function nft_payout(
-    token_id: string,
+    token_id: TokenId,
     balance: u128
     // max_len_payout: u32
 ): Payout | null {
