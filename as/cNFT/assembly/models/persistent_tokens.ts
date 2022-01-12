@@ -1,12 +1,15 @@
 import { PersistentSet, PersistentUnorderedMap, u128 } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
 
+import {persistent_tokens_metadata, TokenMetadata} from "./persistent_tokens_metadata";
+
 @nearBindgen
 export class Token {
     id: string
     owner_id: string
     creator_id: string
     prev_owner_id: string
+    metadata: TokenMetadata
 }
 
 @nearBindgen
@@ -46,9 +49,14 @@ export class PersistentTokens {
      */
     tokens(start: i32, end: i32): Token[] {
         let entries = this._tmap.entries(start, end)
+        let metadataEntries: TokenMetadata[] = persistent_tokens_metadata.get_all(<i32>start, <i32>end);
+
         let tokens: Token[] = []
+
         for (let i = 0; i < entries.length; i++) {
-            tokens.push(entries[i].value)
+            let singleToken = entries[i].value;
+            singleToken.metadata = metadataEntries[i];
+            tokens.push(singleToken);
         }
         return tokens
     }
