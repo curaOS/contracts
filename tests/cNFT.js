@@ -133,6 +133,9 @@ const TOKEN_METADATA_2 = {
     reference: '.gitbook/assets/second.png',
 }
 
+const CONTRACT_CLAIM_GAS = nearAPI.utils.format.parseNearAmount('0.00000000029') // 300 Tgas
+const CONTRACT_CLAIM_PRICE = nearAPI.utils.format.parseNearAmount('1') // 1N
+
 // Test
 async function test() {
     // 1. Creates testing accounts and deploys a contract
@@ -151,10 +154,14 @@ async function test() {
         args: {
             tokenMetadata: TOKEN_METADATA_1,
         },
+        gas: CONTRACT_CLAIM_GAS,
+        amount: CONTRACT_CLAIM_PRICE,
     })
     await bobUseContract.mint({
         args: {
             tokenMetadata: TOKEN_METADATA_2,
+            gas: CONTRACT_CLAIM_GAS,
+            amount: CONTRACT_CLAIM_PRICE,
         },
     })
     console.log('Minted 2 NFTs')
