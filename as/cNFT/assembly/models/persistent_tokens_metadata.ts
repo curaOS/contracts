@@ -1,5 +1,6 @@
 import { PersistentUnorderedMap } from 'near-sdk-as'
 import { TokenId } from '../types'
+import {Token} from "./persistent_tokens";
 
 @nearBindgen
 export class TokenMetadata {
@@ -69,6 +70,10 @@ export class PeristentTokenMetadata {
         }
 
         return metadataCollection;
+    }
+
+    get_by_id(tokenId: TokenId): TokenMetadata | null {
+        return this._tmmap.get(tokenId)
     }
 }
 
