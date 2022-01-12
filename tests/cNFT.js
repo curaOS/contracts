@@ -169,10 +169,14 @@ async function test() {
     // 2.1 get nft tokens by owner
 
     const alice_tokens = await aliceUseContract.nft_tokens_for_owner({
-        account_id: 'alice.test.near',
+        args: {
+            account_id: 'alice.test.near',
+        },
     })
     const bob_tokens = await aliceUseContract.nft_tokens_for_owner({
-        account_id: 'bob.test.near',
+        args: {
+            account_id: 'bob.test.near',
+        },
     })
 
     assert.equal(alice_tokens[0].owner_id, 'alice.test.near')
