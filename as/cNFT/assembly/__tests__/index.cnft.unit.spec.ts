@@ -12,8 +12,9 @@ import {
     mint,
     nft_metadata,
     init,
+    nft_transfer,
 } from '../index'
-import { Token, persistent_tokens } from '../models/persistent_tokens'
+import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 
@@ -102,17 +103,11 @@ describe('- CONTRACT -', () => {
     })
 
     it('transfer tokens from xxx', () => {
+        const token = mintToken('hello.testnet')
 
-        const token1 = new Token();
-        token1.id = 'test1';
-        token1.owner_id = 'hello.testnet';
-        token1.creator_id = 'hello.testnet';
+        nft_transfer(token.id, 'yellow.testnet')
 
-        persistent_tokens.add('test1', token1, 'hello.testnet' );
-
-        persistent_tokens.transfer('test1', 'yellow.testnet');
-
-        let tokens = persistent_tokens.tokens(0,1)
+        let tokens = nft_token(token.id)
 
         log(tokens)
     })

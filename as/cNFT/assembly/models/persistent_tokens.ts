@@ -114,43 +114,16 @@ export class PersistentTokens {
     }
 
     /**
-     * @param tokenId: Id of the token
-     * @param bidderId: accountId of the bidder
-    */
-
-    transfer(tokenId: TokenId, bidderId: AccountId): void {
-
-        /* Getting stored token from tokenId */
-
-        const token = this.get(tokenId)
-
-        if(!token){
-            return;
-        }
-
-        const accountId = token.owner_id
-
-        /* Setting new details of the token */
-
-        token.prev_owner_id = token.owner_id
-        token.owner_id = bidderId
-
-
-        /* Storing token with the new owner's accountId */
-
-        this.add(
-            tokenId,
-            token,
-            bidderId,
+     * @param tokenId: Id of the token to remove
+     * @param accountId: Account of token to remove
+     */
+    remove(tokenId: TokenId, accountId: AccountId): void {
+        this._amap.set(
+            accountId,
+            this._removeFromAccountTokenSet(tokenId, accountId)
         )
 
-        /* Deleting token from previous owner */
-
-        this._deleteFromAccountTokenSet(tokenId, accountId);
-
-
-        /* Delete old owner Id, if the old owner doesn't have anymore tokens  */
-        if(this._amap.getSome(accountId).size == 0) {
+        if (this._amap.getSome(accountId).size == 0) {
             this._oset.delete(accountId)
         }
     }
@@ -171,16 +144,15 @@ export class PersistentTokens {
         return accountTokenSet
     }
 
-    private _deleteFromAccountTokenSet(
+    private _removeFromAccountTokenSet(
         tokenId: TokenId,
         accountId: AccountId
-    ): void {
+    ): PersistentSet<TokenId> {
         let accountTokenSet = this._amap.getSome(accountId)
 
-        if(accountTokenSet) {
-            accountTokenSet.delete(tokenId);
-            this._amap.set(accountId, accountTokenSet);
-        }
+        accountTokenSet.delete(tokenId)
+
+        return accountTokenSet
     }
 }
 
