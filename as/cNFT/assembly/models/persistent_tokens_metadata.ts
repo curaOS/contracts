@@ -1,6 +1,5 @@
 import { PersistentUnorderedMap } from 'near-sdk-as'
 import { TokenId } from '../types'
-import {Token} from "./persistent_tokens";
 
 @nearBindgen
 export class TokenMetadata {
