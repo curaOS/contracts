@@ -59,6 +59,17 @@ export class PeristentTokenMetadata {
 
         return tokenMetadata
     }
+
+    get_all(start: i32, end: i32): TokenMetadata[] {
+        let entries = this._tmmap.entries(start, end);
+        let metadataCollection : TokenMetadata[] = [];
+
+        for (let i = 0; i < entries.length; i++) {
+            metadataCollection.push(entries[i].value)
+        }
+
+        return metadataCollection;
+    }
 }
 
 export const persistent_tokens_metadata = new PeristentTokenMetadata('ptm')
