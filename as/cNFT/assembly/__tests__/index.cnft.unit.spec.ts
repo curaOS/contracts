@@ -97,7 +97,7 @@ describe('- CONTRACT -', () => {
 
         persistent_tokens.add('test1', token1, 'hello.testnet' );
 
-        persistent_tokens.cnft_transfer('test1', 'yellow.testnet');
+        persistent_tokens.transfer('test1', 'yellow.testnet');
 
         let tokens = persistent_tokens.tokens(0,1)
 

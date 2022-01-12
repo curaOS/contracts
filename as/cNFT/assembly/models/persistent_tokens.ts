@@ -132,26 +132,19 @@ export class PersistentTokens {
             token.prev_owner_id = token.owner_id
             token.owner_id = bidderId
 
-            this._tmap.set(tokenId, token)
 
+            /* Storing token with the new owner's accountId */
+
+            this.add(
+                tokenId,
+                token,
+                bidderId,
+            )
 
             /* Deleting token from previous owner */
 
             this._deleteFromAccountTokenSet(tokenId, accountId);
 
-
-            /* Storing token with the new owner's accountId */
-
-            this._amap.set(
-                bidderId,
-                this._addToAccountTokenSet(tokenId, bidderId)
-            )
-
-
-            /* Add new owner Id, if the new owner doesn't have previously stored tokens  */
-            if(!this._oset.has(bidderId)){
-                this._oset.add(bidderId)
-            }
 
             /* Delete old owner Id, if the old owner doesn't have anymore tokens  */
             if(this._amap.getSome(accountId).size == 0) {
