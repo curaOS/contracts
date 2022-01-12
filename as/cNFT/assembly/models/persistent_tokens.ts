@@ -118,42 +118,45 @@ export class PersistentTokens {
      * @param bidderId: accountId of the bidder
     */
 
-    cnft_transfer(tokenId: TokenId, bidderId: AccountId): void {
+    transfer(tokenId: TokenId, bidderId: AccountId): void {
 
         /* Getting stored token from tokenId */
 
-        const token = this._tmap.getSome(tokenId)
-        const accountId = token.owner_id
+        const token = this.get(tokenId)
 
-        /* Setting new details of the token */
+        if(token){
+            const accountId = token.owner_id
 
-        token.prev_owner_id = token.owner_id
-        token.owner_id = bidderId
+            /* Setting new details of the token */
 
-        this._tmap.set(tokenId, token)
+            token.prev_owner_id = token.owner_id
+            token.owner_id = bidderId
 
-
-        /* Deleting token from previous owner */
-
-        this._deleteFromAccountTokenSet(tokenId, accountId);
+            this._tmap.set(tokenId, token)
 
 
-        /* Storing token with the new owner's accountId */
+            /* Deleting token from previous owner */
 
-        this._amap.set(
-            bidderId,
-            this._addToAccountTokenSet(tokenId, bidderId)
-        )
+            this._deleteFromAccountTokenSet(tokenId, accountId);
 
 
-        /* Add new owner Id, if the new owner doesn't have previously stored tokens  */
-        if(!this._oset.has(bidderId)){
-            this._oset.add(bidderId)
-        }
+            /* Storing token with the new owner's accountId */
 
-        /* Delete old owner Id, if the old owner doesn't have anymore tokens  */
-        if(this._amap.getSome(accountId).size == 0) {
-            this._oset.delete(accountId)
+            this._amap.set(
+                bidderId,
+                this._addToAccountTokenSet(tokenId, bidderId)
+            )
+
+
+            /* Add new owner Id, if the new owner doesn't have previously stored tokens  */
+            if(!this._oset.has(bidderId)){
+                this._oset.add(bidderId)
+            }
+
+            /* Delete old owner Id, if the old owner doesn't have anymore tokens  */
+            if(this._amap.getSome(accountId).size == 0) {
+                this._oset.delete(accountId)
+            }
         }
     }
 
