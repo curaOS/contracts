@@ -95,8 +95,16 @@ export class PersistentTokens {
         let accountTokenSet = this._amap.getSome(accountId)
         let tokens: Token[] = []
         let keys: TokenId[] = accountTokenSet.values()
+
         for (start; start < end; start++) {
-            tokens.push(this._tmap.getSome(keys[start]))
+            let singleToken = this._tmap.getSome(keys[start]);
+            let singleTokenMeta = persistent_tokens_metadata.get_by_id(keys[start]);
+
+            if(singleTokenMeta) {
+                singleToken.metadata = singleTokenMeta;
+            }
+            
+            tokens.push(singleToken)
         }
         return tokens
     }
