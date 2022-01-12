@@ -182,6 +182,7 @@ async function test() {
         },
     })
 
+    console.log(alice_tokens);
     assert.equal(alice_tokens[0].owner_id, 'alice.test.near')
     assert.equal(alice_tokens[0].metadata, TOKEN_METADATA_1)
     assert.equal(bob_tokens[0].owner_id, 'bob.test.near')
