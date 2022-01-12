@@ -23,12 +23,11 @@ const contractMethods = {
         'nft_total_supply',
         'nft_supply_for_owner',
         'nft_tokens',
-        'nft_tokens_for_owner',
         'nft_metadata',
         'get_bids',
         'get_bidder_bids',
     ],
-    changeMethods: ['init', 'mint', 'bid'],
+    changeMethods: ['nft_tokens_for_owner', 'init', 'mint', 'bid'],
 }
 let config
 let masterAccount
