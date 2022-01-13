@@ -49,7 +49,7 @@ export class PersistentTokens {
      */
     tokens(start: i32, end: i32): Token[] {
         let entries = this._tmap.entries(start, end)
-        let metadataEntries: TokenMetadata[] = persistent_tokens_metadata.get_all(<i32>start, <i32>end);
+        let metadataEntries: TokenMetadata[] = persistent_tokens_metadata.get(<i32>start, <i32>end);
 
         let tokens: Token[] = []
 
@@ -98,7 +98,7 @@ export class PersistentTokens {
 
         for (start; start < end; start++) {
             let singleToken = this._tmap.getSome(keys[start]);
-            let singleTokenMeta = persistent_tokens_metadata.get_by_id(keys[start]);
+            let singleTokenMeta = persistent_tokens_metadata.get_for_token(keys[start]);
 
             if(singleTokenMeta) {
                 singleToken.metadata = singleTokenMeta;

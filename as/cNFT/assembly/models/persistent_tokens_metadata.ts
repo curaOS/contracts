@@ -60,7 +60,7 @@ export class PeristentTokenMetadata {
         return tokenMetadata
     }
 
-    get_all(start: i32, end: i32): TokenMetadata[] {
+    get(start: i32, end: i32): TokenMetadata[] {
         let entries = this._tmmap.entries(start, end);
         let metadataCollection : TokenMetadata[] = [];
 
@@ -71,7 +71,7 @@ export class PeristentTokenMetadata {
         return metadataCollection;
     }
 
-    get_by_id(tokenId: TokenId): TokenMetadata | null {
+    get_for_token(tokenId: TokenId): TokenMetadata | null {
         return this._tmmap.get(tokenId)
     }
 }
