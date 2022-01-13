@@ -6,7 +6,7 @@ import { persistent_tokens_metadata } from "./models/persistent_tokens_metadata"
 @nearBindgen
 export function nft_token(token_id: TokenId): Token | null {
     let token = persistent_tokens.get(token_id);
-    let metadata = persistent_tokens_metadata.get_for_token(token_id);
+    let metadata = persistent_tokens_metadata.get(token_id);
 
     if(!token || !metadata){
         return null;
