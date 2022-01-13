@@ -1,14 +1,19 @@
 import { AccountId } from '../../utils'
-import { Token } from './models/persistent_tokens'
-import { persistent_tokens } from './models/persistent_tokens'
 import { TokenId } from './types'
+import { persistent_tokens, Token } from './models/persistent_tokens'
+import { persistent_tokens_metadata } from "./models/persistent_tokens_metadata";
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token | null {
-    let t = persistent_tokens.get(token_id)
-    t.metadata = persistent_tokens_metadata.get_for_token(token_id)
+    let token = persistent_tokens.get(token_id);
+    let metadata = persistent_tokens_metadata.get_for_token(token_id);
 
-    return t
+    if(!token || !metadata){
+        return null;
+    }
+
+    token.metadata = metadata;
+    return token;
 }
 
 
@@ -17,7 +22,7 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
 
-    if (!token) {
+    if(!token){
         return;
     }
 
