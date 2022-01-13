@@ -44,5 +44,7 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
 
     logging.log(log)
 
+    token.metadata = tokenMetadata;
+
     return token
 }
