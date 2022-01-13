@@ -16,7 +16,7 @@ export function nft_total_supply(): string {
 @nearBindgen
 export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     const start = <u32>parseInt(from_index)
-    const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit) + start
+    const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit + start)
 
     const tokensIds: TokenId[] = persistent_tokens.tokens()
 
@@ -37,7 +37,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
 @nearBindgen
 export function nft_tokens_for_owner(account_id: string, from_index: string = '0', limit: u8 = 0): Token[] {
     const start = <u32>parseInt(from_index)
-    const end = <u32>(limit == 0 ? parseInt(nft_supply_for_owner(account_id)) : limit) + start
+    const end = <u32>(limit == 0 ? parseInt(nft_supply_for_owner(account_id)) : limit  + start)
 
     const tokensIds: TokenId[] = persistent_tokens.tokens_for_owner(account_id);
 
