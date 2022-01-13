@@ -5,7 +5,7 @@ import {
 
 export { mint } from './mint'
 
-export { nft_token } from './core'
+export { nft_token, nft_transfer } from './core'
 
 export {
     nft_supply_for_owner,
