@@ -129,6 +129,21 @@ export class PersistentTokens {
         return token
     }
 
+    /**
+     * @param tokenId: Id of the token to remove
+     * @param accountId: Account of token to remove
+     */
+    remove(tokenId: TokenId, accountId: AccountId): void {
+        this._amap.set(
+            accountId,
+            this._removeFromAccountTokenSet(tokenId, accountId)
+        )
+
+        if (this._amap.getSome(accountId).size == 0) {
+            this._oset.delete(accountId)
+        }
+    }
+
     private _addToAccountTokenSet(
         tokenId: TokenId,
         accountId: AccountId
@@ -141,6 +156,17 @@ export class PersistentTokens {
         }
 
         accountTokenSet.add(tokenId)
+
+        return accountTokenSet
+    }
+
+    private _removeFromAccountTokenSet(
+        tokenId: TokenId,
+        accountId: AccountId
+    ): PersistentSet<TokenId> {
+        let accountTokenSet = this._amap.getSome(accountId)
+
+        accountTokenSet.delete(tokenId)
 
         return accountTokenSet
     }

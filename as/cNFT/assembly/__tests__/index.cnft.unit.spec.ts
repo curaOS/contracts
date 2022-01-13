@@ -1,7 +1,8 @@
 import { VMContext } from 'near-mock-vm'
+import { u128 } from 'near-sdk-as'
 import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_metadata'
 import { TokenMetadata } from '../models/persistent_tokens_metadata'
-
+import { TokenRoyalty } from '../models/persistent_tokens_royalty'
 import {
     nft_total_supply,
     nft_tokens,
@@ -11,9 +12,11 @@ import {
     mint,
     nft_metadata,
     init,
+    nft_transfer,
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
+import { nft_payout } from '../royalty_payout'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
@@ -21,7 +24,12 @@ const mintToken = (accountId: AccountId): Token => {
     const token_metadata = new TokenMetadata()
     token_metadata.media = 'media'
     token_metadata.extra = 'extra'
-    const token = mint(token_metadata)
+
+    const token_royalty = new TokenRoyalty()
+    token_royalty.percentage = 2500
+    token_royalty.split_between.set('address', 2500)
+
+    const token = mint(token_metadata, token_royalty)
     return token
 }
 
@@ -80,11 +88,27 @@ describe('- CONTRACT -', () => {
         log(nfttokensforowner)
     })
 
+    it('xxx returns token payout', () => {
+        const token = mintToken('hello.testnet')
+        const tokenPayout = nft_payout(token.id, u128.from('10000000000'))
+        log(tokenPayout)
+    })
+
     it('xxx returns nft contract metadata', () => {
         initContract()
 
         const nftContractMetadata = nft_metadata()
 
         log(nftContractMetadata)
+    })
+
+    it('transfer tokens from xxx', () => {
+        const token = mintToken('hello.testnet')
+
+        nft_transfer(token.id, 'yellow.testnet')
+
+        let tokens = nft_token(token.id)
+
+        log(tokens)
     })
 })
