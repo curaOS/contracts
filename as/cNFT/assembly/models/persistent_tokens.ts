@@ -1,7 +1,7 @@
 import { PersistentSet, PersistentUnorderedMap, u128 } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
 
-import {persistent_tokens_metadata, TokenMetadata} from "./persistent_tokens_metadata";
+import { TokenMetadata } from "./persistent_tokens_metadata";
 
 @nearBindgen
 export class Token {
@@ -48,17 +48,7 @@ export class PersistentTokens {
      * @returns an array of tokens
      */
     tokens(start: i32, end: i32): Token[] {
-        let entries = this._tmap.entries(start, end)
-        let metadataEntries: TokenMetadata[] = persistent_tokens_metadata.get(<i32>start, <i32>end);
-
-        let tokens: Token[] = []
-
-        for (let i = 0; i < entries.length; i++) {
-            let singleToken = entries[i].value;
-            singleToken.metadata = metadataEntries[i];
-            tokens.push(singleToken);
-        }
-        return tokens
+        return this._tmap.entries(start, end)
     }
 
     /**
@@ -85,28 +75,12 @@ export class PersistentTokens {
     }
 
     /**
-     * Returns a range of tokens for accountId from start index to end exclusive
+     * Returns an array of tokens ids for accountId from start index to end exclusive
      * @param accountId ID of account to retrieve tokens for
-     * @param start index of starting entries
-     * @param end index of end entries
-     * @returns an array of tokens
+     * @returns an array of tokens ids
      */
-    tokens_for_owner(accountId: AccountId, start: i32, end: i32): Token[] {
-        let accountTokenSet = this._amap.getSome(accountId)
-        let tokens: Token[] = []
-        let keys: TokenId[] = accountTokenSet.values()
-
-        for (start; start < end; start++) {
-            let singleToken = this._tmap.getSome(keys[start]);
-            let singleTokenMeta = persistent_tokens_metadata.get_for_token(keys[start]);
-
-            if(singleTokenMeta) {
-                singleToken.metadata = singleTokenMeta;
-            }
-            
-            tokens.push(singleToken)
-        }
-        return tokens
+    tokens_for_owner(accountId: AccountId): TokenId[] {
+        return this._amap.getSome(accountId).values()
     }
 
     /**

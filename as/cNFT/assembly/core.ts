@@ -5,7 +5,10 @@ import { TokenId } from './types'
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token | null {
-    return persistent_tokens.get(token_id)
+    let t = persistent_tokens.get(token_id)
+    t.metadata = persistent_tokens_metadata.get_for_token(token_id)
+
+    return t
 }
 
 
@@ -14,7 +17,7 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
 
-    if(!token){
+    if (!token) {
         return;
     }
 
