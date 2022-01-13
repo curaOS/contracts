@@ -18,6 +18,7 @@ export class PersistentTokens {
     /** Set is persistent cause it avoids loading the whole Set but just reference */
     private _amap: PersistentUnorderedMap<AccountId, PersistentSet<TokenId>>
     private _oset: PersistentSet<AccountId>
+    private _tset: PersistentSet<TokenId>
 
     /**
      * @param prefix A prefix to use for every key of this map
@@ -32,6 +33,8 @@ export class PersistentTokens {
         >('_amap' + prefix)
 
         this._oset = new PersistentSet<AccountId>('_oset' + prefix)
+
+        this._tset = new PersistentSet<TokenId>('_tset' + prefix)
     }
 
     /**
@@ -56,7 +59,7 @@ export class PersistentTokens {
      * TODO not sure _tmap.lenght can represent up to u128 values
      */
     get number_of_tokens(): u128 {
-        return u128.from(this._tmap.length)
+        return u128.from(this._tset.size)
     }
 
     /**
@@ -99,6 +102,8 @@ export class PersistentTokens {
         )
 
         this._oset.add(accountId)
+
+        this._tset.add(tokenId)
 
         return token
     }
