@@ -50,8 +50,8 @@ export class PersistentTokens {
      * @param end index of end entries
      * @returns an array of tokens
      */
-    tokens(start: i32, end: i32): Token[] {
-        return this._tmap.values(start, end)
+    tokens(): TokenId[] {
+        return this._tset.values()
     }
 
     /**

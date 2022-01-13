@@ -18,15 +18,18 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     const start = <u32>parseInt(from_index)
     const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit) + start
 
-    const entries: Token[] = persistent_tokens.tokens(<i32>start, <i32>end)
+    const tokensIds = persistent_tokens.tokens()
     const metadataEntries: TokenMetadata[] = persistent_tokens_metadata.get(<i32>start, <i32>end);
 
     let tokens: Token[] = []
 
-    for (let i = 0; i < entries.length; i++) {
-        let t = entries[i];
-        t.metadata = metadataEntries[i];
-        tokens.push(t);
+    for (let i = start; i < (start + limit); i++) {
+        let token = nft_token(tokensIds[i]);
+
+        if(token){
+            token.metadata = metadataEntries[i];
+            tokens.push(token);
+        }
     }
 
     return tokens
