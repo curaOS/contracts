@@ -1,6 +1,5 @@
 import { nft_token } from './core';
 import { persistent_tokens, Token } from './models/persistent_tokens'
-import { persistent_tokens_metadata, TokenMetadata } from "./models/persistent_tokens_metadata";
 import { TokenId } from "./types";
 
 @nearBindgen
@@ -20,15 +19,13 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit) + start
 
     const tokensIds: TokenId[] = persistent_tokens.tokens()
-    const metadataEntries: TokenMetadata[] = persistent_tokens_metadata.get(<i32>start, <i32>end);
 
     let tokens: Token[] = []
 
-    for (let i = start; i < (start + limit); i++) {
+    for (let i = start; i < end; i++) {
         let token = nft_token(tokensIds[i]);
 
         if(token){
-            token.metadata = metadataEntries[i];
             tokens.push(token);
         }
     }
@@ -46,7 +43,7 @@ export function nft_tokens_for_owner(account_id: string, from_index: string = '0
 
     let tokens: Token[] = []
 
-    for (let i = start; i < (start + limit); i++) {
+    for (let i = start; i < end; i++) {
         let token = nft_token(tokensIds[i]);
 
         if(token){
