@@ -47,7 +47,8 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx returns persistent token', () => {
-        const nftToken = nft_token('prova.testnet')
+        const token = mintToken('prova.testnet')
+        const nftToken = nft_token(token.id)
 
         log(nftToken)
     })
