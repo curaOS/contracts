@@ -18,7 +18,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     const start = <u32>parseInt(from_index)
     const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit + start)
 
-    const tokensIds: TokenId[] = persistent_tokens.tokens()
+    const tokensIds: TokenId[] = persistent_tokens.tokens(start, end)
 
     let tokens: Token[] = []
 
