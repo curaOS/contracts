@@ -22,7 +22,7 @@ export class PersistentTokens {
      * @param prefix A prefix to use for every key of this map
      */
     constructor(prefix: string) {
-        this._tmap = new PersistentUnorderedMap<AccountId, Token>(
+        this._tmap = new PersistentUnorderedMap<TokenId, Token>(
             '_tmap' + prefix
         )
         this._amap = new PersistentUnorderedMap<

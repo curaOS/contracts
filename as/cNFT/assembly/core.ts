@@ -7,8 +7,10 @@ import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 export function nft_token(token_id: TokenId): Token {
     // get token
     let token = persistent_tokens.get(token_id)
+
     // get metadata and add it to the token
     token.metadata = persistent_tokens_metadata.get(token_id)
+
     // return the token
     return token
 }
