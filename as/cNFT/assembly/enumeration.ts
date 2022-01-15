@@ -22,7 +22,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     // first key
     const start = <u32>parseInt(from_index)
     // last key
-    const end = <u32>(limit == 0 ? keys.length : limit) + start
+    const end = <u32>(limit == 0 ? keys.length : limit  + start)
 
     // empty token array
     let tokens: Token[] = [];        
@@ -45,7 +45,7 @@ export function nft_tokens_for_owner(account_id: string, from_index: string = '0
     // first key
     const start = <u32>parseInt(from_index)
     // last key
-    const end = <u32>(limit == 0 ? keys.length : limit) + start
+    const end = <u32>(limit == 0 ? keys.length : limit + start)
 
     // empty token array
     let tokens: Token[] = [];        
