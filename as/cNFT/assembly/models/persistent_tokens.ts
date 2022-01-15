@@ -44,8 +44,8 @@ export class PersistentTokens {
     /**
      * @returns an array of tokenId
      */
-    keys(): TokenId[] {
-        return this._tmap.keys()
+    keys(start: i32, end: i32): TokenId[] {
+        return this._tmap.keys(start, end)
     }
 
     /**

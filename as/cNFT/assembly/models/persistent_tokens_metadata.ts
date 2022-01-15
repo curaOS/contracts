@@ -59,8 +59,8 @@ export class PeristentTokenMetadata {
     /**
      * @returns array of tokenId
      */
-    keys(): TokenId[] {
-        return this._tmmap.keys()
+    keys(start: i32, end: i32): TokenId[] {
+        return this._tmmap.keys(start, end)
     }
 
     /**

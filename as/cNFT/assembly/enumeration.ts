@@ -1,6 +1,5 @@
 import { nft_token } from './core'
-import { persistent_tokens } from './models/persistent_tokens'
-import { Token } from './models/persistent_tokens'
+import { persistent_tokens, Token } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 
 @nearBindgen
@@ -16,18 +15,19 @@ export function nft_total_supply(): string {
 
 @nearBindgen
 export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
-    // get an array of tokenId from tokens_metadata
-    const keys = persistent_tokens_metadata.keys()
-    
     // first key
     const start = <u32>parseInt(from_index)
     // last key
-    const end = <u32>(limit == 0 ? keys.length : limit  + start)
+    const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit + start)
+
+    // get an array of tokenId from tokens_metadata
+    const keys = persistent_tokens_metadata.keys(start, end)
+
 
     // empty token array
     let tokens: Token[] = [];        
 
-    for (let i = start; i < end; i++) {
+    for (let i = 0; i < keys.length; i++) {
         // get token and add it the tokens array
         let token = nft_token(keys[i]);  
         tokens.push(token)
