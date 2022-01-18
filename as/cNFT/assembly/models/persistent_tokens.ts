@@ -2,6 +2,7 @@ import { PersistentSet, PersistentUnorderedMap, u128 } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
 import { TokenMetadata } from './persistent_tokens_metadata'
 
+// TODO improve Token structure
 @nearBindgen
 export class Token {
     id: string
