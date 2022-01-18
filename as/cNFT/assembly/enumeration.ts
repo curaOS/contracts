@@ -29,7 +29,8 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
 
     for (let i = 0; i < keys.length; i++) {
         // get token and add it the tokens array
-        let token = nft_token(keys[i]);  
+        let token = persistent_tokens.get(keys[i])
+        token.metadata = persistent_tokens_metadata.get(keys[i])
         tokens.push(token)
     }
 
