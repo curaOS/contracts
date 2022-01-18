@@ -1,4 +1,3 @@
-import { nft_token } from './core'
 import { persistent_tokens, Token } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 
@@ -53,7 +52,8 @@ export function nft_tokens_for_owner(account_id: string, from_index: string = '0
 
     for (let i = start; i < end; i++) {
         // get token and add it the tokens array
-        let token = nft_token(keys[i]);  
+        let token = persistent_tokens.get(keys[i])
+        token.metadata = persistent_tokens_metadata.get(keys[i])
         tokens.push(token)
     }
 
