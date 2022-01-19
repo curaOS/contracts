@@ -34,11 +34,14 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
     persistent_tokens_royalty.add(tokenId, token_royalty)
 
 
+    token.metadata = tokenMetadata
+    
     // Immiting log event
     const mint_log = new NftMintLog()
     
     mint_log.owner_id = context.sender
     mint_log.token_ids = [tokenId]
+    mint_log.tokens = [token]
     
     const log = new NftEventLogData<NftMintLog>("nft_mint", [mint_log])
 
