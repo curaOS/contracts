@@ -49,7 +49,21 @@ export class PeristentTokenMetadata {
     }
 
     /**
-     *
+     * @param tokenId Id of token
+     * @returns tokenMetadata for tokenId
+     */
+    get(tokenId: TokenId): TokenMetadata {
+        return this._tmmap.getSome(tokenId)
+    }
+
+    /**
+     * @returns array of tokenId
+     */
+    keys(start: i32, end: i32): TokenId[] {
+        return this._tmmap.keys(start, end)
+    }
+
+    /**
      * @param tokenId Id of new token
      * @param tokenMetadata TokenMetadata to be added
      * @returns added tokenMetadata

@@ -47,7 +47,8 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx returns persistent token', () => {
-        const nftToken = nft_token('prova.testnet')
+        const token = mintToken('prova.testnet')
+        const nftToken = nft_token(token.id)
 
         log(nftToken)
     })
@@ -82,7 +83,7 @@ describe('- CONTRACT -', () => {
         mintToken('hello.testnet')
         mintToken('hello.testnet')
         mintToken('hello.testnet')
-        const nfttokensforowner = nft_tokens_for_owner('hello.testnet', '1', 3)
+        const nfttokensforowner = nft_tokens_for_owner('hello.testnet', '0', 3)
         expect(nfttokensforowner.length).toStrictEqual(3)
 
         log(nfttokensforowner)
