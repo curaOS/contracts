@@ -40,6 +40,11 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     
     // Immiting log event
     const transfer_log = new NftTransferLog()
+    
+    transfer_log.old_owner_id = token.prev_owner_id
+    transfer_log.new_owner_id = token.owner_id
+    transfer_log.token_ids = [token.id]
+
     const log = new NftEventLogData<NftTransferLog>('nft_transfer', [transfer_log])
     logging.log(log)
 }
