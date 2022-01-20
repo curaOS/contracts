@@ -1,6 +1,7 @@
 import { context } from 'near-sdk-as'
 import { Bid } from './models/bid'
 import { persistent_market } from './models/persistent_market'
+import { BidShares, persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 
 @nearBindgen
 export function bid(tokenId: string, amount: number): Bid {
@@ -30,3 +31,14 @@ export function get_bidder_bids(accountId: string): Bid[] {
 export function remove_bid(tokenId:string, accountId: string): void {
     persistent_market.remove(tokenId, accountId)
 }
+
+@nearBindgen
+export function set_bid_shares(
+    token_id: string,
+    prev_owner: u16,
+    creator: u16,
+    owner: u16
+  ): void {
+    const new_bid_shares = new BidShares(prev_owner, creator, owner);
+    persistent_tokens_royalty.set_shares(token_id, new_bid_shares);
+  }
