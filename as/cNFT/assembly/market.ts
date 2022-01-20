@@ -24,3 +24,9 @@ export function get_bids(tokenId: string): Map<string, Bid> {
 export function get_bidder_bids(accountId: string): Bid[] {
     return persistent_market.get_by_bidder(accountId)
 }
+
+
+@nearBindgen
+export function remove_bid(tokenId:string, accountId: string): void {
+    persistent_market.remove(tokenId, accountId)
+}
