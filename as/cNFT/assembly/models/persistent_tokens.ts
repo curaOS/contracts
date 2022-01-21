@@ -104,7 +104,18 @@ export class PersistentTokens {
      * @param tokenId: Id of the token to remove
      * @param accountId: Account of token to remove
      */
+    remove_token(tokenId: TokenId, accountId: AccountId): void {
+        this._tmap.delete(tokenId);
+
+        this.remove(tokenId, accountId);
+    }
+
+    /**
+     * @param tokenId: Id of the token to remove
+     * @param accountId: Account of token to remove
+     */
     remove(tokenId: TokenId, accountId: AccountId): void {
+
         this._amap.set(
             accountId,
             this._removeFromAccountTokenSet(tokenId, accountId)
