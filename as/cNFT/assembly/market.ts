@@ -1,7 +1,7 @@
-import { context } from 'near-sdk-as'
+import { context, logging } from 'near-sdk-as'
 import { Bid } from './models/bid'
 import { persistent_market } from './models/persistent_market'
-
+import { NftBidLog, NftEventLogData } from './models/log'
 @nearBindgen
 export function bid(tokenId: string, amount: number): Bid {
     let bid = new Bid()
