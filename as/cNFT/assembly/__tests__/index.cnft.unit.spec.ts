@@ -13,6 +13,7 @@ import {
     nft_metadata,
     init,
     nft_transfer,
+    burn_design
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
@@ -111,5 +112,17 @@ describe('- CONTRACT -', () => {
         let tokens = nft_token(token.id)
 
         log(tokens)
+    })
+
+    it('xxx burn token', () => {
+        mintToken('hello.testnet')
+        const token = mintToken('hello.testnet')
+
+        burn_design(token.id);
+
+        const tokens = nft_supply_for_owner(token.owner_id);
+
+        expect(tokens).toStrictEqual('1');
+        log(tokens);
     })
 })
