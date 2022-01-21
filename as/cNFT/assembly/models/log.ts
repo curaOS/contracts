@@ -49,3 +49,11 @@ export class NftEventLogData<T> {
         this.data = data
     }
 }
+
+@nearBindgen
+export class NftBidLog {
+    bidder_id: string
+    token_ids: string[]
+    amount: number
+    memo: string = ''
+}
