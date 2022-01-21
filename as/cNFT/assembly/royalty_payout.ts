@@ -7,8 +7,8 @@ import { Payout, TokenId } from './types'
 @nearBindgen
 export function nft_payout(
     token_id: TokenId,
-    balance: u128
-    // max_len_payout: u32
+    balance: u128,
+    max_len_payout: u32
 ): Payout | null {
     let token = persistent_tokens.get(token_id)
 
@@ -26,7 +26,7 @@ export function nft_payout(
     let royalty_sb_keys = token_royalty.split_between.keys()
     let royalty_sb_size = token_royalty.split_between.size
 
-    /** @todo assert gas is limited, check nomicon */
+    assert(royalty_sb_size <= max_len_payout, "Royalty size greater than max len"
 
     /** Go through each key and value in the royalty object */
     for (let i = 0; i < royalty_sb_size; i++) {
