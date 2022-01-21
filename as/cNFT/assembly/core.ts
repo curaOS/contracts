@@ -36,3 +36,15 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     persistent_tokens.remove(token.id, token.prev_owner_id)
 
 }
+
+
+@nearBindgen
+export function burn_design(token_id: TokenId): void {
+
+    /* Getting stored token from tokenId */
+    const token = persistent_tokens.get(token_id)
+
+    persistent_tokens.remove_token(token_id, token.owner_id);
+    persistent_tokens_metadata.remove(token_id);
+
+}
