@@ -1,9 +1,16 @@
+import { NFTContractMetadata } from './persistent_nft_contract_metadata'
+import { Token } from './persistent_tokens'
+import { TokenMetadata } from './persistent_tokens_metadata'
+
 // An event log to capture token minting
 @nearBindgen
 export class NftMintLog {
     owner_id: string
     token_ids: string[]
-    memo: string = ''
+    memo: string
+
+    tokens: Token[]
+    metadata: TokenMetadata[]
 }
 
 // An event log to capture token burning
@@ -25,6 +32,13 @@ export class NftTransferLog {
     memo: string = ''
 }
 
+// An event log to capture contract metadata
+@nearBindgen
+export class NftInitLog {
+    metadata: NFTContractMetadata
+    memo: string = ''
+}
+
 @nearBindgen
 export class NftEventLogData<T> {
     standard: string = 'nep171'
@@ -36,4 +50,12 @@ export class NftEventLogData<T> {
         this.event = event
         this.data = data
     }
+}
+
+@nearBindgen
+export class NftBidLog {
+    bidder_id: string
+    token_ids: string[]
+    amount: number
+    memo: string = ''
 }
