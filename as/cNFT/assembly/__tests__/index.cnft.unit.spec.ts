@@ -91,7 +91,7 @@ describe('- CONTRACT -', () => {
 
     it('xxx returns token payout', () => {
         const token = mintToken('hello.testnet')
-        const tokenPayout = nft_payout(token.id, u128.from('10000000000'))
+        const tokenPayout = nft_payout(token.id, u128.from('10000000000'), 1000)
         log(tokenPayout)
     })
 
