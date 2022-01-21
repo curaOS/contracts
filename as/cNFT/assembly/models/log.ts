@@ -1,5 +1,6 @@
 import { NFTContractMetadata } from './persistent_nft_contract_metadata'
 import { Token } from './persistent_tokens'
+import { TokenMetadata } from './persistent_tokens_metadata'
 
 // An event log to capture token minting
 @nearBindgen
@@ -9,6 +10,7 @@ export class NftMintLog {
     memo: string
 
     tokens: Token[]
+    metadata: TokenMetadata[]
 }
 
 // An event log to capture token burning
