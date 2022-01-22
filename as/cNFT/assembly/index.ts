@@ -1,6 +1,7 @@
 import {
-    NFTContractMetadata,
-    persistent_nft_contract_metadata,
+    defaultNFTContractMetadata,
+    NFTContractMetadata, PersistentNFTContractMetadata,
+
 } from './models/persistent_nft_contract_metadata'
 import { logging } from 'near-sdk-as'
 import { NftEventLogData, NftInitLog } from './models/log'
@@ -23,6 +24,7 @@ export { nft_metadata } from './metadata'
 export function init(contract_metadata: NFTContractMetadata): void {
     /** TODO no need to destructure like this, pass contract_metadata and go over props in constructor */
 
+    const persistent_nft_contract_metadata = new PersistentNFTContractMetadata(defaultNFTContractMetadata());
     persistent_nft_contract_metadata.update(contract_metadata)
 
     // Immiting log event
