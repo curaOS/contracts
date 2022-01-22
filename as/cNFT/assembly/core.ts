@@ -43,7 +43,6 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
 
     /* Deleting token from previous owner */
     persistent_tokens.remove(token.id, token.prev_owner_id)
-    assert(persistent_tokens.get(token.id) == null, "Previous token can't be removed")
     
     /* Storing token with the new owner's accountId */
     persistent_tokens.add(token_id, token, bidder_id)

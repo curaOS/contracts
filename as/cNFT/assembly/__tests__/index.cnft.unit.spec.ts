@@ -106,6 +106,7 @@ describe('- CONTRACT -', () => {
     it('transfer tokens from xxx', () => {
         const token = mintToken('hello.testnet')
 
+        VMContext.setAttached_deposit(u128.from(1))
         nft_transfer(token.id, 'yellow.testnet')
 
         let tokens = nft_token(token.id)
