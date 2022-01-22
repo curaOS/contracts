@@ -8,11 +8,11 @@ jobs:
               with:
                   repository: near/nearcore
             - uses: actions/cache@v2
-              id: cache-sandbox-near  # give it a name for checking the cache hit-or-not;;
+              id: cache-sandbox-near # give it a name for checking the cache hit-or-not;;
               with:
-                path: ./target/  # what we cache: the folder
-                key: cache-sandbox-near
-            - name: "Building near"
+                  path: ./target/ # what we cache: the folder
+                  key: cache-sandbox-near
+            - name: 'Building near'
               run: make sandbox
               if: steps.cache-sandbox-near.outputs.cache-hit != 'true'
             - name: 'Running near sandbox'
@@ -23,7 +23,7 @@ jobs:
                   target/debug/near-sandbox --home /tmp/near-sandbox run &
             - uses: actions/checkout@v2
               with:
-                path: contracts
+                  path: contracts
             - uses: actions/setup-node@v2
               with:
                   node-version: '15'
@@ -31,9 +31,11 @@ jobs:
               working-directory: ./contracts
               run: |
                   yarn install
+                  yarn build-cnft
                   yarn build-market
                   yarn build-nft
             - name: 'Testing contracts'
               working-directory: ./contracts
               run: |
+                  node tests/cNFT.js
                   node tests/nft.js
