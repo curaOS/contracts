@@ -101,13 +101,31 @@ async function initTest() {
     return { aliceUseContract, bobUseContract }
 }
 
+// Utils
+function randomString(length) {
+    let result = ' '
+    const characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+            Math.floor(Math.random() * charactersLength)
+        )
+    }
+    return result
+}
+
+function randomInt(min = 0, max = 10) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 // Example data
 const CONTRACT_METADATA = {
     spec: 'nft-1.0.0',
     name: 'nftExample',
     symbol: 'NFTEXAMPLE',
     icon: '',
-    base_uri: 'https://raw.githubusercontent.com/curaOS/source/master',
+    base_uri: 'https://picsum.photos',
     reference: '',
     reference_hash: '',
     packages_script: '',
@@ -116,20 +134,16 @@ const CONTRACT_METADATA = {
     parameters: '',
 }
 
-const TOKEN_METADATA_1 = {
-    title: 'AA Alice',
-    copies: 2,
-    media: '.gitbook/assets/second.png',
-    description: 'Ali ceee',
-    reference: '.gitbook/assets/cura.png',
-}
-
-const TOKEN_METADATA_2 = {
-    title: 'boby',
-    copies: 1,
-    media: '.gitbook/assets/cura.png',
-    description: 'boby gg',
-    reference: '.gitbook/assets/second.png',
+function random_token_metadata() {
+    const TOKEN_METADATA = {
+        title: generateString(randomInt(0, 100)),
+        copies: randomInt(1, 10),
+        description: generateString(randomInt(0, 1000)),
+        extra: generateString(randomInt(0, 100)),
+        media: `https://picsum.photos/seed/${generateString(6)}/300/300`,
+        reference: `https://picsum.photos/seed/${generateString(6)}/300/300`,
+    }
+    return TOKEN_METADATA
 }
 
 const CONTRACT_CLAIM_GAS = nearAPI.utils.format.parseNearAmount('0.00000000029') // 300 Tgas
@@ -150,24 +164,25 @@ async function test() {
         amount: CONTRACT_CLAIM_PRICE,
     })
 
-    // 2. Mint two tokens
-    await aliceUseContract.mint({
-        args: {
-            tokenMetadata: TOKEN_METADATA_1,
-        },
-        gas: CONTRACT_CLAIM_GAS,
-        amount: CONTRACT_CLAIM_PRICE,
-    })
-    await bobUseContract.mint({
-        args: {
-            tokenMetadata: TOKEN_METADATA_2,
+    // 2. Mint 100 tokens
+
+    for (let i = 0; i < 50; i++) {
+        await aliceUseContract.mint({
+            args: {
+                tokenMetadata: random_token_metadata(),
+            },
             gas: CONTRACT_CLAIM_GAS,
             amount: CONTRACT_CLAIM_PRICE,
-        },
-        gas: CONTRACT_CLAIM_GAS,
-        amount: CONTRACT_CLAIM_PRICE,
-    })
-    console.log('Minted 2 NFTs')
+        })
+        await bobUseContract.mint({
+            args: {
+                tokenMetadata: random_token_metadata(),
+            },
+            gas: CONTRACT_CLAIM_GAS,
+            amount: CONTRACT_CLAIM_PRICE,
+        })
+    }
+    console.log('Minted 50 NFTs for Alice and 50 NFTs for Bob')
 
     // 2.1 get nft tokens by owner
 
@@ -182,7 +197,7 @@ async function test() {
         },
     })
 
-    console.log(alice_tokens);
+    console.log(alice_tokens)
     assert.equal(alice_tokens[0].owner_id, 'alice.test.near')
     assert.equal(alice_tokens[0].metadata, TOKEN_METADATA_1)
     assert.equal(bob_tokens[0].owner_id, 'bob.test.near')
@@ -194,7 +209,7 @@ async function test() {
 
     const total_supply = await bobUseContract.nft_total_supply()
 
-    assert.equal(total_supply, 2)
+    assert.equal(total_supply, 100)
 
     console.log('nft_total_supply returns the right amount')
 
@@ -207,8 +222,8 @@ async function test() {
         account_id: 'bob.test.near',
     })
 
-    assert.equal(nft_supply_for_alice, 1)
-    assert.equal(nft_supply_for_bob, 1)
+    assert.equal(nft_supply_for_alice, 50)
+    assert.equal(nft_supply_for_bob, 50)
 
     console.log('nft_total_supply returns the right amount')
 
