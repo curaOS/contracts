@@ -13,10 +13,22 @@ import {
     nft_metadata,
     init,
     nft_transfer,
+    set_bid,
+    get_bids,
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
+import { Ask, Bid, BidShares } from '../models/market'
+import {
+    get_ask,
+    get_bidder_bids,
+    get_bid_shares,
+    remove_ask,
+    remove_bid,
+    set_ask,
+    set_bid_shares,
+} from '../market'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
@@ -112,4 +124,102 @@ describe('- CONTRACT -', () => {
 
         log(tokens)
     })
+})
+
+const bidOnToken = (
+    accountId: AccountId,
+    tokenId: string,
+    amount: number
+): Bid => {
+    VMContext.setSigner_account_id(accountId)
+    return set_bid(tokenId, amount)
+}
+
+describe('- MARKET -', () => {
+    it('xxx sets a bid & returns it', () => {
+        bidOnToken('hello.testnet', '0', 10)
+
+        const bids = get_bids('0')
+        expect(bids.has('hello.testnet')).toBeTruthy(
+            'Bids should have bidder bid'
+        )
+
+        const bid = bids.get('hello.testnet')
+        expect(bid.amount).toStrictEqual(u128.from(10))
+        expect(bid.bidder).toStrictEqual('hello.testnet')
+        expect(bid.recipient).toStrictEqual('0')
+    })
+    it('xxx sets a bid & removes it', () => {
+        bidOnToken('hello.testnet', '0', 10)
+
+        remove_bid('0')
+
+        const bids = get_bids('0')
+        expect(bids.has('hello.testnet')).toBeFalsy(
+            'Bids should not have bidder bid'
+        )
+    })
+    it('xxx sets multiple bids & return bidder bids', () => {
+        bidOnToken('hello.testnet', '0', 10)
+        bidOnToken('hello.testnet', '1', 20)
+
+        const bids = get_bidder_bids('hello.testnet')
+
+        expect(bids.length).toStrictEqual(2)
+
+        for (let i = 0; i < bids.length; i++) {
+            expect(bids[i].bidder).toStrictEqual('hello.testnet')
+            if (bids[i].recipient == '0') {
+                expect(bids[i].amount).toStrictEqual(u128.from(10))
+            }
+            if (bids[i].recipient == '1') {
+                expect(bids[i].amount).toStrictEqual(u128.from(20))
+            }
+        }
+    })
+    it('xxx sets ask & gets it', () => {
+        const exAsk = new Ask()
+        exAsk.amount = u128.from(10)
+        exAsk.currency = 'near'
+        exAsk.sell_on_share = 50
+
+        set_ask('0', exAsk)
+
+        const ask = get_ask('0')
+
+        expect(ask.amount).toStrictEqual(exAsk.amount)
+        expect(ask.currency).toStrictEqual(exAsk.currency)
+        expect(ask.sell_on_share).toStrictEqual(exAsk.sell_on_share)
+    })
+    it('xxx sets ask & removes it', () => {
+        const exAsk = new Ask()
+        exAsk.amount = u128.from(10)
+        exAsk.currency = 'near'
+        exAsk.sell_on_share = 50
+
+        set_ask('0', exAsk)
+
+        remove_ask('0')
+
+        const getask = (): void => {
+            get_ask('0')
+        }
+        expect(getask).toThrow()
+    })
+    it('xxx sets bid shares & gets it', () => {
+        const exBidShares = new BidShares()
+        exBidShares.owner = 25
+        exBidShares.creator = 50
+        exBidShares.prev_owner = 25
+
+        set_bid_shares('0', exBidShares)
+
+        const bidShares = get_bid_shares('0')
+
+        expect(bidShares.owner).toStrictEqual(exBidShares.owner)
+        expect(bidShares.creator).toStrictEqual(exBidShares.creator)
+        expect(bidShares.prev_owner).toStrictEqual(exBidShares.prev_owner)
+    })
+
+    /** @todo add test for accept_bid */
 })
