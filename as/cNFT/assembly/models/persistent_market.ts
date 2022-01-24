@@ -1,6 +1,6 @@
 import { PersistentSet, PersistentUnorderedMap } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
-import { Bid } from './market'
+import { Bid, Ask } from './market'
 
 declare type BidsByBidder = Map<AccountId, Bid>
 
@@ -8,6 +8,7 @@ declare type BidsByBidder = Map<AccountId, Bid>
 export class PersistentMarket {
     private _tmap: PersistentUnorderedMap<TokenId, BidsByBidder>
     private _amap: PersistentUnorderedMap<AccountId, PersistentSet<TokenId>>
+    private _askmap: PersistentUnorderedMap<TokenId, Ask>
 
     /**
      * @param prefix A prefix to use for every key of this map
@@ -20,6 +21,10 @@ export class PersistentMarket {
             AccountId,
             PersistentSet<TokenId>
         >('_amap' + prefix)
+
+        this._askmap = new PersistentUnorderedMap<TokenId, Ask>(
+            '_askmap' + prefix
+        )
     }
 
     /**
@@ -61,6 +66,19 @@ export class PersistentMarket {
             accountId,
             this._removeFromAccountBidSet(tokenId, accountId)
         )
+    }
+
+    /**
+     * Ask
+     */
+    set_ask(tokenId: TokenId, ask: Ask): void {
+        this._askmap.set(tokenId, ask)
+    }
+    get_ask(tokenId: TokenId): Ask {
+        return this._askmap.getSome(tokenId)
+    }
+    remove_ask(tokenId: TokenId): void {
+        this._askmap.delete(tokenId)
     }
 
     private _addToTokenBidMap(
