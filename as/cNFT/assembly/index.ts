@@ -22,6 +22,7 @@ export {
     remove_bid,
     get_bids,
     get_bidder_bids,
+    accept_bid,
     // Ask
     set_ask,
     get_ask,

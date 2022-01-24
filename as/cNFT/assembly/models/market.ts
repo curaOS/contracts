@@ -1,6 +1,8 @@
+import { u128 } from 'near-sdk-as'
+
 @nearBindgen
 export class Bid {
-    amount: number
+    amount: u128
     bidder: string
     recipient: string
     sell_on_share: u16
@@ -9,7 +11,7 @@ export class Bid {
 
 @nearBindgen
 export class Ask {
-    public amount: number
+    public amount: u128
     public sell_on_share: u16
     public currency: string
 }
