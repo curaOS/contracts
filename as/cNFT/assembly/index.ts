@@ -26,6 +26,9 @@ export {
     set_ask,
     get_ask,
     remove_ask,
+    // Bid shares
+    set_bid_shares,
+    get_bid_shares
 } from './market'
 
 export { nft_metadata } from './metadata'

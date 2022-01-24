@@ -1,5 +1,5 @@
 import { context, logging } from 'near-sdk-as'
-import { Ask, Bid } from './models/market'
+import { Ask, Bid, BidsByBidder, BidShares } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
 
@@ -35,7 +35,7 @@ export function remove_bid(tokenId: string): void {
 }
 
 @nearBindgen
-export function get_bids(tokenId: string): Map<string, Bid> {
+export function get_bids(tokenId: string): BidsByBidder {
     return persistent_market.get(tokenId)
 }
 
@@ -62,5 +62,21 @@ export function get_bidder_bids(accountId: string): Bid[] {
  @nearBindgen
  export function get_ask(tokenId: string): Ask {
      return persistent_market.get_ask(tokenId)
+ }
+ 
+
+
+/**
+ * Bid shares
+ */
+
+ @nearBindgen
+ export function set_bid_shares(tokenId: string, shares: BidShares): void {
+     persistent_market.set_bid_shares(tokenId, shares)
+ }
+ 
+ @nearBindgen
+ export function get_bid_shares(tokenId: string): BidShares {
+     return persistent_market.get_bid_shares(tokenId)
  }
  
