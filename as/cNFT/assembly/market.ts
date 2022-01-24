@@ -4,7 +4,7 @@ import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
 
 @nearBindgen
-export function bid(tokenId: string, amount: number): Bid {
+export function set_bid(tokenId: string, amount: number): Bid {
     let bid = new Bid()
 
     bid.bidder = context.sender
@@ -23,6 +23,11 @@ export function bid(tokenId: string, amount: number): Bid {
     logging.log(log)
 
     return bid
+}
+
+@nearBindgen
+export function remove_bid(tokenId: string): void {
+    persistent_market.remove(tokenId, context.sender)
 }
 
 @nearBindgen
