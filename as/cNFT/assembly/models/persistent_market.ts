@@ -1,6 +1,6 @@
 import { PersistentSet, PersistentUnorderedMap } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
-import { Bid } from './bid'
+import { Bid } from './market'
 
 declare type BidsByBidder = Map<AccountId, Bid>
 
