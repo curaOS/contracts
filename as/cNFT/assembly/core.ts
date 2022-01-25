@@ -4,7 +4,7 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog } from './models/log'
 import { logging, context } from 'near-sdk-as'
-import { assert_one_yocto } from '../../NFT/assembly/asserts'
+import { assert_one_yocto } from './utils/asserts'
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
