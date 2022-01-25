@@ -63,4 +63,6 @@ export class PersistentNFTContractMetadata {
 /**
  * @todo not sure best approach is to create this before the init and update it later  */
 export const persistent_nft_contract_metadata =
-    new PersistentNFTContractMetadata(defaultNFTContractMetadata())
+    (): PersistentNFTContractMetadata => {
+        return new PersistentNFTContractMetadata(defaultNFTContractMetadata())
+    }

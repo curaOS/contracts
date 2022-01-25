@@ -10,9 +10,9 @@ export function nft_payout(
     balance: u128
     // max_len_payout: u32
 ): Payout | null {
-    let token = persistent_tokens.get(token_id)
+    let token = persistent_tokens().get(token_id)
 
-    let token_royalty = persistent_tokens_royalty.get(token_id)
+    let token_royalty = persistent_tokens_royalty().get(token_id)
 
     if (token == null || token_royalty == null) {
         return null

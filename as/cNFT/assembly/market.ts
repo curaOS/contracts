@@ -11,7 +11,7 @@ export function bid(tokenId: string, amount: number): Bid {
     bid.amount = amount
     bid.recipient = tokenId
 
-    persistent_market.add(tokenId, context.sender, bid)
+    persistent_market().add(tokenId, context.sender, bid)
 
     // Immiting log event
     const bid_log = new NftBidLog()
@@ -27,10 +27,10 @@ export function bid(tokenId: string, amount: number): Bid {
 
 @nearBindgen
 export function get_bids(tokenId: string): Map<string, Bid> {
-    return persistent_market.get(tokenId)
+    return persistent_market().get(tokenId)
 }
 
 @nearBindgen
 export function get_bidder_bids(accountId: string): Bid[] {
-    return persistent_market.get_by_bidder(accountId)
+    return persistent_market().get_by_bidder(accountId)
 }

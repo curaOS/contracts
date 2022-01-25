@@ -23,7 +23,7 @@ export { nft_metadata } from './metadata'
 export function init(contract_metadata: NFTContractMetadata): void {
     /** TODO no need to destructure like this, pass contract_metadata and go over props in constructor */
 
-    persistent_nft_contract_metadata.update(contract_metadata)
+    persistent_nft_contract_metadata().update(contract_metadata)
 
     // Immiting log event
     const init_log = new NftInitLog()

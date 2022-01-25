@@ -75,4 +75,6 @@ export class PeristentTokenMetadata {
     }
 }
 
-export const persistent_tokens_metadata = new PeristentTokenMetadata('ptm')
+export const persistent_tokens_metadata = (): PeristentTokenMetadata => {
+    return new PeristentTokenMetadata('ptm')
+}

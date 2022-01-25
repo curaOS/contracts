@@ -16,22 +16,22 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
     /**
      * @todo Assert uniqueId is actually unique
      * @todo Generate valid token id */
-    const tokenId = persistent_tokens.number_of_tokens.toString()
+    const tokenId = persistent_tokens().number_of_tokens.toString()
     token.id = tokenId
 
     /**@todo Not always sender is creator i guess */
     token.creator_id = context.sender
     token.owner_id = context.sender
 
-    persistent_tokens_metadata.add(tokenId, tokenMetadata)
+    persistent_tokens_metadata().add(tokenId, tokenMetadata)
 
-    persistent_tokens.add(
+    persistent_tokens().add(
         tokenId,
         token,
         context.sender
     )
 
-    persistent_tokens_royalty.add(tokenId, token_royalty)
+    persistent_tokens_royalty().add(tokenId, token_royalty)
 
 
     

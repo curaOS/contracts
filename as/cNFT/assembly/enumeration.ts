@@ -3,12 +3,12 @@ import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 
 @nearBindgen
 export function nft_supply_for_owner(account_id: string): string {
-    return persistent_tokens.supply_for_owner(account_id)
+    return persistent_tokens().supply_for_owner(account_id)
 }
 
 @nearBindgen
 export function nft_total_supply(): string {
-    return persistent_tokens.number_of_tokens.toString()
+    return persistent_tokens().number_of_tokens.toString()
 }
 
 
@@ -20,7 +20,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit + start)
 
     // get an array of tokenId from tokens_metadata
-    const keys = persistent_tokens_metadata.keys(start, end)
+    const keys = persistent_tokens_metadata().keys(start, end)
 
 
     // empty token array
@@ -28,8 +28,8 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
 
     for (let i = 0; i < keys.length; i++) {
         // get token and add it the tokens array
-        let token = persistent_tokens.get(keys[i])
-        token.metadata = persistent_tokens_metadata.get(keys[i])
+        let token = persistent_tokens().get(keys[i])
+        token.metadata = persistent_tokens_metadata().get(keys[i])
         tokens.push(token)
     }
 
@@ -40,7 +40,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
 @nearBindgen
 export function nft_tokens_for_owner(account_id: string, from_index: string = '0', limit: u8 = 0): Token[] {
     // get an array of tokenId for owner
-    const keys =  persistent_tokens.tokens_for_owner(account_id);
+    const keys =  persistent_tokens().tokens_for_owner(account_id);
     
     // first key
     const start = <u32>parseInt(from_index)
@@ -52,8 +52,8 @@ export function nft_tokens_for_owner(account_id: string, from_index: string = '0
 
     for (let i = start; i < end; i++) {
         // get token and add it the tokens array
-        let token = persistent_tokens.get(keys[i])
-        token.metadata = persistent_tokens_metadata.get(keys[i])
+        let token = persistent_tokens().get(keys[i])
+        token.metadata = persistent_tokens_metadata().get(keys[i])
         tokens.push(token)
     }
 

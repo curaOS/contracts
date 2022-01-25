@@ -75,4 +75,6 @@ export class PersistentMarket {
     }
 }
 
-export const persistent_market = new PersistentMarket('pm')
+export const persistent_market = (): PersistentMarket => {
+    return new PersistentMarket('pm')
+}

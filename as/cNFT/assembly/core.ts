@@ -8,10 +8,10 @@ import { logging } from 'near-sdk-as'
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
     // get token
-    let token = persistent_tokens.get(token_id)
+    let token = persistent_tokens().get(token_id)
 
     // get metadata and add it to the token
-    token.metadata = persistent_tokens_metadata.get(token_id)
+    token.metadata = persistent_tokens_metadata().get(token_id)
 
     // return the token
     return token
@@ -21,7 +21,7 @@ export function nft_token(token_id: TokenId): Token {
 @nearBindgen
 export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     /* Getting stored token from tokenId */
-    const token = persistent_tokens.get(token_id)
+    const token = persistent_tokens().get(token_id)
 
     if(!token){
         return;
@@ -32,10 +32,10 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     token.owner_id = bidder_id
 
     /* Storing token with the new owner's accountId */
-    persistent_tokens.add(token_id, token, bidder_id)
+    persistent_tokens().add(token_id, token, bidder_id)
 
     /* Deleting token from previous owner */
-    persistent_tokens.remove(token.id, token.prev_owner_id)
+    persistent_tokens().remove(token.id, token.prev_owner_id)
 
     
     // Immiting log event

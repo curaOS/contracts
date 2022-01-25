@@ -48,4 +48,6 @@ export class PeristentTokenRoyalty {
     }
 }
 
-export const persistent_tokens_royalty = new PeristentTokenRoyalty('ptr')
+export const persistent_tokens_royalty = (): PeristentTokenRoyalty => {
+    return new PeristentTokenRoyalty('ptr')
+}
