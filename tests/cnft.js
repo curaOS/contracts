@@ -179,7 +179,7 @@ async function test() {
     })
 
     const cMeta = await aliceUseContract.nft_metadata()
-    assert.equal(cMeta, CONTRACT_METADATA)
+    assert.equal(cMeta.symbol, CONTRACT_METADATA.symbol)
     
     const tokens = await aliceUseContract.nft_tokens()
     console.log(tokens);
