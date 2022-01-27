@@ -15,20 +15,16 @@ import {
     nft_transfer,
     set_bid,
     get_bids,
+    get_bidder_bids,
+    remove_bid,
+    get_bid_shares,
+    set_bid_shares,
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
 import { BidShares } from '../models/royalties'
-import {
-    get_bid_shares,
-    set_bid_shares,
-} from '../royalties'
-import {
-    get_bidder_bids,
-    remove_bid,
-} from '../market'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)

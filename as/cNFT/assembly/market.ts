@@ -1,5 +1,5 @@
 import { context, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
-import { Ask, Bid, BidsByBidder } from './models/market'
+import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
 import { nft_token, nft_transfer } from './core'
