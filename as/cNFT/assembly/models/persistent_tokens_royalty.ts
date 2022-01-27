@@ -46,6 +46,13 @@ export class PeristentTokenRoyalty {
     get(token_id: TokenId): TokenRoyalty | null {
         return this._trmap.get(token_id)
     }
+
+    /**
+     * @param token_id ID of token to remove from _map
+     */
+    remove(token_id: TokenId): void {
+        this._trmap.delete(token_id);
+    }
 }
 
 export const persistent_tokens_royalty = new PeristentTokenRoyalty('ptr')

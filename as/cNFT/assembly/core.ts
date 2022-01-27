@@ -4,6 +4,7 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import {context, logging} from 'near-sdk-as'
+import {persistent_tokens_royalty} from "./models/persistent_tokens_royalty";
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
@@ -59,9 +60,10 @@ export function burn_design(token_id: TokenId): void {
 
     assert(context.sender == token.owner_id, "You must be the owner of the token to burn")
 
-    /* Deleting token and metadata */
+    /* Deleting token, metadata and royalty */
     persistent_tokens.remove_token(token_id, token.owner_id);
     persistent_tokens_metadata.remove(token_id);
+    persistent_tokens_royalty.remove(token_id);
 
     // Immiting log event
     const burn_log = new NftBurnLog();
