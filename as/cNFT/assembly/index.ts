@@ -27,7 +27,7 @@ export {
 export {
     set_bid_shares,
     get_bid_shares
-} from 'royalties.ts'
+} from './royalties'
 
 export { nft_metadata } from './metadata'
 
