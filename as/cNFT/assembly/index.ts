@@ -17,16 +17,17 @@ export {
 } from './enumeration'
 
 export {
-    // Bid
     set_bid,
     remove_bid,
     get_bids,
     get_bidder_bids,
     accept_bid,
-    // Bid shares
+} from './market'
+
+export {
     set_bid_shares,
     get_bid_shares
-} from './market'
+} from 'royalties.ts'
 
 export { nft_metadata } from './metadata'
 

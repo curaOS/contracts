@@ -3,7 +3,7 @@ import { Ask, Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
 import { nft_token, nft_transfer } from './core'
-import { calculate_owner_share, split_share } from './utils/market'
+import { calculate_owner_share, split_share } from './utils/royalties'
 
 /**
  * Bid

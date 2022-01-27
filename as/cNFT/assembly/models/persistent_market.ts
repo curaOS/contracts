@@ -1,6 +1,6 @@
 import { PersistentSet, PersistentUnorderedMap } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
-import { Bid, Ask, BidsByBidder } from './market'
+import { Bid, BidsByBidder } from './market'
 
 @nearBindgen
 export class PersistentMarket {
