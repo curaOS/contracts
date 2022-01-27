@@ -3,6 +3,7 @@ import { royalty_to_payout } from './utils/royalties'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { Payout, TokenId } from './types'
+import { BidShares } from './models/royalties'
 
 @nearBindgen
 export function nft_payout(
@@ -43,3 +44,18 @@ export function nft_payout(
     //return the payout object
     return payout
 }
+
+/**
+ * Bid shares
+ */
+
+ @nearBindgen
+ export function set_bid_shares(tokenId: string, shares: BidShares): void {
+     persistent_market.set_bid_shares(tokenId, shares)
+ }
+ 
+ @nearBindgen
+ export function get_bid_shares(tokenId: string): BidShares {
+     return persistent_market.get_bid_shares(tokenId)
+ }
+ 

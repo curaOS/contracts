@@ -1,5 +1,5 @@
 import { context, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
-import { Ask, Bid, BidsByBidder, BidShares } from './models/market'
+import { Ask, Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
 import { nft_token, nft_transfer } from './core'
@@ -96,17 +96,3 @@ export function accept_bid(
  
 
 
-/**
- * Bid shares
- */
-
- @nearBindgen
- export function set_bid_shares(tokenId: string, shares: BidShares): void {
-     persistent_market.set_bid_shares(tokenId, shares)
- }
- 
- @nearBindgen
- export function get_bid_shares(tokenId: string): BidShares {
-     return persistent_market.get_bid_shares(tokenId)
- }
- 

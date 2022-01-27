@@ -1,5 +1,6 @@
 import { PersistentUnorderedMap } from 'near-sdk-as'
 import { TokenId, AccountId } from '../types'
+import { BidShares } from './royalties'
 
 @nearBindgen
 export class TokenRoyalty {
@@ -18,6 +19,7 @@ export function defaultTokenRoyalty(): TokenRoyalty {
 export class PeristentTokenRoyalty {
     /** @todo explain this structure*/
     private _trmap: PersistentUnorderedMap<TokenId, TokenRoyalty>
+    private _shmap: PersistentUnorderedMap<TokenId, BidShares>
 
     /**
      * @param prefix A prefix to use for every key of this map
@@ -25,6 +27,10 @@ export class PeristentTokenRoyalty {
     constructor(prefix: string) {
         this._trmap = new PersistentUnorderedMap<TokenId, TokenRoyalty>(
             '_trmap' + prefix
+        )
+
+        this._shmap = new PersistentUnorderedMap<TokenId, BidShares>(
+            '_shmap' + prefix
         )
     }
 
@@ -45,6 +51,17 @@ export class PeristentTokenRoyalty {
      */
     get(token_id: TokenId): TokenRoyalty | null {
         return this._trmap.get(token_id)
+    }
+
+
+    /**
+     * Bid shares
+     */
+    set_bid_shares(tokenId: TokenId, bidShares: BidShares): void {
+        this._shmap.set(tokenId, bidShares)
+    }
+    get_bid_shares(tokenId: TokenId): BidShares {
+        return this._shmap.getSome(tokenId)
     }
 }
 
