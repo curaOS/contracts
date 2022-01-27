@@ -19,12 +19,15 @@ import {
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
-import { Bid, BidShares } from '../models/market'
+import { Bid } from '../models/market'
+import { BidShares } from '../models/royalties'
+import {
+    get_bid_shares,
+    set_bid_shares,
+} from '../royalties'
 import {
     get_bidder_bids,
-    get_bid_shares,
     remove_bid,
-    set_bid_shares,
 } from '../market'
 
 const mintToken = (accountId: AccountId): Token => {
