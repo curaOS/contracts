@@ -93,25 +93,6 @@ export function accept_bid(
 
   /** @todo add accept_bid log event */
 }
-
-/**
- * Ask
- */
-
- @nearBindgen
- export function set_ask(tokenId: string, ask: Ask): void {
-     persistent_market.set_ask(tokenId, ask)
- }
- 
- @nearBindgen
- export function remove_ask(tokenId: string): void {
-     persistent_market.remove_ask(tokenId)
- }
- 
- @nearBindgen
- export function get_ask(tokenId: string): Ask {
-     return persistent_market.get_ask(tokenId)
- }
  
 
 

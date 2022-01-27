@@ -19,14 +19,11 @@ import {
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
-import { Ask, Bid, BidShares } from '../models/market'
+import { Bid, BidShares } from '../models/market'
 import {
-    get_ask,
     get_bidder_bids,
     get_bid_shares,
-    remove_ask,
     remove_bid,
-    set_ask,
     set_bid_shares,
 } from '../market'
 
@@ -176,35 +173,6 @@ describe('- MARKET -', () => {
                 expect(bids[i].amount).toStrictEqual(u128.from(20))
             }
         }
-    })
-    it('xxx sets ask & gets it', () => {
-        const exAsk = new Ask()
-        exAsk.amount = u128.from(10)
-        exAsk.currency = 'near'
-        exAsk.sell_on_share = 50
-
-        set_ask('0', exAsk)
-
-        const ask = get_ask('0')
-
-        expect(ask.amount).toStrictEqual(exAsk.amount)
-        expect(ask.currency).toStrictEqual(exAsk.currency)
-        expect(ask.sell_on_share).toStrictEqual(exAsk.sell_on_share)
-    })
-    it('xxx sets ask & removes it', () => {
-        const exAsk = new Ask()
-        exAsk.amount = u128.from(10)
-        exAsk.currency = 'near'
-        exAsk.sell_on_share = 50
-
-        set_ask('0', exAsk)
-
-        remove_ask('0')
-
-        const getask = (): void => {
-            get_ask('0')
-        }
-        expect(getask).toThrow()
     })
     it('xxx sets bid shares & gets it', () => {
         const exBidShares = new BidShares()

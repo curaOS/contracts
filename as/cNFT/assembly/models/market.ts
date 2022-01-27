@@ -10,13 +10,6 @@ export class Bid {
 }
 
 @nearBindgen
-export class Ask {
-    public amount: u128
-    public sell_on_share: u16
-    public currency: string
-}
-
-@nearBindgen
 export class BidShares {
     public prev_owner: u16
     public creator: u16
