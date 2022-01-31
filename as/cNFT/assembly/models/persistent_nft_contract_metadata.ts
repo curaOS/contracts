@@ -17,6 +17,7 @@ export class NFTContractMetadata {
     render_script: string
     style_css: string
     parameters: string
+    nft_per_owner: number
 }
 
 export function defaultNFTContractMetadata(): NFTContractMetadata {
@@ -32,6 +33,7 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
         render_script: '',
         style_css: '',
         parameters: '',
+        nft_per_owner: 0, // 0 = unlimited
     }
 }
 
