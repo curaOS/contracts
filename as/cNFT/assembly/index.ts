@@ -24,11 +24,6 @@ export {
     accept_bid,
 } from './market'
 
-export {
-    set_bid_shares,
-    get_bid_shares
-} from './royalties'
-
 export { nft_metadata } from './metadata'
 
 export function init(contract_metadata: NFTContractMetadata): void {
