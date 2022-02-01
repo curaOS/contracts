@@ -1,4 +1,5 @@
 import { u128 } from 'near-sdk-as'
+import { TokenId } from '../types'
 
 @nearBindgen
 export class Bid {
@@ -9,4 +10,4 @@ export class Bid {
     currency: string
 }
 
-export type BidsByBidder = Map<string, Bid>
+export type BidsByBidder = Map<TokenId, Bid>

@@ -1,13 +1,10 @@
-import { context, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
+import { context, ContractPromiseBatch, env, logging } from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
 import { nft_token, nft_transfer } from './core'
-import { calculate_owner_share, split_share } from './utils/royalties'
-
-/**
- * Bid
- */
+import { nft_payout } from './royalty_payout'
+import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
@@ -41,52 +38,57 @@ export function get_bidder_bids(accountId: string): Bid[] {
 }
 
 @nearBindgen
-export function accept_bid(
-    tokenId: string,
-    bidder: string
-): void {
-  const bids = persistent_market.get(tokenId);
+export function accept_bid(tokenId: string, bidder: string): void {
+    const bids = persistent_market.get(tokenId)
 
-  if (!bids.has(bidder)) {
-    return;
-  }
-  const bid = bids.get(bidder)
-  const bidShares = persistent_market.get_bid_shares(tokenId)
-  const token = nft_token(tokenId)
+    if (!bids.has(bidder)) {
+        return
+    }
 
-  // Transfer bid share to owner  
-  const promiseOwner = ContractPromiseBatch.create(token.owner_id);
-  promiseOwner.transfer(split_share(bidShares.owner, bid.amount));
+    const bid = bids.get(bidder)
+    const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
+    const token = nft_token(tokenId)
 
-  // Transfer bid share to creator
-  const promiseCreator = ContractPromiseBatch.create(token.creator_id);
-  promiseCreator.transfer(split_share(bidShares.creator, bid.amount));
+    const payout = nft_payout(tokenId, bid.amount)
 
-  // Transfer bid share to previous owner
-  const promisePrevOwner = ContractPromiseBatch.create(token.prev_owner_id);
-  promisePrevOwner.transfer(split_share(bidShares.prev_owner, bid.amount));
+    if (!payout) {
+        return
+    }
 
-  env.promise_return(promiseCreator.id);
-  env.promise_return(promiseOwner.id);
-  env.promise_return(promisePrevOwner.id);
-  
-  // Transfer token to bidder
-  nft_transfer(tokenId, bidder)
+    // Transfer bid share to owner
+    const promiseOwner = ContractPromiseBatch.create(token.owner_id)
+    promiseOwner.transfer(payout.get(token.owner_id))
 
-  // Set the new bid shares
-  bidShares.prev_owner = bid.sell_on_share;
-  bidShares.owner = calculate_owner_share(bidShares);
-  persistent_market.set_bid_shares(tokenId, bidShares);
+    // Transfer bid share to creator
+    const promiseCreator = ContractPromiseBatch.create(token.creator_id)
+    promiseCreator.transfer(payout.get(token.creator_id))
 
-  // Remove the accepted bid
-  persistent_market.remove(tokenId, bidder)
+    // Transfer bid share to previous owner
+    const promisePrevOwner = ContractPromiseBatch.create(token.prev_owner_id)
+    promisePrevOwner.transfer(payout.get(token.prev_owner_id))
 
-  // Remove ask
-  persistent_market.remove_ask(tokenId)
+    env.promise_return(promiseCreator.id)
+    env.promise_return(promiseOwner.id)
+    env.promise_return(promisePrevOwner.id)
 
+    // Transfer token to bidder
+    nft_transfer(tokenId, bidder)
 
-  /** @todo add accept_bid log event */
+    if (!tokenRoyalty) {
+        return
+    }
+
+    // Set the new bid shares
+
+    tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
+    tokenRoyalty.percentage =
+        tokenRoyalty.percentage -
+        tokenRoyalty.split_between.get(token.prev_owner_id) +
+        tokenRoyalty.split_between.get(token.owner_id)
+    persistent_tokens_royalty.add(tokenId, tokenRoyalty)
+
+    // Remove the accepted bid
+    persistent_market.remove(tokenId, bidder)
+
+    /** @todo add accept_bid log event */
 }
- 
-
-
