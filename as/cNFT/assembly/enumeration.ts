@@ -11,7 +11,6 @@ export function nft_total_supply(): string {
     return persistent_tokens.number_of_tokens.toString()
 }
 
-
 @nearBindgen
 export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     // first key
@@ -22,9 +21,8 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
     // get an array of tokenId from tokens_metadata
     const keys = persistent_tokens_metadata.keys(start, end)
 
-
     // empty token array
-    let tokens: Token[] = [];        
+    let tokens: Token[] = []
 
     for (let i = 0; i < keys.length; i++) {
         // get token and add it the tokens array
@@ -33,22 +31,25 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
         tokens.push(token)
     }
 
-    return tokens;
+    return tokens
 }
 
-
 @nearBindgen
-export function nft_tokens_for_owner(account_id: string, from_index: string = '0', limit: u8 = 0): Token[] {
+export function nft_tokens_for_owner(
+    account_id: string,
+    from_index: string = '0',
+    limit: u8 = 0
+): Token[] {
     // get an array of tokenId for owner
-    const keys =  persistent_tokens.tokens_for_owner(account_id);
-    
+    const keys = persistent_tokens.tokens_for_owner(account_id)
+
     // first key
     const start = <u32>parseInt(from_index)
     // last key
     const end = <u32>(limit == 0 ? keys.length : limit + start)
 
     // empty token array
-    let tokens: Token[] = [];        
+    let tokens: Token[] = []
 
     for (let i = start; i < end; i++) {
         // get token and add it the tokens array
@@ -57,5 +58,5 @@ export function nft_tokens_for_owner(account_id: string, from_index: string = '0
         tokens.push(token)
     }
 
-    return tokens;
+    return tokens
 }
