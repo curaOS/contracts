@@ -61,8 +61,6 @@ export class PersistentMarket {
         )
     }
 
-
-
     private _addToTokenBidMap(
         tokenId: TokenId,
         accountId: AccountId,
