@@ -6,3 +6,6 @@ asneardev/
 docs/
 
 .idea
+
+/neardev/dev-account
+/neardev/dev-account.env
