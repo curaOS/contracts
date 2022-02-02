@@ -17,8 +17,6 @@ import {
     get_bids,
     get_bidder_bids,
     remove_bid,
-    get_bid_shares,
-    set_bid_shares,
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
@@ -128,7 +126,15 @@ const bidOnToken = (
     amount: number
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
-    return set_bid(tokenId, amount)
+
+    const bid = new Bid()
+    bid.amount = u128.from(amount)
+    bid.bidder = accountId
+    bid.recipient = tokenId
+    bid.sell_on_share = 10
+    bid.currency = 'near'
+
+    return set_bid(tokenId, bid)
 }
 
 describe('- MARKET -', () => {
@@ -172,20 +178,6 @@ describe('- MARKET -', () => {
                 expect(bids[i].amount).toStrictEqual(u128.from(20))
             }
         }
-    })
-    it('xxx sets bid shares & gets it', () => {
-        const exBidShares = new BidShares()
-        exBidShares.owner = 25
-        exBidShares.creator = 50
-        exBidShares.prev_owner = 25
-
-        set_bid_shares('0', exBidShares)
-
-        const bidShares = get_bid_shares('0')
-
-        expect(bidShares.owner).toStrictEqual(exBidShares.owner)
-        expect(bidShares.creator).toStrictEqual(exBidShares.creator)
-        expect(bidShares.prev_owner).toStrictEqual(exBidShares.prev_owner)
     })
 
     /** @todo add test for accept_bid */
