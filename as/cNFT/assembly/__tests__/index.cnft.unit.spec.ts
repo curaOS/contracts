@@ -13,10 +13,16 @@ import {
     nft_metadata,
     init,
     nft_transfer,
+    set_bid,
+    get_bids,
+    get_bidder_bids,
+    remove_bid,
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
+import { Bid } from '../models/market'
+import { BidShares } from '../models/royalties'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
@@ -112,4 +118,67 @@ describe('- CONTRACT -', () => {
 
         log(tokens)
     })
+})
+
+const bidOnToken = (
+    accountId: AccountId,
+    tokenId: string,
+    amount: number
+): Bid => {
+    VMContext.setSigner_account_id(accountId)
+
+    const bid = new Bid()
+    bid.amount = u128.from(amount)
+    bid.bidder = accountId
+    bid.recipient = tokenId
+    bid.sell_on_share = 10
+    bid.currency = 'near'
+
+    return set_bid(tokenId, bid)
+}
+
+describe('- MARKET -', () => {
+    it('xxx sets a bid & returns it', () => {
+        bidOnToken('hello.testnet', '0', 10)
+
+        const bids = get_bids('0')
+        expect(bids.has('hello.testnet')).toBeTruthy(
+            'Bids should have bidder bid'
+        )
+
+        const bid = bids.get('hello.testnet')
+        expect(bid.amount).toStrictEqual(u128.from(10))
+        expect(bid.bidder).toStrictEqual('hello.testnet')
+        expect(bid.recipient).toStrictEqual('0')
+    })
+    it('xxx sets a bid & removes it', () => {
+        bidOnToken('hello.testnet', '0', 10)
+
+        remove_bid('0')
+
+        const bids = get_bids('0')
+        expect(bids.has('hello.testnet')).toBeFalsy(
+            'Bids should not have bidder bid'
+        )
+    })
+    it('xxx sets multiple bids & return bidder bids', () => {
+        bidOnToken('hello.testnet', '0', 10)
+        bidOnToken('hello.testnet', '1', 20)
+
+        const bids = get_bidder_bids('hello.testnet')
+
+        expect(bids.length).toStrictEqual(2)
+
+        for (let i = 0; i < bids.length; i++) {
+            expect(bids[i].bidder).toStrictEqual('hello.testnet')
+            if (bids[i].recipient == '0') {
+                expect(bids[i].amount).toStrictEqual(u128.from(10))
+            }
+            if (bids[i].recipient == '1') {
+                expect(bids[i].amount).toStrictEqual(u128.from(20))
+            }
+        }
+    })
+
+    /** @todo add test for accept_bid */
 })
