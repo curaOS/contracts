@@ -56,6 +56,6 @@ export class NftEventLogData<T> {
 export class NftBidLog {
     bidder_id: string
     token_ids: string[]
-    amount: number
+    amount: string
     memo: string = ''
 }
