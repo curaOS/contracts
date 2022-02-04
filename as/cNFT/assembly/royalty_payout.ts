@@ -4,6 +4,7 @@ import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { Payout, TokenId } from './types'
 
+/** @todo add back @nearBindgen */
 export function nft_payout(
     token_id: TokenId,
     balance: u128
