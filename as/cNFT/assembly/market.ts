@@ -2,12 +2,15 @@ import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, 
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
-import { nft_token, nft_transfer } from './core'
 import { nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
-import { NftTransferArgs } from './types'
+
+class NftTransferArgs {
+    token_id: string
+    bidder_id: string
+}
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {

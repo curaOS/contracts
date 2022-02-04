@@ -7,8 +7,3 @@ export declare type Payout = Map<AccountId, u128>
 
 export declare type Amount = u128
 export declare type Balance = Amount
-
-export declare class NftTransferArgs {
-    token_id: string
-    bidder_id: string
-}
