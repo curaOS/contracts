@@ -62,3 +62,17 @@ export class NftBidLog {
     currency: string
     memo: string = ''
 }
+
+@nearBindgen
+export class NftRemoveBidLog {
+    bidder_id: string
+    token_ids: string[]
+    memo: string = ''
+}
+
+@nearBindgen
+export class NftAcceptBidLog {
+    bidder_id: string
+    token_ids: string[]
+    memo: string = ''
+}

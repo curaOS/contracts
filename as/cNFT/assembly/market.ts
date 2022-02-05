@@ -1,7 +1,7 @@
 import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, env, logging, u128 } from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
-import { NftEventLogData, NftBidLog } from './models/log'
+import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
 import { nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
@@ -34,6 +34,14 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 @nearBindgen
 export function remove_bid(tokenId: string): void {
     persistent_market.remove(tokenId, context.sender)
+
+    // Committing log event
+    const remove_bid_log = new NftRemoveBidLog()
+    remove_bid_log.bidder_id = context.sender
+    remove_bid_log.token_ids = [tokenId]
+
+    const log = new NftEventLogData<NftRemoveBidLog>('nft_remove_bid', [remove_bid_log])
+    logging.log(log)
 }
 
 @nearBindgen
@@ -101,5 +109,11 @@ export function accept_bid(tokenId: string, bidder: string): void {
     // Remove the accepted bid
     persistent_market.remove(tokenId, bidder)
 
-    /** @todo add accept_bid log event */
+    // Committing log event
+    const accept_bid_log = new NftAcceptBidLog()
+    accept_bid_log.bidder_id = bidder
+    accept_bid_log.token_ids = [tokenId]
+
+    const log = new NftEventLogData<NftAcceptBidLog>('nft_accept_bid', [accept_bid_log])
+    logging.log(log)
 }
