@@ -57,5 +57,8 @@ export class NftBidLog {
     bidder_id: string
     token_ids: string[]
     amount: string
+    recipient: string
+    sell_on_share: string
+    currency: string
     memo: string = ''
 }

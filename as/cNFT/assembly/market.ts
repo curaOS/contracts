@@ -21,6 +21,9 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     bid_log.bidder_id = bid.bidder
     bid_log.token_ids = [bid.recipient]
     bid_log.amount = bid.amount.toString()
+    bid_log.recipient = bid.recipient
+    bid_log.sell_on_share = bid.sell_on_share.toString()
+    bid_log.currency = bid.currency
 
     const log = new NftEventLogData<NftBidLog>('nft_bid', [bid_log])
     logging.log(log)
