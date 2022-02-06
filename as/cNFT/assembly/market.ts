@@ -1,4 +1,4 @@
-import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, env, logging, u128 } from 'near-sdk-as'
+import { context, ContractPromise, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog } from './models/log'
@@ -30,7 +30,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
 @nearBindgen
 export function remove_bid(tokenId: string): void {
-    persistent_market.remove(tokenId, context.sender)
+    persistent_market().remove(tokenId, context.sender)
 }
 
 @nearBindgen
@@ -45,15 +45,15 @@ export function get_bidder_bids(accountId: string): Bid[] {
 
 @nearBindgen
 export function accept_bid(tokenId: string, bidder: string): void {
-    const bids = persistent_market.get(tokenId)
+    const bids = persistent_market().get(tokenId)
 
     if (!bids.has(bidder)) {
         return
     }
 
     const bid = bids.get(bidder)
-    const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
-    const token = persistent_tokens.get(tokenId)
+    const tokenRoyalty = persistent_tokens_royalty().get(tokenId)
+    const token = persistent_tokens().get(tokenId)
 
     const payout = nft_payout(tokenId, bid.amount)
 
@@ -93,10 +93,10 @@ export function accept_bid(tokenId: string, bidder: string): void {
         tokenRoyalty.percentage -
         tokenRoyalty.split_between.get(token.prev_owner_id) +
         tokenRoyalty.split_between.get(token.owner_id)
-    persistent_tokens_royalty.add(tokenId, tokenRoyalty)
+    persistent_tokens_royalty().add(tokenId, tokenRoyalty)
 
     // Remove the accepted bid
-    persistent_market.remove(tokenId, bidder)
+    persistent_market().remove(tokenId, bidder)
 
     /** @todo add accept_bid log event */
 }
