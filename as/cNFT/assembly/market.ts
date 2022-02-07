@@ -2,7 +2,7 @@ import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, 
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
-import { nft_payout } from './royalty_payout'
+import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
@@ -66,7 +66,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
     const token = persistent_tokens.get(tokenId)
 
-    const payout = nft_payout(tokenId, bid.amount)
+    const payout = internal_nft_payout(tokenId, bid.amount)
 
     if (!payout) {
         return
