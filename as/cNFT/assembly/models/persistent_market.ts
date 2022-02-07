@@ -1,8 +1,6 @@
 import { PersistentSet, PersistentUnorderedMap } from 'near-sdk-as'
 import { AccountId, TokenId } from '../types'
-import { Bid } from './bid'
-
-declare type BidsByBidder = Map<AccountId, Bid>
+import { Bid, BidsByBidder } from './market'
 
 @nearBindgen
 export class PersistentMarket {
@@ -49,6 +47,20 @@ export class PersistentMarket {
         this._amap.set(accountId, this._addToAccountBidSet(tokenId, accountId))
     }
 
+    /**
+     * Remove the bid for tokenID
+     */
+    remove(tokenId: TokenId, accountId: AccountId): void {
+        if (!this.get(tokenId).has(accountId)) {
+            return
+        }
+        this._tmap.set(tokenId, this._removeFromTokenBidMap(tokenId, accountId))
+        this._amap.set(
+            accountId,
+            this._removeFromAccountBidSet(tokenId, accountId)
+        )
+    }
+
     private _addToTokenBidMap(
         tokenId: TokenId,
         accountId: AccountId,
@@ -71,6 +83,24 @@ export class PersistentMarket {
             _set = new PersistentSet<TokenId>('_abs' + accountId)
         }
         _set.add(tokenId)
+        return _set
+    }
+
+    private _removeFromTokenBidMap(
+        tokenId: TokenId,
+        accountId: AccountId
+    ): BidsByBidder {
+        let _map = this._tmap.getSome(tokenId)
+        _map.delete(accountId)
+        return _map
+    }
+
+    private _removeFromAccountBidSet(
+        tokenId: TokenId,
+        accountId: AccountId
+    ): PersistentSet<TokenId> {
+        let _set = this._amap.getSome(accountId)
+        _set.delete(tokenId)
         return _set
     }
 }

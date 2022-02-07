@@ -15,7 +15,13 @@ export {
     nft_tokens_for_owner,
 } from './enumeration'
 
-export { bid, get_bids, get_bidder_bids } from './market'
+export {
+    set_bid,
+    remove_bid,
+    get_bids,
+    get_bidder_bids,
+    accept_bid,
+} from './market'
 
 export { nft_metadata } from './metadata'
 
