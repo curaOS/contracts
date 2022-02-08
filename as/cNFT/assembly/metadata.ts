@@ -4,5 +4,5 @@ import { PersistentNFTContractMetadata, NFTContractMetadata } from './models/per
 
 @nearBindgen
 export function nft_metadata(): NFTContractMetadata {
-       return storage.getSome<NFTContractMetadata>(PersistentNFTContractMetadata.STORAGE_KEY)
+       return storage.getSome<NFTContractMetadata>(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD)
 }
