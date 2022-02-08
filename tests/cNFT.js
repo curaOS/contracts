@@ -154,8 +154,8 @@ function random_token_metadata() {
 
 function random_bid() {
     const BID = {
-        amount: `randomInt(0, 100)`,
-        bidder: '',
+        amount: '1',
+        bidder: 'bob.test.near',
         recipient: '',
         sell_on_share: randomInt(0, 10),
         currency: 'near',
@@ -308,6 +308,7 @@ async function test() {
     let bids_for_jenny = await jennyUseContract.get_bids({
         tokenId: jennyTokens[0].id,
     })
+    bids_for_jenny = Object.values(bids_for_jenny)
 
     assert.equal(bids_for_jenny[0].amount, '1')
     assert.equal(bids_for_jenny[0].bidder, 'bob.test.near')
