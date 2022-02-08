@@ -30,7 +30,7 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     const token = persistent_tokens.get(token_id)
 
     /* todo: change when adding approval management */
-    assert(context.sender == token.owner_id, "You must own token")
+    assert(context.predecessor == token.owner_id, "You must own token")
     assert(bidder_id != token.owner_id, "Bidder is already the owner")
 
     if(!token){
