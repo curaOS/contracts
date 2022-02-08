@@ -1,5 +1,8 @@
 import {
-    NFTContractMetadata, PersistentNFTContractMetadata,
+    NFTContractExtra,
+    NFTContractMetadata,
+    PersistentNFTContractMetadata,
+    persistent_nft_contract_metadata,
 } from './models/persistent_nft_contract_metadata'
 import { logging, storage } from 'near-sdk-as'
 import { NftEventLogData, NftInitLog } from './models/log'
@@ -25,18 +28,17 @@ export {
 
 export { nft_metadata } from './metadata'
 
-export function init(contract_metadata: NFTContractMetadata): void {
-    const persistent_nft_contract_metadata = new PersistentNFTContractMetadata();
+export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra): void {
 
-    assert(!storage.hasKey(persistent_nft_contract_metadata.get_storage_key()), 'Already initialized')
+    // Init can be called only once
+    assert(!storage.hasKey(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD), 'Already initialized')
 
-    persistent_nft_contract_metadata.update(contract_metadata)
+    persistent_nft_contract_metadata.update_standard(contract_metadata)
+    persistent_nft_contract_metadata.update_extra(contract_extra)
 
     // Immiting log event
     const init_log = new NftInitLog()
     init_log.metadata = contract_metadata
     const log = new NftEventLogData<NftInitLog>('nft_init', [init_log])
     logging.log(log)
-
-    return
 }

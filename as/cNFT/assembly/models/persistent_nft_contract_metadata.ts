@@ -19,6 +19,11 @@ export class NFTContractMetadata {
     parameters: string
 }
 
+@nearBindgen
+export class NFTContractExtra {
+    mint_price: string
+}
+
 export function defaultNFTContractMetadata(): NFTContractMetadata {
     return {
         spec: NFT_SPEC,
@@ -37,27 +42,16 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
 
 @nearBindgen
 export class PersistentNFTContractMetadata {
-    static STORAGE_KEY: string = 'nft_contract_metadata'
+    static STORAGE_KEY_STANDARD: string = "nft_contract_metadata_standard"
+    static STORAGE_KEY_EXTRA: string = "nft_contract_metadata_extra"
 
-    constructor() {
+    update_standard(contract_metadata: NFTContractMetadata): void {
+        storage.set<NFTContractMetadata>(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD, contract_metadata)
     }
 
-    update(contract_metadata: NFTContractMetadata): void {
-        this.set_storage(contract_metadata)
-    }
-
-    @contractPrivate()
-    set_storage(contract_metadata: NFTContractMetadata): void {
-        storage.set(
-            PersistentNFTContractMetadata.STORAGE_KEY,
-            contract_metadata
-        )
-    }
-
-    get_storage_key(): string {
-        return PersistentNFTContractMetadata.STORAGE_KEY
+    update_extra(contract_extra: NFTContractExtra): void {
+        storage.set<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA, contract_extra)
     }
 }
 
-/**
- * @todo not sure best approach is to create this before the init and update it later  */
+export const persistent_nft_contract_metadata = new PersistentNFTContractMetadata()
