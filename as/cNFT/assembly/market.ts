@@ -46,13 +46,16 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 @nearBindgen
 export function remove_bid(tokenId: string): void {
     const bids = persistent_market.get(tokenId);
-    const bid = bids.get(context.sender)
 
-    // Transfer bid amount back to the bidder
-    const promiseBidder = ContractPromiseBatch.create(bid.bidder)
-    promiseBidder.transfer(bid.amount);
+    if(bids.has(context.sender)){
+        const bid = bids.get(context.sender)
 
-    env.promise_return(promiseBidder.id);
+        // Transfer bid amount back to the bidder
+        const promiseBidder = ContractPromiseBatch.create(bid.bidder)
+        promiseBidder.transfer(bid.amount);
+
+        env.promise_return(promiseBidder.id);
+    }
 
 
     persistent_market.remove(tokenId, context.sender)
