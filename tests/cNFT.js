@@ -28,7 +28,7 @@ const contractMethods = {
         'get_bidder_bids',
         'nft_tokens_for_owner',
     ],
-    changeMethods: ['init', 'mint', 'bid'],
+    changeMethods: ['init', 'mint', 'set_bid', 'remove_bid', 'accept_bid'],
 }
 let config
 let masterAccount
@@ -152,9 +152,20 @@ function random_token_metadata() {
     return TOKEN_METADATA
 }
 
+function random_bid() {
+    const BID = {
+        amount: `randomInt(0, 100)`,
+        bidder: '',
+        recipient: '',
+        sell_on_share: randomInt(0, 10),
+        currency: 'near',
+    }
+    return BID
+}
+
 // Test configs
 
-const TOTAL_MINT = 50
+const TOTAL_MINT = 20
 
 // Gas
 const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
@@ -205,7 +216,8 @@ async function test() {
         })
     }
     console.log(
-        `Minted ${TOTAL_MINT / 2} NFTs for Alice and ${TOTAL_MINT / 2
+        `Minted ${TOTAL_MINT / 2} NFTs for Alice and ${
+            TOTAL_MINT / 2
         } NFTs for Bob`
     )
 
@@ -256,7 +268,7 @@ async function test() {
     // e. get nft tokens for owner
 
     const aliceTokens = await aliceUseContract.nft_tokens_for_owner({
-        account_id: "alice.test.near",
+        account_id: 'alice.test.near',
         from_index: '0',
         limit: 2,
     })
@@ -269,34 +281,34 @@ async function test() {
         // trying to find limit
         try {
             await aliceUseContract.nft_tokens_for_owner({
-                account_id: "alice.test.near",
+                account_id: 'alice.test.near',
                 from_index: '0',
                 limit: i,
             })
         } catch {
-            console.log(`limit for "nft_tokens_for_owner" without gas is ${i - 1}`)
+            console.log(
+                `limit for "nft_tokens_for_owner" without gas is ${i - 1}`
+            )
             break
         }
     }
-
-
 
     /**
      * 5. Test market methods
      */
 
     // a. Bob bids on Alice token
-    await bobUseContract.bid({
+    await bobUseContract.set_bid({
         tokenId: aliceTokens[0].id,
-        amount: "1",
+        bid: random_bid(),
     })
     console.log(`"bid" works well`)
 
-    // b. Alice get bids 
+    // b. Alice get bids
     const bids_for_alice = await aliceUseContract.get_bids({
         tokenId: aliceTokens[0].id,
     })
-    assert.equal(bids_for_alice[0].amount, "1")
+    assert.equal(bids_for_alice[0].amount, '1')
     assert.equal(bids_for_alice[0].bidder, 'bob.test.near')
 
     console.log('get_bids returns the right data')
@@ -305,7 +317,7 @@ async function test() {
     const bids_by_bob = await bobUseContract.get_bidder_bids({
         accountId: 'bob.test.near',
     })
-    assert.equal(bids_by_bob[0].amount, "1")
+    assert.equal(bids_by_bob[0].amount, '1')
     assert.equal(bids_by_bob[0].bidder, 'bob.test.near')
 
     console.log('get_bidder_bids returns the right data')
