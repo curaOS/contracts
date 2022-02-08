@@ -25,6 +25,7 @@ import { Bid } from '../models/market'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
+    VMContext.setPredecessor_account_id(accountId)
 
     const token_metadata = new TokenMetadata()
     token_metadata.media = 'media'
