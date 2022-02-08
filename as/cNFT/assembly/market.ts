@@ -65,9 +65,13 @@ export function accept_bid(tokenId: string, bidder: string): void {
         return
     }
 
+    const token = persistent_tokens.get(tokenId)
+
+    /* todo: change when adding approval management */
+    assert(context.predecessor == token.owner_id, "You must own token")
+
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
-    const token = persistent_tokens.get(tokenId)
 
     const payout = internal_nft_payout(tokenId, bid.amount)
 
