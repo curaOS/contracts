@@ -10,7 +10,7 @@ import { Payout, TokenId } from './types'
 export function nft_payout(
     token_id: TokenId,
     balance: u128,
-    max_len_payout: u32
+    max_len_payout: u32 = u32.MAX_VALUE
 ): Payout | null {
 
     //return the payout object
@@ -22,7 +22,7 @@ export function nft_payout(
 export function internal_nft_payout(
     token_id: TokenId,
     balance: u128,
-    max_len_payout: u32
+    max_len_payout: u32 = u32.MAX_VALUE
 ): Payout | null {
     let token = persistent_tokens.get(token_id)
 
