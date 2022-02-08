@@ -14,6 +14,18 @@ class NftTransferArgs {
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
+    const bids = persistent_market.get(tokenId);
+
+    // Refund previous bid If user has a one
+    if(bids.has(bid.bidder)){
+        const prevBid = bids.get(bid.bidder)
+
+        const promiseBidder = ContractPromiseBatch.create(prevBid.bidder)
+        promiseBidder.transfer(prevBid.amount);
+
+        env.promise_return(promiseBidder.id);
+    }
+
     persistent_market.add(tokenId, bid.bidder, bid)
 
     // Committing log event
@@ -85,7 +97,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
     // Transfer bid share to owner
     const promiseOwner = ContractPromiseBatch.create(token.owner_id)
     promiseOwner.transfer(payout.get(token.owner_id))
-    log(payout.get(token.owner_id))
+
     // Transfer bid share to creator
     const promiseCreator = ContractPromiseBatch.create(token.creator_id)
     promiseCreator.transfer(payout.get(token.creator_id))
