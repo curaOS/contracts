@@ -56,6 +56,23 @@ export class NftEventLogData<T> {
 export class NftBidLog {
     bidder_id: string
     token_ids: string[]
-    amount: number
+    amount: string
+    recipient: string
+    sell_on_share: string
+    currency: string
+    memo: string = ''
+}
+
+@nearBindgen
+export class NftRemoveBidLog {
+    bidder_id: string
+    token_ids: string[]
+    memo: string = ''
+}
+
+@nearBindgen
+export class NftAcceptBidLog {
+    bidder_id: string
+    token_ids: string[]
     memo: string = ''
 }
