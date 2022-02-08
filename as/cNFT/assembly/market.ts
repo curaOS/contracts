@@ -119,6 +119,18 @@ export function accept_bid(tokenId: string, bidder: string): void {
         return
     }
 
+    // Refunding remaining bids
+    let oldBids = bids.values()
+
+    for(let i=0; i < oldBids.length; i++){
+        if(oldBids[i].bidder != bidder){
+            const promiseBidder = ContractPromiseBatch.create(oldBids[i].bidder)
+            promiseBidder.transfer(oldBids[i].amount);
+
+            env.promise_return(promiseBidder.id);
+        }
+    }
+
     // Set the new bid shares
 
     tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
