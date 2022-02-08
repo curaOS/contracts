@@ -14,15 +14,15 @@ export function nft_payout(
 ): Payout | null {
 
     //return the payout object
-    return internal_nft_payout(token_id, balance);
+    return internal_nft_payout(token_id, balance, max_len_payout);
 }
 
 
 
 export function internal_nft_payout(
     token_id: TokenId,
-    balance: u128
-    // max_len_payout: u32
+    balance: u128,
+    max_len_payout: u32
 ): Payout | null {
     let token = persistent_tokens.get(token_id)
 

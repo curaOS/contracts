@@ -14,9 +14,9 @@ class NftTransferArgs {
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
-    assert(bid.amount > 0, "Bid can't be zero")
-    assert(u128.from(bid.amount) == context.attachedDeposit, "Attached deposit must equal bid amount")
-  
+    assert(bid.amount > u128.Zero, "Bid can't be zero")
+    assert(bid.amount == context.attachedDeposit, "Attached deposit must equal bid amount")
+
     persistent_market.add(tokenId, bid.bidder, bid)
 
     // Committing log event
