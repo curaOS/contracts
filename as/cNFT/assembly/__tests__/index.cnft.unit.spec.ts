@@ -22,7 +22,6 @@ import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
-import { BidShares } from '../models/royalties'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
@@ -127,7 +126,8 @@ const bidOnToken = (
     amount: number
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
-
+    VMContext.setAttached_deposit(u128.from(amount))
+    
     const bid = new Bid()
     bid.amount = u128.from(amount)
     bid.bidder = accountId
