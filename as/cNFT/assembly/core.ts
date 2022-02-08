@@ -20,7 +20,7 @@ export function nft_token(token_id: TokenId): Token {
 
 
 @nearBindgen
-export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
+export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
     /* Exactly one yocto is required for the transfer */
 
@@ -31,7 +31,7 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
 
     /* todo: change when adding approval management */
     assert(context.predecessor == token.owner_id, "You must own token")
-    assert(bidder_id != token.owner_id, "Bidder is already the owner")
+    assert(receiver_id != token.owner_id, "Bidder is already the owner")
 
     if(!token){
         return;
@@ -39,13 +39,13 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
 
     /* Setting new details of the token */
     token.prev_owner_id = token.owner_id
-    token.owner_id = bidder_id
+    token.owner_id = receiver_id
 
     /* Deleting token from previous owner */
     persistent_tokens.remove(token.id, token.prev_owner_id)
     
     /* Storing token with the new owner's accountId */
-    persistent_tokens.add(token_id, token, bidder_id)
+    persistent_tokens.add(token_id, token, receiver_id)
     
     // Immiting log event
     const transfer_log = new NftTransferLog()
