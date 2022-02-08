@@ -33,6 +33,16 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
 @nearBindgen
 export function remove_bid(tokenId: string): void {
+    const bids = persistent_market.get(tokenId);
+    const bid = bids.get(context.sender)
+
+    // Transfer bid amount back to the bidder
+    const promiseBidder = ContractPromiseBatch.create(bid.bidder)
+    promiseBidder.transfer(bid.amount);
+
+    env.promise_return(promiseBidder.id);
+
+
     persistent_market.remove(tokenId, context.sender)
 
     // Committing log event
@@ -75,7 +85,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
     // Transfer bid share to owner
     const promiseOwner = ContractPromiseBatch.create(token.owner_id)
     promiseOwner.transfer(payout.get(token.owner_id))
-
+    log(payout.get(token.owner_id))
     // Transfer bid share to creator
     const promiseCreator = ContractPromiseBatch.create(token.creator_id)
     promiseCreator.transfer(payout.get(token.creator_id))
