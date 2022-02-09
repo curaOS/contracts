@@ -13,7 +13,7 @@ import {
     nft_metadata,
     init,
     nft_transfer,
-    burn_design
+    burn_design,
     set_bid,
     get_bids,
     get_bidder_bids,

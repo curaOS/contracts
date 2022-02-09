@@ -73,10 +73,6 @@ export class PeristentTokenMetadata {
 
         return tokenMetadata
     }
-
-    remove(tokenId: TokenId): void{
-        this._tmmap.delete(tokenId)
-    }
 }
 
 export const persistent_tokens_metadata = new PeristentTokenMetadata('ptm')
