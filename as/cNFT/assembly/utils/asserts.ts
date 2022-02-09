@@ -1,4 +1,7 @@
 import { context, u128 } from 'near-sdk-as'
+import { TokenId } from '../../../utils'
+import { persistent_tokens } from '../models/persistent_tokens'
+import { AccountId } from '../types'
 
 export function assert_deposit_attached(amount: u128): void {
     assert(
@@ -19,4 +22,12 @@ export function assert_at_least_one_yocto(): void {
         u128.ge(context.attachedDeposit, u128.from('1')),
         'Deposit is at least one yoctoNEAR'
     )
+}
+
+export function assert_token_exists(token_id: TokenId): void {
+    assert(persistent_tokens.has(token_id), "Token doesn't exist")
+}
+
+export function assert_token_owner(owner_id: AccountId): void {
+    assert(context.predecessor == owner_id, "You must own token")
 }

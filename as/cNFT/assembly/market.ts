@@ -6,6 +6,7 @@ import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
+import { assert_deposit_attached, assert_token_exists, assert_token_owner } from './utils/asserts'
 
 class NftTransferArgs {
     token_id: string
@@ -15,8 +16,8 @@ class NftTransferArgs {
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
     assert(bid.amount > u128.Zero, "Bid can't be zero")
-    assert(bid.amount == context.attachedDeposit, "Attached deposit must equal bid amount")
-    assert(persistent_tokens.has(tokenId), "Token doesn't exist")    
+    assert_deposit_attached(bid.amount)
+    assert_token_exists(tokenId)
 
     persistent_market.add(tokenId, bid.bidder, bid)
 
@@ -69,7 +70,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
     const token = persistent_tokens.get(tokenId)
 
     /* todo: change when adding approval management */
-    assert(context.predecessor == token.owner_id, "You must own token")
+    assert_token_owner(token.owner_id)
 
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
