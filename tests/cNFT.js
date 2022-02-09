@@ -120,6 +120,14 @@ function randomInt(min = 0, max = 10) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+
+// Gas
+const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
+const CONTRACT_MINT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
+const CONTRACT_TOKENS_GAS =
+    nearAPI.utils.format.parseNearAmount('0.00000000030') // 1000 Tgas
+const CONTRACT_MINT_PRICE = nearAPI.utils.format.parseNearAmount('1') // 1N
+
 // Example data
 const CONTRACT_METADATA = {
     spec: 'nft-1.0.0',
@@ -135,7 +143,7 @@ const CONTRACT_METADATA = {
     parameters: '',
 }
 const CONTRACT_EXTRA = {
-    mint_price: '1',
+    mint_price: CONTRACT_MINT_PRICE,
     max_copies: '100',
 }
 
@@ -170,13 +178,6 @@ function random_bid() {
 // Test configs
 
 const TOTAL_MINT = 20
-
-// Gas
-const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
-const CONTRACT_MINT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
-const CONTRACT_TOKENS_GAS =
-    nearAPI.utils.format.parseNearAmount('0.00000000030') // 1000 Tgas
-const CONTRACT_MINT_PRICE = nearAPI.utils.format.parseNearAmount('1') // 1N
 
 // Test
 async function test() {
