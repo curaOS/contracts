@@ -135,8 +135,8 @@ const CONTRACT_METADATA = {
     parameters: '',
 }
 const CONTRACT_EXTRA = {
-    mint_price: '1',
-    max_copies: '100',
+    mint_price: 1,
+    max_copies: 100,
 }
 
 const TOKEN_ROYALTY = {
