@@ -125,7 +125,8 @@ const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') 
 const CONTRACT_MINT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
 const CONTRACT_TOKENS_GAS =
     nearAPI.utils.format.parseNearAmount('0.00000000030') // 1000 Tgas
-const CONTRACT_MINT_PRICE = nearAPI.utils.format.parseNearAmount('1') // 1N
+const ONE_NEAR = nearAPI.utils.format.parseNearAmount('1')
+const CONTRACT_MINT_PRICE = ONE_NEAR
 
 // Example data
 const CONTRACT_METADATA = {
