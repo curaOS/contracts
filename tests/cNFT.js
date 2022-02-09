@@ -134,6 +134,10 @@ const CONTRACT_METADATA = {
     style_css: '',
     parameters: '',
 }
+const CONTRACT_EXTRA = {
+    mint_price: '1',
+    max_copies: '100',
+}
 
 const TOKEN_ROYALTY = {
     split_between: { 'jenny.test.near': 10 },
@@ -188,6 +192,7 @@ async function test() {
     await jennyUseContract.init({
         args: {
             contract_metadata: CONTRACT_METADATA,
+            contract_extra: CONTRACT_EXTRA,
         },
         gas: CONTRACT_INIT_GAS,
     })
