@@ -1,4 +1,4 @@
-import { storage } from 'near-sdk-as'
+import { storage, u128 } from 'near-sdk-as'
 
 const NFT_SPEC = 'nft-1.0.0'
 const NFT_NAME = 'Nft'
@@ -21,7 +21,8 @@ export class NFTContractMetadata {
 
 @nearBindgen
 export class NFTContractExtra {
-    mint_price: string
+    mint_price: u128 = u128.One
+    max_copies: u128 = u128.Max
 }
 
 export function defaultNFTContractMetadata(): NFTContractMetadata {
