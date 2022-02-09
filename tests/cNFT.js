@@ -120,7 +120,6 @@ function randomInt(min = 0, max = 10) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-
 // Gas
 const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
 const CONTRACT_MINT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
@@ -166,7 +165,7 @@ function random_token_metadata() {
 
 function random_bid() {
     const BID = {
-        amount: '1',
+        amount: ONE_NEAR,
         bidder: 'bob.test.near',
         recipient: '',
         sell_on_share: randomInt(0, 10),
@@ -304,9 +303,14 @@ async function test() {
      */
 
     // a. Bob bids on Jenny token
+    const rBid = random_bid()
     await bobUseContract.set_bid({
-        tokenId: jennyTokens[0].id,
-        bid: random_bid(),
+        args: {
+            tokenId: jennyTokens[0].id,
+            bid: random_bid(),
+        },
+        gas: CONTRACT_MINT_GAS,
+        amount: rBid.amount,
     })
     console.log(`"bid" works well`)
 
