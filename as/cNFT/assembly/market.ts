@@ -19,12 +19,14 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     if(persistent_market.has(tokenId)){
         const bids = persistent_market.get(tokenId);
 
-        const prevBid = bids.get(bid.bidder)
+        if(bids.has(bid.bidder)) {
+            const prevBid = bids.get(bid.bidder)
 
-        const promiseBidder = ContractPromiseBatch.create(prevBid.bidder)
-        promiseBidder.transfer(prevBid.amount);
+            const promiseBidder = ContractPromiseBatch.create(prevBid.bidder)
+            promiseBidder.transfer(prevBid.amount);
 
-        env.promise_return(promiseBidder.id);
+            env.promise_return(promiseBidder.id);
+        }
     }
 
     persistent_market.add(tokenId, bid.bidder, bid)
@@ -47,19 +49,15 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 @nearBindgen
 export function remove_bid(tokenId: string): void {
 
-    if(persistent_market.has(tokenId)) {
-        const bids = persistent_market.get(tokenId);
+    const bids = persistent_market.get(tokenId);
 
-        if(bids.has(context.sender)){
-            const bid = bids.get(context.sender)
+    const bid = bids.get(context.sender)
 
-            // Transfer bid amount back to the bidder
-            const promiseBidder = ContractPromiseBatch.create(bid.bidder)
-            promiseBidder.transfer(bid.amount);
+    // Transfer bid amount back to the bidder
+    const promiseBidder = ContractPromiseBatch.create(bid.bidder)
+    promiseBidder.transfer(bid.amount);
 
-            env.promise_return(promiseBidder.id);
-        }
-    }
+    env.promise_return(promiseBidder.id);
 
 
     persistent_market.remove(tokenId, context.sender)
