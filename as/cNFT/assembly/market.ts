@@ -14,10 +14,11 @@ class NftTransferArgs {
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
-    const bids = persistent_market.get(tokenId);
 
     // Refund previous bid If user has a one
-    if(bids.has(bid.bidder)){
+    if(persistent_market.has(tokenId)){
+        const bids = persistent_market.get(tokenId);
+
         const prevBid = bids.get(bid.bidder)
 
         const promiseBidder = ContractPromiseBatch.create(prevBid.bidder)
@@ -45,16 +46,19 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
 @nearBindgen
 export function remove_bid(tokenId: string): void {
-    const bids = persistent_market.get(tokenId);
 
-    if(bids.has(context.sender)){
-        const bid = bids.get(context.sender)
+    if(persistent_market.has(tokenId)) {
+        const bids = persistent_market.get(tokenId);
 
-        // Transfer bid amount back to the bidder
-        const promiseBidder = ContractPromiseBatch.create(bid.bidder)
-        promiseBidder.transfer(bid.amount);
+        if(bids.has(context.sender)){
+            const bid = bids.get(context.sender)
 
-        env.promise_return(promiseBidder.id);
+            // Transfer bid amount back to the bidder
+            const promiseBidder = ContractPromiseBatch.create(bid.bidder)
+            promiseBidder.transfer(bid.amount);
+
+            env.promise_return(promiseBidder.id);
+        }
     }
 
 

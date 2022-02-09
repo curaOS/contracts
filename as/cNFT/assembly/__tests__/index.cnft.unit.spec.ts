@@ -126,6 +126,7 @@ const bidOnToken = (
     amount: number
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
+    VMContext.setAccount_balance(u128.from('1000000000000000000000000000'))
 
     const bid = new Bid()
     bid.amount = u128.from(amount)
