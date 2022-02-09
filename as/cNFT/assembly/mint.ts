@@ -10,16 +10,23 @@ import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persis
 @nearBindgen
 export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty): Token {
 
-    /** Assert deposit attached based on custom amount from init */
     const contract_extra = storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
-    assert_deposit_attached(u128.fromString(contract_extra.mint_price))
+    const number_of_tokens = persistent_tokens.number_of_tokens;
+
+    /** Assert attached deposit based on custom amount from NFTContractExtra */
+    assert_deposit_attached(contract_extra.mint_price)
+
+    /** Assert number_of_tokens is less than max_copies */
+    assert(number_of_tokens < contract_extra.max_copies, "Contract max supply reached");
 
     let token = new Token()
 
-    /**
-     * @todo Assert uniqueId is actually unique
-     * @todo Generate valid token id */
-    const tokenId = persistent_tokens.number_of_tokens.toString()
+    /** @todo Generate valid token id */
+    const tokenId = number_of_tokens.toString()
+
+    /** Assert tokenId doesn't already exists */
+    assert(!persistent_tokens.has(tokenId), "Token already exists")
+
     token.id = tokenId
 
     /**@todo Not always sender is creator i guess */
