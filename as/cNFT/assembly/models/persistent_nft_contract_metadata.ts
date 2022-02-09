@@ -39,8 +39,7 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
 export class PersistentNFTContractMetadata {
     static STORAGE_KEY: string = 'nft_contract_metadata'
 
-    constructor(contract_metadata: NFTContractMetadata) {
-        this.set_storage(contract_metadata)
+    constructor() {
     }
 
     update(contract_metadata: NFTContractMetadata): void {
@@ -62,5 +61,3 @@ export class PersistentNFTContractMetadata {
 
 /**
  * @todo not sure best approach is to create this before the init and update it later  */
-export const persistent_nft_contract_metadata =
-    new PersistentNFTContractMetadata(defaultNFTContractMetadata())

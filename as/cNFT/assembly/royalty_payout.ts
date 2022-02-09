@@ -4,8 +4,22 @@ import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { Payout, TokenId } from './types'
 
+
+/** @todo implement better solution **/
 @nearBindgen
 export function nft_payout(
+    token_id: TokenId,
+    balance: u128
+    // max_len_payout: u32
+): Payout | null {
+
+    //return the payout object
+    return internal_nft_payout(token_id, balance);
+}
+
+
+
+export function internal_nft_payout(
     token_id: TokenId,
     balance: u128
     // max_len_payout: u32

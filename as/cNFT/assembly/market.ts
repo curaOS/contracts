@@ -1,10 +1,16 @@
-import { context, ContractPromiseBatch, env, logging } from 'near-sdk-as'
+import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, env, logging, u128 } from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
-import { NftEventLogData, NftBidLog } from './models/log'
-import { nft_token, nft_transfer } from './core'
-import { nft_payout } from './royalty_payout'
+import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
+import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
+import { persistent_tokens } from './models/persistent_tokens'
+import { XCC_GAS } from '../../utils'
+
+class NftTransferArgs {
+    token_id: string
+    bidder_id: string
+}
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
@@ -15,6 +21,9 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     bid_log.bidder_id = bid.bidder
     bid_log.token_ids = [bid.recipient]
     bid_log.amount = bid.amount.toString()
+    bid_log.recipient = bid.recipient
+    bid_log.sell_on_share = bid.sell_on_share.toString()
+    bid_log.currency = bid.currency
 
     const log = new NftEventLogData<NftBidLog>('nft_bid', [bid_log])
     logging.log(log)
@@ -25,6 +34,14 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 @nearBindgen
 export function remove_bid(tokenId: string): void {
     persistent_market.remove(tokenId, context.sender)
+
+    // Committing log event
+    const remove_bid_log = new NftRemoveBidLog()
+    remove_bid_log.bidder_id = context.sender
+    remove_bid_log.token_ids = [tokenId]
+
+    const log = new NftEventLogData<NftRemoveBidLog>('nft_remove_bid', [remove_bid_log])
+    logging.log(log)
 }
 
 @nearBindgen
@@ -47,9 +64,9 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
-    const token = nft_token(tokenId)
+    const token = persistent_tokens.get(tokenId)
 
-    const payout = nft_payout(tokenId, bid.amount)
+    const payout = internal_nft_payout(tokenId, bid.amount)
 
     if (!payout) {
         return
@@ -72,7 +89,9 @@ export function accept_bid(tokenId: string, bidder: string): void {
     env.promise_return(promisePrevOwner.id)
 
     // Transfer token to bidder
-    nft_transfer(tokenId, bidder)
+    const transferArgs: NftTransferArgs = { "token_id": tokenId, "bidder_id": bidder }
+    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, u128.Zero)
+    promiseTransfer.returnAsResult()
 
     if (!tokenRoyalty) {
         return
@@ -90,5 +109,11 @@ export function accept_bid(tokenId: string, bidder: string): void {
     // Remove the accepted bid
     persistent_market.remove(tokenId, bidder)
 
-    /** @todo add accept_bid log event */
+    // Committing log event
+    const accept_bid_log = new NftAcceptBidLog()
+    accept_bid_log.bidder_id = bidder
+    accept_bid_log.token_ids = [tokenId]
+
+    const log = new NftEventLogData<NftAcceptBidLog>('nft_accept_bid', [accept_bid_log])
+    logging.log(log)
 }

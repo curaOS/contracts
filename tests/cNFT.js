@@ -28,7 +28,7 @@ const contractMethods = {
         'get_bidder_bids',
         'nft_tokens_for_owner',
     ],
-    changeMethods: ['init', 'mint', 'bid'],
+    changeMethods: ['init', 'mint', 'set_bid', 'remove_bid', 'accept_bid'],
 }
 let config
 let masterAccount
@@ -87,8 +87,8 @@ async function initTest() {
         new BN(10).pow(new BN(25))
     )
 
-    const aliceUseContract = await createContractUser(
-        'alice',
+    const jennyUseContract = await createContractUser(
+        'jenny',
         config.contractAccount,
         contractMethods
     )
@@ -99,7 +99,7 @@ async function initTest() {
         contractMethods
     )
     console.log('Finish deploy contracts and create test accounts')
-    return { aliceUseContract, bobUseContract }
+    return { jennyUseContract, bobUseContract }
 }
 
 // Utils
@@ -136,7 +136,7 @@ const CONTRACT_METADATA = {
 }
 
 const TOKEN_ROYALTY = {
-    split_between: { 'alice.test.near': 10 },
+    split_between: { 'jenny.test.near': 10 },
     percentage: 20,
 }
 
@@ -152,9 +152,20 @@ function random_token_metadata() {
     return TOKEN_METADATA
 }
 
+function random_bid() {
+    const BID = {
+        amount: '1',
+        bidder: 'bob.test.near',
+        recipient: '',
+        sell_on_share: randomInt(0, 10),
+        currency: 'near',
+    }
+    return BID
+}
+
 // Test configs
 
-const TOTAL_MINT = 50
+const TOTAL_MINT = 20
 
 // Gas
 const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
@@ -169,25 +180,25 @@ async function test() {
      * 1. Creates testing accounts and deploys a contract
      */
     await initNear()
-    const { aliceUseContract, bobUseContract } = await initTest()
+    const { jennyUseContract, bobUseContract } = await initTest()
 
     /**
      * 2. Initialize the contract metadata
      */
-    await aliceUseContract.init({
+    await jennyUseContract.init({
         args: {
             contract_metadata: CONTRACT_METADATA,
         },
         gas: CONTRACT_INIT_GAS,
     })
-    console.log('Init contract by Alice')
+    console.log('Init contract by Jenny')
 
     /**
      * 3. Minting tokens
      */
 
     for (let i = 0; i < TOTAL_MINT / 2; i++) {
-        await aliceUseContract.mint({
+        await jennyUseContract.mint({
             args: {
                 tokenMetadata: random_token_metadata(),
                 token_royalty: TOKEN_ROYALTY,
@@ -205,7 +216,8 @@ async function test() {
         })
     }
     console.log(
-        `Minted ${TOTAL_MINT / 2} NFTs for Alice and ${TOTAL_MINT / 2
+        `Minted ${TOTAL_MINT / 2} NFTs for Jenny and ${
+            TOTAL_MINT / 2
         } NFTs for Bob`
     )
 
@@ -221,17 +233,17 @@ async function test() {
 
     // b. get NFT Supply for Owner
 
-    const nft_supply_for_alice = await aliceUseContract.nft_supply_for_owner({
+    const nft_supply_for_jenny = await jennyUseContract.nft_supply_for_owner({
         account_id: 'bob.test.near',
     })
-    assert.equal(parseInt(nft_supply_for_alice), TOTAL_MINT / 2)
+    assert.equal(parseInt(nft_supply_for_jenny), TOTAL_MINT / 2)
     console.log(
         `"nft_supply_for_owner" returns the right amount ${TOTAL_MINT / 2}`
     )
 
     // c. get nft tokens
 
-    const tokens = await aliceUseContract.nft_tokens({
+    const tokens = await jennyUseContract.nft_tokens({
         from_index: '0',
         limit: 2,
     })
@@ -243,7 +255,7 @@ async function test() {
     for (let i = 1; i < TOTAL_MINT; i++) {
         // trying to find limit
         try {
-            await aliceUseContract.nft_tokens({
+            await jennyUseContract.nft_tokens({
                 from_index: '0',
                 limit: i,
             })
@@ -255,8 +267,8 @@ async function test() {
 
     // e. get nft tokens for owner
 
-    const aliceTokens = await aliceUseContract.nft_tokens_for_owner({
-        account_id: "alice.test.near",
+    const jennyTokens = await jennyUseContract.nft_tokens_for_owner({
+        account_id: 'jenny.test.near',
         from_index: '0',
         limit: 2,
     })
@@ -268,36 +280,38 @@ async function test() {
     for (let i = 1; i < TOTAL_MINT; i++) {
         // trying to find limit
         try {
-            await aliceUseContract.nft_tokens_for_owner({
-                account_id: "alice.test.near",
+            await jennyUseContract.nft_tokens_for_owner({
+                account_id: 'jenny.test.near',
                 from_index: '0',
                 limit: i,
             })
         } catch {
-            console.log(`limit for "nft_tokens_for_owner" without gas is ${i - 1}`)
+            console.log(
+                `limit for "nft_tokens_for_owner" without gas is ${i - 1}`
+            )
             break
         }
     }
-
-
 
     /**
      * 5. Test market methods
      */
 
-    // a. Bob bids on Alice token
-    await bobUseContract.bid({
-        tokenId: aliceTokens[0].id,
-        amount: "1",
+    // a. Bob bids on Jenny token
+    await bobUseContract.set_bid({
+        tokenId: jennyTokens[0].id,
+        bid: random_bid(),
     })
     console.log(`"bid" works well`)
 
-    // b. Alice get bids 
-    const bids_for_alice = await aliceUseContract.get_bids({
-        tokenId: aliceTokens[0].id,
+    // b. Jenny get bids
+    let bids_for_jenny = await jennyUseContract.get_bids({
+        tokenId: jennyTokens[0].id,
     })
-    assert.equal(bids_for_alice[0].amount, "1")
-    assert.equal(bids_for_alice[0].bidder, 'bob.test.near')
+    bids_for_jenny = Object.values(bids_for_jenny)
+
+    assert.equal(bids_for_jenny[0].amount, '1')
+    assert.equal(bids_for_jenny[0].bidder, 'bob.test.near')
 
     console.log('get_bids returns the right data')
 
@@ -305,7 +319,7 @@ async function test() {
     const bids_by_bob = await bobUseContract.get_bidder_bids({
         accountId: 'bob.test.near',
     })
-    assert.equal(bids_by_bob[0].amount, "1")
+    assert.equal(bids_by_bob[0].amount, '1')
     assert.equal(bids_by_bob[0].bidder, 'bob.test.near')
 
     console.log('get_bidder_bids returns the right data')
