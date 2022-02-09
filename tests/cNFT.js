@@ -321,8 +321,8 @@ async function test() {
     })
     bids_for_jenny = Object.values(bids_for_jenny)
 
-    assert.equal(bids_for_jenny[0].amount, '1')
-    assert.equal(bids_for_jenny[0].bidder, 'bob.test.near')
+    assert.equal(bids_for_jenny[0].amount, rBid.amount)
+    assert.equal(bids_for_jenny[0].bidder, rBid.bidder)
 
     console.log('get_bids returns the right data')
 
@@ -330,8 +330,8 @@ async function test() {
     const bids_by_bob = await bobUseContract.get_bidder_bids({
         accountId: 'bob.test.near',
     })
-    assert.equal(bids_by_bob[0].amount, '1')
-    assert.equal(bids_by_bob[0].bidder, 'bob.test.near')
+    assert.equal(bids_by_bob[0].amount, rBid.amount)
+    assert.equal(bids_by_bob[0].bidder, rBid.bidder)
 
     console.log('get_bidder_bids returns the right data')
 
