@@ -1,4 +1,5 @@
 import { storage, u128 } from 'near-sdk-as'
+import { ONE_NEAR } from '../../../utils'
 
 const NFT_SPEC = 'nft-1.0.0'
 const NFT_NAME = 'Nft'
@@ -43,7 +44,7 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
 
 export function defaultNFTContractExtra(): NFTContractExtra {
     return {
-        mint_price: u128.One.toString(),
+        mint_price: ONE_NEAR.toString(),
         max_copies: u128.Max.toString(),
     }
 }
