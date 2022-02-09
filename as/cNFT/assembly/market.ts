@@ -16,6 +16,7 @@ class NftTransferArgs {
 export function set_bid(tokenId: string, bid: Bid): Bid {
     assert(bid.amount > u128.Zero, "Bid can't be zero")
     assert(bid.amount == context.attachedDeposit, "Attached deposit must equal bid amount")
+    assert(persistent_tokens.has(tokenId), "Token doesn't exist")    
 
     persistent_market.add(tokenId, bid.bidder, bid)
 
