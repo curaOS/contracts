@@ -139,6 +139,7 @@ const bidOnToken = (
 
 describe('- MARKET -', () => {
     it('xxx sets a bid & returns it', () => {
+        mintToken('yellow.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         const bids = get_bids('0')
@@ -152,6 +153,7 @@ describe('- MARKET -', () => {
         expect(bid.recipient).toStrictEqual('0')
     })
     it('xxx sets a bid & removes it', () => {
+        mintToken('yellow.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         remove_bid('0')
@@ -162,6 +164,9 @@ describe('- MARKET -', () => {
         )
     })
     it('xxx sets multiple bids & return bidder bids', () => {
+        mintToken('yellow.testnet')
+        mintToken('yellow.testnet')
+
         bidOnToken('hello.testnet', '0', 10)
         bidOnToken('hello.testnet', '1', 20)
 
