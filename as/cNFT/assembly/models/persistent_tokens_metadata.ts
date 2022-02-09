@@ -15,6 +15,7 @@ export class TokenMetadata {
     updated_at: string
     reference: string
     reference_hash: string
+    media_animation: string
 }
 
 export function defaultTokenMetadata(): TokenMetadata {
@@ -31,6 +32,7 @@ export function defaultTokenMetadata(): TokenMetadata {
         updated_at: '',
         reference: '',
         reference_hash: '',
+        media_animation: ''
     }
 }
 
