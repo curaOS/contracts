@@ -21,6 +21,13 @@ export class PersistentMarket {
     }
 
     /**
+     * @param token_id ID of token to check if bids exists
+     */
+    has(token_id: TokenId): bool {
+        return this._tmap.contains(token_id)
+    }
+
+    /**
      * @returns An object of bids for tokenId
      */
     get(tokenId: TokenId): BidsByBidder {
