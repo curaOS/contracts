@@ -22,6 +22,7 @@ import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
+import { ONE_NEAR } from '../../../utils'
 
 
 const initContract = (): void => {
@@ -33,7 +34,7 @@ const initContract = (): void => {
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
     VMContext.setPredecessor_account_id(accountId)
-    VMContext.setAttached_deposit(u128.fromString("1"))
+    VMContext.setAttached_deposit(ONE_NEAR)
 
     const token_metadata = new TokenMetadata()
     token_metadata.media = 'media'
