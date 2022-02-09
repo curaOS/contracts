@@ -1,4 +1,5 @@
 import {
+    defaultNFTContractExtra,
     NFTContractExtra,
     NFTContractMetadata,
     persistent_nft_contract_metadata,
@@ -27,7 +28,7 @@ export {
 
 export { nft_metadata } from './metadata'
 
-export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra): void {
+export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
     // Init can be called only once
     assert(storage.get<string>("init") == null, "Already initialized");

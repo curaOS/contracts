@@ -21,8 +21,8 @@ export class NFTContractMetadata {
 
 @nearBindgen
 export class NFTContractExtra {
-    mint_price: u128 = u128.One
-    max_copies: u128 = u128.Max
+    mint_price: string
+    max_copies: string
 }
 
 export function defaultNFTContractMetadata(): NFTContractMetadata {
@@ -38,6 +38,13 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
         render_script: '',
         style_css: '',
         parameters: '',
+    }
+}
+
+export function defaultNFTContractExtra(): NFTContractExtra {
+    return {
+        mint_price: u128.One.toString(),
+        max_copies: u128.Max.toString(),
     }
 }
 

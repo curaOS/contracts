@@ -26,12 +26,8 @@ import { Bid } from '../models/market'
 
 const initContract = (): void => {
     const nft_contract_metadata = defaultNFTContractMetadata()
-    const nft_contract_extra: NFTContractExtra = {
-        mint_price: u128.One,
-        max_copies: u128.Max
-    }
 
-    init(nft_contract_metadata, nft_contract_extra)
+    init(nft_contract_metadata)
 }
 
 const mintToken = (accountId: AccountId): Token => {
