@@ -27,7 +27,8 @@ import { Bid } from '../models/market'
 const initContract = (): void => {
     const nft_contract_metadata = defaultNFTContractMetadata()
     const nft_contract_extra: NFTContractExtra = {
-        mint_price: "1"
+        mint_price: u128.One,
+        max_copies: u128.Max
     }
 
     init(nft_contract_metadata, nft_contract_extra)
@@ -154,6 +155,8 @@ const bidOnToken = (
 
 describe('- MARKET -', () => {
     it('xxx sets a bid & returns it', () => {
+        initContract()
+        mintToken('hello.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         const bids = get_bids('0')
@@ -167,6 +170,8 @@ describe('- MARKET -', () => {
         expect(bid.recipient).toStrictEqual('0')
     })
     it('xxx sets a bid & removes it', () => {
+        initContract()
+        mintToken('hello.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         remove_bid('0')
@@ -177,6 +182,9 @@ describe('- MARKET -', () => {
         )
     })
     it('xxx sets multiple bids & return bidder bids', () => {
+        initContract()
+        mintToken('hello.testnet')
+        mintToken('hello.testnet')
         bidOnToken('hello.testnet', '0', 10)
         bidOnToken('hello.testnet', '1', 20)
 
