@@ -58,7 +58,7 @@ export function burn_design(token_id: TokenId): void {
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
 
-    assert((context.sender == token.owner_id) && (context.sender == token.creator_id), "You must be the creator and the owner of the token to burn it")
+    assert((context.predecessor == token.owner_id) && (context.predecessor == token.creator_id), "You must be the creator and the owner of the token to burn it")
 
     /* Deleting token from its owner */
     persistent_tokens.remove(token_id, token.owner_id);

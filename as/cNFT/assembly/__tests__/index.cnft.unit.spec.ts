@@ -27,7 +27,8 @@ import { BidShares } from '../models/royalties'
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
-
+    VMContext.setPredecessor_account_id(accountId)
+    
     const token_metadata = new TokenMetadata()
     token_metadata.media = 'media'
     token_metadata.extra = 'extra'
