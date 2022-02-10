@@ -1,4 +1,4 @@
-import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, env, logging, u128 } from 'near-sdk-as'
+import { context, ContractPromise, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
@@ -6,6 +6,7 @@ import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
+import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner } from './utils/asserts'
 
 class NftTransferArgs {
     token_id: string
@@ -14,6 +15,10 @@ class NftTransferArgs {
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
+    assert(bid.amount > u128.Zero, "Bid can't be zero")
+    assert_eq_attached_deposit(bid.amount)
+    assert_token_exists(tokenId)
+
     persistent_market.add(tokenId, bid.bidder, bid)
 
     // Committing log event
@@ -56,15 +61,21 @@ export function get_bidder_bids(accountId: string): Bid[] {
 
 @nearBindgen
 export function accept_bid(tokenId: string, bidder: string): void {
+    assert_one_yocto()
+
     const bids = persistent_market.get(tokenId)
 
     if (!bids.has(bidder)) {
         return
     }
 
+    const token = persistent_tokens.get(tokenId)
+
+    /* todo: change when adding approval management */
+    assert_eq_token_owner(context.predecessor, token.owner_id)
+
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
-    const token = persistent_tokens.get(tokenId)
 
     const payout = internal_nft_payout(tokenId, bid.amount)
 
@@ -90,7 +101,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Transfer token to bidder
     const transferArgs: NftTransferArgs = { "token_id": tokenId, "bidder_id": bidder }
-    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, u128.Zero)
+    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, context.attachedDeposit)
     promiseTransfer.returnAsResult()
 
     if (!tokenRoyalty) {

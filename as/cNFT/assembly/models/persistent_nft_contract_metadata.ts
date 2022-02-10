@@ -1,4 +1,5 @@
-import { storage } from 'near-sdk-as'
+import { storage, u128 } from 'near-sdk-as'
+import { ONE_NEAR } from '../../../utils'
 
 const NFT_SPEC = 'nft-1.0.0'
 const NFT_NAME = 'Nft'
@@ -19,6 +20,13 @@ export class NFTContractMetadata {
     parameters: string
 }
 
+@nearBindgen
+export class NFTContractExtra {
+    mint_price: string
+    max_copies: u32
+    default_max_len_payout: u32
+}
+
 export function defaultNFTContractMetadata(): NFTContractMetadata {
     return {
         spec: NFT_SPEC,
@@ -35,29 +43,26 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
     }
 }
 
-@nearBindgen
-export class PersistentNFTContractMetadata {
-    static STORAGE_KEY: string = 'nft_contract_metadata'
-
-    constructor() {
-    }
-
-    update(contract_metadata: NFTContractMetadata): void {
-        this.set_storage(contract_metadata)
-    }
-
-    @contractPrivate()
-    set_storage(contract_metadata: NFTContractMetadata): void {
-        storage.set(
-            PersistentNFTContractMetadata.STORAGE_KEY,
-            contract_metadata
-        )
-    }
-
-    get_storage_key(): string {
-        return PersistentNFTContractMetadata.STORAGE_KEY
+export function defaultNFTContractExtra(): NFTContractExtra {
+    return {
+        mint_price: ONE_NEAR.toString(),
+        max_copies: 1024,
+        default_max_len_payout: 20,
     }
 }
 
-/**
- * @todo not sure best approach is to create this before the init and update it later  */
+@nearBindgen
+export class PersistentNFTContractMetadata {
+    static STORAGE_KEY_STANDARD: string = "nft_contract_metadata_standard"
+    static STORAGE_KEY_EXTRA: string = "nft_contract_metadata_extra"
+
+    update_standard(contract_metadata: NFTContractMetadata): void {
+        storage.set<NFTContractMetadata>(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD, contract_metadata)
+    }
+
+    update_extra(contract_extra: NFTContractExtra): void {
+        storage.set<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA, contract_extra)
+    }
+}
+
+export const persistent_nft_contract_metadata = new PersistentNFTContractMetadata()

@@ -1,6 +1,6 @@
 import { VMContext } from 'near-mock-vm'
 import { u128 } from 'near-sdk-as'
-import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_metadata'
+import { defaultNFTContractMetadata, NFTContractExtra } from '../models/persistent_nft_contract_metadata'
 import { TokenMetadata } from '../models/persistent_tokens_metadata'
 import { TokenRoyalty } from '../models/persistent_tokens_royalty'
 import {
@@ -23,12 +23,20 @@ import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
-import { BidShares } from '../models/royalties'
+import { ONE_NEAR } from '../../../utils'
+
+
+const initContract = (): void => {
+    const nft_contract_metadata = defaultNFTContractMetadata()
+
+    init(nft_contract_metadata)
+}
 
 const mintToken = (accountId: AccountId): Token => {
     VMContext.setSigner_account_id(accountId)
     VMContext.setPredecessor_account_id(accountId)
-    
+    VMContext.setAttached_deposit(ONE_NEAR)
+
     const token_metadata = new TokenMetadata()
     token_metadata.media = 'media'
     token_metadata.extra = 'extra'
@@ -41,20 +49,16 @@ const mintToken = (accountId: AccountId): Token => {
     return token
 }
 
-const initContract = (): void => {
-    const nft_contract_metadata = defaultNFTContractMetadata()
-
-    init(nft_contract_metadata)
-}
-
 describe('- CONTRACT -', () => {
-    it('xxx returns token lenght', () => {
+
+    it('xxx returns token lenght', () => {        
         const nftTotalSupply = nft_total_supply()
 
         log(nftTotalSupply)
     })
 
     it('xxx returns persistent token', () => {
+        initContract()
         const token = mintToken('prova.testnet')
         const nftToken = nft_token(token.id)
 
@@ -62,12 +66,14 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx mints token', () => {
+        initContract()
         const token = mintToken('prova.testnet')
 
         log(token)
     })
 
     it('xxx returns supply for owner', () => {
+        initContract()
         mintToken('prova.testnet')
         mintToken('prova.testnet')
 
@@ -77,6 +83,7 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx returns range of tokens', () => {
+        initContract()
         mintToken('prova.testnet')
         mintToken('hello.testnet')
         mintToken('yellow.testnet')
@@ -87,6 +94,7 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx returns range of tokens for owner', () => {
+        initContract()
         mintToken('hello.testnet')
         mintToken('hello.testnet')
         mintToken('hello.testnet')
@@ -98,8 +106,9 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx returns token payout', () => {
+        initContract()
         const token = mintToken('hello.testnet')
-        const tokenPayout = nft_payout(token.id, u128.from('10000000000'))
+        const tokenPayout = nft_payout(token.id, u128.from('10000000000'), 1000)
         log(tokenPayout)
     })
 
@@ -112,8 +121,10 @@ describe('- CONTRACT -', () => {
     })
 
     it('transfer tokens from xxx', () => {
+        initContract()
         const token = mintToken('hello.testnet')
 
+        VMContext.setAttached_deposit(u128.from(1))
         nft_transfer(token.id, 'yellow.testnet')
 
         let tokens = nft_token(token.id)
@@ -140,6 +151,7 @@ const bidOnToken = (
     amount: number
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
+    VMContext.setAttached_deposit(u128.from(amount))
 
     const bid = new Bid()
     bid.amount = u128.from(amount)
@@ -153,6 +165,8 @@ const bidOnToken = (
 
 describe('- MARKET -', () => {
     it('xxx sets a bid & returns it', () => {
+        initContract()
+        mintToken('hello.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         const bids = get_bids('0')
@@ -166,6 +180,8 @@ describe('- MARKET -', () => {
         expect(bid.recipient).toStrictEqual('0')
     })
     it('xxx sets a bid & removes it', () => {
+        initContract()
+        mintToken('hello.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         remove_bid('0')
@@ -176,6 +192,9 @@ describe('- MARKET -', () => {
         )
     })
     it('xxx sets multiple bids & return bidder bids', () => {
+        initContract()
+        mintToken('hello.testnet')
+        mintToken('hello.testnet')
         bidOnToken('hello.testnet', '0', 10)
         bidOnToken('hello.testnet', '1', 20)
 

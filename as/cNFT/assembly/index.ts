@@ -1,7 +1,10 @@
 import {
-    NFTContractMetadata, PersistentNFTContractMetadata,
+    defaultNFTContractExtra,
+    NFTContractExtra,
+    NFTContractMetadata,
+    persistent_nft_contract_metadata,
 } from './models/persistent_nft_contract_metadata'
-import { logging } from 'near-sdk-as'
+import { logging, storage } from 'near-sdk-as'
 import { NftEventLogData, NftInitLog } from './models/log'
 
 export { mint } from './mint'
@@ -25,17 +28,19 @@ export {
 
 export { nft_metadata } from './metadata'
 
-export function init(contract_metadata: NFTContractMetadata): void {
-    /** TODO no need to destructure like this, pass contract_metadata and go over props in constructor */
+export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
-    const persistent_nft_contract_metadata = new PersistentNFTContractMetadata();
-    persistent_nft_contract_metadata.update(contract_metadata)
+    // Init can be called only once
+    assert(storage.get<string>("init") == null, "Already initialized");
+
+    persistent_nft_contract_metadata.update_standard(contract_metadata)
+    persistent_nft_contract_metadata.update_extra(contract_extra)
+
+    storage.set("init", "done");
 
     // Immiting log event
     const init_log = new NftInitLog()
     init_log.metadata = contract_metadata
     const log = new NftEventLogData<NftInitLog>('nft_init', [init_log])
     logging.log(log)
-
-    return
 }

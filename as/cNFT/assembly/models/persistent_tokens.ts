@@ -43,6 +43,13 @@ export class PersistentTokens {
     }
 
     /**
+     * @param token_id ID of token to check if exists
+     */
+    has(token_id: TokenId): bool {
+        return this._tmap.contains(token_id)
+    }
+
+    /**
      * @returns an array of tokenId
      */
     keys(start: i32, end: i32): TokenId[] {
