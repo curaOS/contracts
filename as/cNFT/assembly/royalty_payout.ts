@@ -1,8 +1,10 @@
-import { u128 } from 'near-sdk-as'
+import { storage, u128 } from 'near-sdk-as'
 import { royalty_to_payout } from './utils/royalties'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { Payout, TokenId } from './types'
+import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persistent_nft_contract_metadata'
+
 
 
 /** @todo implement better solution **/
@@ -10,7 +12,7 @@ import { Payout, TokenId } from './types'
 export function nft_payout(
     token_id: TokenId,
     balance: u128,
-    max_len_payout: u32 = u32.MAX_VALUE
+    max_len_payout: u32 = 0
 ): Payout | null {
 
     //return the payout object
@@ -22,8 +24,15 @@ export function nft_payout(
 export function internal_nft_payout(
     token_id: TokenId,
     balance: u128,
-    max_len_payout: u32 = u32.MAX_VALUE
+    max_len_payout: u32 = 0
 ): Payout | null {
+
+    // if max_len_payout is not passed or 0, get it from NFTContractExtra
+    if (max_len_payout == 0) {
+        const contract_extra = storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
+        max_len_payout = contract_extra.default_max_len_payout;
+    }
+
     let token = persistent_tokens.get(token_id)
 
     let token_royalty = persistent_tokens_royalty.get(token_id)

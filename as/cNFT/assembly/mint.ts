@@ -17,7 +17,7 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
     assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
 
     /** Assert number_of_tokens is less than max_copies */
-    assert(number_of_tokens < u128.fromString(contract_extra.max_copies), "Contract max supply reached");
+    assert(number_of_tokens.toU32() < contract_extra.max_copies, "Contract max supply reached");
 
     let token = new Token()
 
