@@ -1,4 +1,4 @@
-import { context, ContractPromise, ContractPromiseBatch, ContractPromiseResult, env, logging, u128 } from 'near-sdk-as'
+import { context, ContractPromise, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
@@ -101,7 +101,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Transfer token to bidder
     const transferArgs: NftTransferArgs = { "token_id": tokenId, "bidder_id": bidder }
-    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, u128.from('1'))
+    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, context.attachedDeposit)
     promiseTransfer.returnAsResult()
 
     if (!tokenRoyalty) {
