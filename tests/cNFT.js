@@ -143,7 +143,7 @@ const CONTRACT_METADATA = {
     parameters: '',
 }
 const CONTRACT_EXTRA = {
-    mint_price: parseInt(CONTRACT_MINT_PRICE),
+    mint_price: CONTRACT_MINT_PRICE,
     max_copies: 100,
     default_max_len_payout: 20,
 }
