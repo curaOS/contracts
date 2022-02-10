@@ -45,7 +45,7 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
 export function defaultNFTContractExtra(): NFTContractExtra {
     return {
         mint_price: ONE_NEAR.toString(),
-        max_copies: u128.Max.toString(),
+        max_copies: "1024",
     }
 }
 
