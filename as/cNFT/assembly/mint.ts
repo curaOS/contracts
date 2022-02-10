@@ -1,5 +1,5 @@
 import { context, logging, storage, u128 } from 'near-sdk-as'
-import { assert_eq_attached_deposit } from './utils/asserts'
+import { assert_eq_attached_deposit, assert_mints_per_address } from './utils/asserts'
 import { Token } from './models/persistent_tokens'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata, TokenMetadata } from './models/persistent_tokens_metadata'
@@ -21,13 +21,7 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
     /** Assert number_of_tokens is less than max_copies */
     assert(number_of_tokens.toU32() < contract_extra.max_copies, "Contract max supply reached");
 
-
-    const owner_supply = parseInt(persistent_tokens.supply_for_owner(context.sender))
-    const nft_per_owner = nft_metadata().nft_per_owner
-    // if nft_per_owner is 0 then skip assert
-    if(nft_per_owner){
-        assert(owner_supply < nft_per_owner, `Limited to ${nft_per_owner} NFTs per owner`)
-    }
+    assert_mints_per_address(contract_extra.mints_per_address, context.sender)
 
     let token = new Token()
 
