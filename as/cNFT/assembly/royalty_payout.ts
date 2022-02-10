@@ -1,29 +1,38 @@
-import { u128 } from 'near-sdk-as'
+import { storage, u128 } from 'near-sdk-as'
 import { royalty_to_payout } from './utils/royalties'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { Payout, TokenId } from './types'
+import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persistent_nft_contract_metadata'
+
 
 
 /** @todo implement better solution **/
 @nearBindgen
 export function nft_payout(
     token_id: TokenId,
-    balance: u128
-    // max_len_payout: u32
+    balance: u128,
+    max_len_payout: u32 = 0
 ): Payout | null {
 
     //return the payout object
-    return internal_nft_payout(token_id, balance);
+    return internal_nft_payout(token_id, balance, max_len_payout);
 }
 
 
 
 export function internal_nft_payout(
     token_id: TokenId,
-    balance: u128
-    // max_len_payout: u32
+    balance: u128,
+    max_len_payout: u32 = 0
 ): Payout | null {
+
+    // if max_len_payout is not passed or 0, get it from NFTContractExtra
+    if (max_len_payout == 0) {
+        const contract_extra = storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
+        max_len_payout = contract_extra.default_max_len_payout;
+    }
+
     let token = persistent_tokens.get(token_id)
 
     let token_royalty = persistent_tokens_royalty.get(token_id)
@@ -40,7 +49,7 @@ export function internal_nft_payout(
     let royalty_sb_keys = token_royalty.split_between.keys()
     let royalty_sb_size = token_royalty.split_between.size
 
-    /** @todo assert gas is limited, check nomicon */
+    assert(u32(royalty_sb_size) <= max_len_payout, "Royalty size greater than max len")
 
     /** Go through each key and value in the royalty object */
     for (let i = 0; i < royalty_sb_size; i++) {
