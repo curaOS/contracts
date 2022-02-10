@@ -35,7 +35,7 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     persistent_tokens.add(token_id, token, bidder_id)
 
     /* Deleting token from previous owner */
-    persistent_tokens.remove_from_account(token.id, token.prev_owner_id)
+    persistent_tokens.remove(token.id, token.prev_owner_id)
 
 
     // Immiting log event
@@ -60,7 +60,7 @@ export function burn_design(token_id: TokenId): void {
     assert((context.predecessor == token.owner_id) && (context.predecessor == token.creator_id), "You must be the creator and the owner of the token to burn it")
 
     /* Deleting token from its owner */
-    persistent_tokens.remove(token_id, token.owner_id);
+    persistent_tokens.burn(token_id, token.owner_id);
 
 
     // Immiting log event

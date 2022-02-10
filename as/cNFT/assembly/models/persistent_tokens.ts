@@ -106,13 +106,13 @@ export class PersistentTokens {
      * @param tokenId: Id of the token to remove
      * @param accountId: Account of token to remove
      */
-    remove(tokenId: TokenId, accountId: AccountId): void {
+    burn(tokenId: TokenId, accountId: AccountId): void {
         let token = this._tmap.getSome(tokenId);
         token.owner_id = '';
 
         this._tmap.set(tokenId, token);
 
-        this.remove_from_account(tokenId, accountId);
+        this.remove(tokenId, accountId);
     }
 
     /**
@@ -120,7 +120,7 @@ export class PersistentTokens {
      * @param tokenId: Id of the token to remove
      * @param accountId: Account of token to remove
      */
-    remove_from_account(tokenId: TokenId, accountId: AccountId): void {
+    remove(tokenId: TokenId, accountId: AccountId): void {
 
         this._amap.set(
             accountId,
