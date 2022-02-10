@@ -34,5 +34,5 @@ export function assert_eq_token_owner(predecessor: AccountId, owner_id: AccountI
 
 export function assert_mints_per_address(mints_per_address: u32, address: AccountId): void {
     const owner_supply = parseInt(persistent_tokens.supply_for_owner(address))
-    assert(owner_supply < mints_per_address, "Limited to " + mints_per_address + " NFTs per owner")
+    assert(owner_supply < mints_per_address, "Limited to " + mints_per_address.toString() + " NFTs per owner")
 }
