@@ -133,6 +133,7 @@ describe('- CONTRACT -', () => {
     })
 
     it('xxx burn token', () => {
+        initContract()
         mintToken('hello.testnet')
         const token = mintToken('hello.testnet')
 
