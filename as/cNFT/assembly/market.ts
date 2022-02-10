@@ -61,6 +61,8 @@ export function get_bidder_bids(accountId: string): Bid[] {
 
 @nearBindgen
 export function accept_bid(tokenId: string, bidder: string): void {
+    assert_one_yocto()
+
     const bids = persistent_market.get(tokenId)
 
     if (!bids.has(bidder)) {
@@ -99,7 +101,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Transfer token to bidder
     const transferArgs: NftTransferArgs = { "token_id": tokenId, "bidder_id": bidder }
-    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, u128.Zero)
+    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, u128.from('1'))
     promiseTransfer.returnAsResult()
 
     if (!tokenRoyalty) {
