@@ -6,7 +6,7 @@ import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
-import { assert_eq_attached_deposit, assert_token_exists, assert_token_owner } from './utils/asserts'
+import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner } from './utils/asserts'
 
 class NftTransferArgs {
     token_id: string
@@ -70,7 +70,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
     const token = persistent_tokens.get(tokenId)
 
     /* todo: change when adding approval management */
-    assert_token_owner(token.owner_id)
+    assert_eq_token_owner(context.predecessor, token.owner_id)
 
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)

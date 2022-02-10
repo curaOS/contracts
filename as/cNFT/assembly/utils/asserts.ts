@@ -28,6 +28,6 @@ export function assert_token_exists(token_id: TokenId): void {
     assert(persistent_tokens.has(token_id), "Token doesn't exist")
 }
 
-export function assert_token_owner(owner_id: AccountId): void {
-    assert(context.predecessor == owner_id, "You must own token")
+export function assert_eq_token_owner(predecessor: AccountId, owner_id: AccountId): void {
+    assert(predecessor == owner_id, "You must own token")
 }

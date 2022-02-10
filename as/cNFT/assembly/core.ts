@@ -4,7 +4,7 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog } from './models/log'
 import { logging, context } from 'near-sdk-as'
-import { assert_one_yocto, assert_token_owner } from './utils/asserts'
+import { assert_one_yocto, assert_eq_token_owner } from './utils/asserts'
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
@@ -30,7 +30,7 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
     const token = persistent_tokens.get(token_id)
 
     /* todo: change when adding approval management */
-    assert_token_owner(token.owner_id)
+    assert_eq_token_owner(context.predecessor, token.owner_id)
     /* Assert owner is not receiver */
     assert(receiver_id != token.owner_id, "Bidder is already the owner")
 
