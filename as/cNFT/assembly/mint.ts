@@ -1,5 +1,5 @@
 import { context, logging, storage, u128 } from 'near-sdk-as'
-import { assert_deposit_attached } from './utils/asserts'
+import { assert_eq_attached_deposit } from './utils/asserts'
 import { Token } from './models/persistent_tokens'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata, TokenMetadata } from './models/persistent_tokens_metadata'
@@ -14,7 +14,7 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
     const number_of_tokens = persistent_tokens.number_of_tokens;
 
     /** Assert attached deposit based on custom amount from NFTContractExtra */
-    assert_deposit_attached(u128.fromString(contract_extra.mint_price))
+    assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
 
     /** Assert number_of_tokens is less than max_copies */
     assert(number_of_tokens < u128.fromString(contract_extra.max_copies), "Contract max supply reached");

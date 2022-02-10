@@ -3,7 +3,7 @@ import { TokenId } from '../../../utils'
 import { persistent_tokens } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 
-export function assert_deposit_attached(amount: u128): void {
+export function assert_eq_attached_deposit(amount: u128): void {
     assert(
         u128.eq(context.attachedDeposit, amount),
         'Deposit is not requested amount'

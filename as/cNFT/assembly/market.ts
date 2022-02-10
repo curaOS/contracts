@@ -6,7 +6,7 @@ import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
-import { assert_deposit_attached, assert_token_exists, assert_token_owner } from './utils/asserts'
+import { assert_eq_attached_deposit, assert_token_exists, assert_token_owner } from './utils/asserts'
 
 class NftTransferArgs {
     token_id: string
@@ -16,7 +16,7 @@ class NftTransferArgs {
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
     assert(bid.amount > u128.Zero, "Bid can't be zero")
-    assert_deposit_attached(bid.amount)
+    assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
 
     persistent_market.add(tokenId, bid.bidder, bid)
