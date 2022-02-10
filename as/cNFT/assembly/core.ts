@@ -4,7 +4,6 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import {context, logging} from 'near-sdk-as'
-import {persistent_tokens_royalty} from "./models/persistent_tokens_royalty";
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
@@ -36,7 +35,7 @@ export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
     persistent_tokens.add(token_id, token, bidder_id)
 
     /* Deleting token from previous owner */
-    persistent_tokens.remove(token.id, token.prev_owner_id)
+    persistent_tokens.remove_from_account(token.id, token.prev_owner_id)
 
 
     // Immiting log event
