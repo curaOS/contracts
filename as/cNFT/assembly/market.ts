@@ -15,9 +15,24 @@ class NftTransferArgs {
 
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
+
     assert(bid.amount > u128.Zero, "Bid can't be zero")
     assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
+
+    // Refund previous bid If user has one
+    if(persistent_market.has(tokenId)){
+        const bids = persistent_market.get(tokenId);
+
+        if(bids.has(bid.bidder)) {
+            const prevBid = bids.get(bid.bidder)
+
+            const promiseBidder = ContractPromiseBatch.create(prevBid.bidder)
+            promiseBidder.transfer(prevBid.amount);
+
+            env.promise_return(promiseBidder.id);
+        }
+    }
 
     persistent_market.add(tokenId, bid.bidder, bid)
 
@@ -38,6 +53,18 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
 @nearBindgen
 export function remove_bid(tokenId: string): void {
+
+    const bids = persistent_market.get(tokenId);
+
+    const bid = bids.get(context.sender)
+
+    // Transfer bid amount back to the bidder
+    const promiseBidder = ContractPromiseBatch.create(bid.bidder)
+    promiseBidder.transfer(bid.amount);
+
+    env.promise_return(promiseBidder.id);
+
+
     persistent_market.remove(tokenId, context.sender)
 
     // Committing log event

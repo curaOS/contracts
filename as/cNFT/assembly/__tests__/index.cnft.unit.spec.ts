@@ -152,6 +152,7 @@ const bidOnToken = (
     amount: number
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
+    VMContext.setAccount_balance(u128.from('1000000000000000000000000000'))
     VMContext.setAttached_deposit(u128.from(amount))
 
     const bid = new Bid()
@@ -166,8 +167,9 @@ const bidOnToken = (
 
 describe('- MARKET -', () => {
     it('xxx sets a bid & returns it', () => {
+
         initContract()
-        mintToken('hello.testnet')
+        mintToken('yellow.testnet')
         bidOnToken('hello.testnet', '0', 10)
 
         const bids = get_bids('0')
@@ -181,8 +183,10 @@ describe('- MARKET -', () => {
         expect(bid.recipient).toStrictEqual('0')
     })
     it('xxx sets a bid & removes it', () => {
+      
         initContract()
-        mintToken('hello.testnet')
+        mintToken('yellow.testnet')
+
         bidOnToken('hello.testnet', '0', 10)
 
         remove_bid('0')
@@ -193,9 +197,11 @@ describe('- MARKET -', () => {
         )
     })
     it('xxx sets multiple bids & return bidder bids', () => {
+
         initContract()
-        mintToken('hello.testnet')
-        mintToken('hello.testnet')
+        mintToken('yellow.testnet')
+        mintToken('yellow.testnet')
+
         bidOnToken('hello.testnet', '0', 10)
         bidOnToken('hello.testnet', '1', 20)
 
