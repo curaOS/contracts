@@ -15,7 +15,7 @@ class NftTransferArgs {
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
 
-    // Refund previous bid If user has a one
+    // Refund previous bid If user has one
     if(persistent_market.has(tokenId)){
         const bids = persistent_market.get(tokenId);
 
