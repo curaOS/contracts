@@ -25,6 +25,7 @@ export class NFTContractExtra {
     mint_price: string
     max_copies: u32
     default_max_len_payout: u32
+    mints_per_address: u32
 }
 
 export function defaultNFTContractMetadata(): NFTContractMetadata {
@@ -48,6 +49,7 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_price: ONE_NEAR.toString(),
         max_copies: 1024,
         default_max_len_payout: 20,
+        mints_per_address: 1024,
     }
 }
 

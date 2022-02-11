@@ -1,11 +1,13 @@
 import { context, logging, storage, u128 } from 'near-sdk-as'
-import { assert_eq_attached_deposit } from './utils/asserts'
+import { assert_eq_attached_deposit, assert_mints_per_address } from './utils/asserts'
 import { Token } from './models/persistent_tokens'
 import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata, TokenMetadata } from './models/persistent_tokens_metadata'
 import { persistent_tokens_royalty, TokenRoyalty } from './models/persistent_tokens_royalty'
 import { NftEventLogData, NftMintLog } from './models/log'
+import { nft_metadata } from './metadata'
 import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persistent_nft_contract_metadata'
+
 
 @nearBindgen
 export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty): Token {
@@ -18,6 +20,8 @@ export function mint(tokenMetadata: TokenMetadata, token_royalty: TokenRoyalty):
 
     /** Assert number_of_tokens is less than max_copies */
     assert(number_of_tokens.toU32() < contract_extra.max_copies, "Contract max supply reached");
+
+    assert_mints_per_address(contract_extra.mints_per_address, context.sender)
 
     let token = new Token()
 
