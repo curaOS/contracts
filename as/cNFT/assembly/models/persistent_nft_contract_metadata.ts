@@ -1,5 +1,6 @@
-import { storage, u128 } from 'near-sdk-as'
+import { storage } from 'near-sdk-as'
 import { ONE_NEAR } from '../../../utils'
+import { AccountId } from '../types'
 
 const NFT_SPEC = 'nft-1.0.0'
 const NFT_NAME = 'Nft'
@@ -26,6 +27,11 @@ export class NFTContractExtra {
     max_copies: u32
     default_max_len_payout: u32
     mints_per_address: u32
+    mint_payee_id: ''
+    mint_royalty: {
+        id: AccountId
+        amount: u32
+    }
 }
 
 export function defaultNFTContractMetadata(): NFTContractMetadata {
@@ -50,21 +56,33 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         max_copies: 1024,
         default_max_len_payout: 20,
         mints_per_address: 1024,
+        mint_payee_id: '',
+        mint_royalty: {
+            id: '',
+            amount: 0,
+        },
     }
 }
 
 @nearBindgen
 export class PersistentNFTContractMetadata {
-    static STORAGE_KEY_STANDARD: string = "nft_contract_metadata_standard"
-    static STORAGE_KEY_EXTRA: string = "nft_contract_metadata_extra"
+    static STORAGE_KEY_STANDARD: string = 'nft_contract_metadata_standard'
+    static STORAGE_KEY_EXTRA: string = 'nft_contract_metadata_extra'
 
     update_standard(contract_metadata: NFTContractMetadata): void {
-        storage.set<NFTContractMetadata>(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD, contract_metadata)
+        storage.set<NFTContractMetadata>(
+            PersistentNFTContractMetadata.STORAGE_KEY_STANDARD,
+            contract_metadata
+        )
     }
 
     update_extra(contract_extra: NFTContractExtra): void {
-        storage.set<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA, contract_extra)
+        storage.set<NFTContractExtra>(
+            PersistentNFTContractMetadata.STORAGE_KEY_EXTRA,
+            contract_extra
+        )
     }
 }
 
-export const persistent_nft_contract_metadata = new PersistentNFTContractMetadata()
+export const persistent_nft_contract_metadata =
+    new PersistentNFTContractMetadata()
