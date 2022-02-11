@@ -43,6 +43,13 @@ export class PersistentTokens {
     }
 
     /**
+     * @param token_id ID of token to check if exists
+     */
+    has(token_id: TokenId): bool {
+        return this._tmap.contains(token_id)
+    }
+
+    /**
      * @returns an array of tokenId
      */
     keys(start: i32, end: i32): TokenId[] {
@@ -100,11 +107,28 @@ export class PersistentTokens {
         return token
     }
 
+
     /**
+     * Burn a token
+     * @param tokenId: Id of the token to remove
+     * @param accountId: Account of token to remove
+     */
+    burn(tokenId: TokenId, accountId: AccountId): void {
+        let token = this._tmap.getSome(tokenId);
+        token.owner_id = '';
+
+        this._tmap.set(tokenId, token);
+
+        this.remove(tokenId, accountId);
+    }
+
+    /**
+     * Remove a token from a user's token set.
      * @param tokenId: Id of the token to remove
      * @param accountId: Account of token to remove
      */
     remove(tokenId: TokenId, accountId: AccountId): void {
+
         this._amap.set(
             accountId,
             this._removeFromAccountTokenSet(tokenId, accountId)

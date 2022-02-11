@@ -2,8 +2,10 @@ import { AccountId } from '../../utils'
 import { TokenId } from './types'
 import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
-import { NftEventLogData, NftTransferLog } from './models/log'
-import { logging } from 'near-sdk-as'
+import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
+import { logging, context } from 'near-sdk-as'
+import { assert_one_yocto, assert_eq_token_owner } from './utils/asserts'
+
 
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
@@ -19,32 +21,68 @@ export function nft_token(token_id: TokenId): Token {
 
 
 @nearBindgen
-export function nft_transfer(token_id: TokenId, bidder_id: AccountId): void {
+export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
+
+    /* Exactly one yocto is required for the transfer */
+
+    assert_one_yocto()
+
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
 
-    if(!token){
+    /* todo: change when adding approval management */
+    assert_eq_token_owner(context.predecessor, token.owner_id)
+    /* Assert owner is not receiver */
+    assert(receiver_id != token.owner_id, "Bidder is already the owner")
+
+    if (!token) {
         return;
     }
 
     /* Setting new details of the token */
     token.prev_owner_id = token.owner_id
-    token.owner_id = bidder_id
-
-    /* Storing token with the new owner's accountId */
-    persistent_tokens.add(token_id, token, bidder_id)
+    token.owner_id = receiver_id
 
     /* Deleting token from previous owner */
     persistent_tokens.remove(token.id, token.prev_owner_id)
 
-    
+
+    /* Storing token with the new owner's accountId */
+    persistent_tokens.add(token_id, token, receiver_id)
+
+
     // Immiting log event
     const transfer_log = new NftTransferLog()
-    
+
     transfer_log.old_owner_id = token.prev_owner_id
     transfer_log.new_owner_id = token.owner_id
     transfer_log.token_ids = [token.id]
 
     const log = new NftEventLogData<NftTransferLog>('nft_transfer', [transfer_log])
     logging.log(log)
+
+}
+
+
+@nearBindgen
+export function burn_design(token_id: TokenId): void {
+
+    /* Getting stored token from tokenId */
+    const token = persistent_tokens.get(token_id)
+
+    assert((context.predecessor == token.owner_id) && (context.predecessor == token.creator_id), "You must be the creator and the owner of the token to burn it")
+
+    /* Deleting token from its owner */
+    persistent_tokens.burn(token_id, token.owner_id);
+
+
+    // Immiting log event
+    const burn_log = new NftBurnLog();
+
+    burn_log.owner_id = token.owner_id;
+    burn_log.authorized_id = context.sender;
+    burn_log.token_ids = [token.id];
+
+    const log = new NftEventLogData<NftBurnLog>('nft_burn', [burn_log]);
+    logging.log(log);
 }

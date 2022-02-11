@@ -120,6 +120,14 @@ function randomInt(min = 0, max = 10) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+// Gas
+const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
+const CONTRACT_MINT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
+const CONTRACT_TOKENS_GAS =
+    nearAPI.utils.format.parseNearAmount('0.00000000030') // 1000 Tgas
+const ONE_NEAR = nearAPI.utils.format.parseNearAmount('1')
+const CONTRACT_MINT_PRICE = ONE_NEAR
+
 // Example data
 const CONTRACT_METADATA = {
     spec: 'nft-1.0.0',
@@ -133,6 +141,12 @@ const CONTRACT_METADATA = {
     render_script: '',
     style_css: '',
     parameters: '',
+}
+const CONTRACT_EXTRA = {
+    mint_price: CONTRACT_MINT_PRICE,
+    max_copies: 100,
+    default_max_len_payout: 20,
+    mints_per_address: 50,
 }
 
 const TOKEN_ROYALTY = {
@@ -154,7 +168,7 @@ function random_token_metadata() {
 
 function random_bid() {
     const BID = {
-        amount: '1',
+        amount: ONE_NEAR,
         bidder: 'bob.test.near',
         recipient: '',
         sell_on_share: randomInt(0, 10),
@@ -166,13 +180,6 @@ function random_bid() {
 // Test configs
 
 const TOTAL_MINT = 20
-
-// Gas
-const CONTRACT_INIT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
-const CONTRACT_MINT_GAS = nearAPI.utils.format.parseNearAmount('0.00000000030') // 300 Tgas
-const CONTRACT_TOKENS_GAS =
-    nearAPI.utils.format.parseNearAmount('0.00000000030') // 1000 Tgas
-const CONTRACT_MINT_PRICE = nearAPI.utils.format.parseNearAmount('1') // 1N
 
 // Test
 async function test() {
@@ -188,6 +195,7 @@ async function test() {
     await jennyUseContract.init({
         args: {
             contract_metadata: CONTRACT_METADATA,
+            contract_extra: CONTRACT_EXTRA,
         },
         gas: CONTRACT_INIT_GAS,
     })
@@ -298,9 +306,14 @@ async function test() {
      */
 
     // a. Bob bids on Jenny token
+    const rBid = random_bid()
     await bobUseContract.set_bid({
-        tokenId: jennyTokens[0].id,
-        bid: random_bid(),
+        args: {
+            tokenId: jennyTokens[0].id,
+            bid: random_bid(),
+        },
+        gas: CONTRACT_MINT_GAS,
+        amount: rBid.amount,
     })
     console.log(`"bid" works well`)
 
@@ -310,8 +323,8 @@ async function test() {
     })
     bids_for_jenny = Object.values(bids_for_jenny)
 
-    assert.equal(bids_for_jenny[0].amount, '1')
-    assert.equal(bids_for_jenny[0].bidder, 'bob.test.near')
+    assert.equal(bids_for_jenny[0].amount, rBid.amount)
+    assert.equal(bids_for_jenny[0].bidder, rBid.bidder)
 
     console.log('get_bids returns the right data')
 
@@ -319,8 +332,8 @@ async function test() {
     const bids_by_bob = await bobUseContract.get_bidder_bids({
         accountId: 'bob.test.near',
     })
-    assert.equal(bids_by_bob[0].amount, '1')
-    assert.equal(bids_by_bob[0].bidder, 'bob.test.near')
+    assert.equal(bids_by_bob[0].amount, rBid.amount)
+    assert.equal(bids_by_bob[0].bidder, rBid.bidder)
 
     console.log('get_bidder_bids returns the right data')
 
