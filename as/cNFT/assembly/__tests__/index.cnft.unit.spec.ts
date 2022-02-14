@@ -127,7 +127,7 @@ describe('- CONTRACT -', () => {
 
         const nftContractExtra = nft_metadata_extra()
 
-        log(NFTContractExtra)
+        log(nftContractExtra)
     })
 
     it('transfer tokens from xxx', () => {
