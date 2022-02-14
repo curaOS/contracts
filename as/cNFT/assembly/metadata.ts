@@ -9,5 +9,5 @@ export function nft_metadata(): NFTContractMetadata {
 
 @nearBindgen
 export function nft_metadata_extra(): NFTContractExtra {
-       return storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD)
+       return storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
 }
