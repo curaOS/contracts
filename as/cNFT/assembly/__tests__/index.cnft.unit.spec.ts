@@ -24,6 +24,7 @@ import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
 import { ONE_NEAR } from '../../../utils'
+import { nft_metadata_extra } from '../metadata'
 
 
 const initContract = (): void => {
@@ -118,6 +119,15 @@ describe('- CONTRACT -', () => {
         const nftContractMetadata = nft_metadata()
 
         log(nftContractMetadata)
+    })
+
+
+    it('xxx returns nft contract extra', () => {
+        initContract()
+
+        const nftContractExtra = nft_metadata_extra()
+
+        log(NFTContractExtra)
     })
 
     it('transfer tokens from xxx', () => {
