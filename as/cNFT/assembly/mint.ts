@@ -1,4 +1,11 @@
-import { context, logging, storage, u128 } from 'near-sdk-as'
+import {
+    ContractPromiseBatch,
+    context,
+    logging,
+    storage,
+    u128,
+    env,
+} from 'near-sdk-as'
 import {
     assert_eq_attached_deposit,
     assert_mints_per_address,
@@ -42,10 +49,12 @@ export function mint(
 
     /** Make sure default perp royalty is included */
     assert(
-        token_royalty.split_between.has(contract_extra.mint_royalty.id) &&
-            token_royalty.split_between.get(contract_extra.mint_royalty.id) ==
-                contract_extra.mint_royalty.amount,
-        ''
+        !contract_extra.mint_royalty_id ||
+            (token_royalty.split_between.has(contract_extra.mint_royalty_id) &&
+                token_royalty.split_between.get(
+                    contract_extra.mint_royalty_id
+                ) == contract_extra.mint_royalty_amount),
+        'Default perpetual royalty needs to be included in minted token.'
     )
 
     let token = new Token()

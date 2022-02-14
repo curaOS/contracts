@@ -27,11 +27,9 @@ export class NFTContractExtra {
     max_copies: u32
     default_max_len_payout: u32
     mints_per_address: u32
-    mint_payee_id: ''
-    mint_royalty: {
-        id: AccountId
-        amount: u32
-    }
+    mint_payee_id: AccountId
+    mint_royalty_id: AccountId
+    mint_royalty_amount: u32
 }
 
 export function defaultNFTContractMetadata(): NFTContractMetadata {
@@ -57,10 +55,8 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         default_max_len_payout: 20,
         mints_per_address: 1024,
         mint_payee_id: '',
-        mint_royalty: {
-            id: '',
-            amount: 0,
-        },
+        mint_royalty_id: '',
+        mint_royalty_amount: 0,
     }
 }
 
