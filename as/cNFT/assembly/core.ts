@@ -7,6 +7,18 @@ import { logging, context } from 'near-sdk-as'
 import { assert_one_yocto, assert_eq_token_owner } from './utils/asserts'
 
 
+/**
+ * Get details of a single token
+ *
+ * **Basic usage example:**
+ * ```
+ * let token = nft_token("jenny911038");
+ * ```
+ *
+ * @param token_id ID of the token that needs to get details
+ * @return Details of the token if present
+ *
+ */
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
     // get token
@@ -19,7 +31,19 @@ export function nft_token(token_id: TokenId): Token {
     return token
 }
 
-
+/**
+ * Transfer a token to another account
+ *
+ *  **Note:** User must be the owner of the token
+ *
+ * **Basic usage example:**
+ * ```
+ * nft_transfer("jenny911038", "alice.test.near");
+ * ```
+ *
+ * @param token_id ID of the token that needs to transfer
+ * @param receiver_id ID of the receiving account
+ */
 @nearBindgen
 export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
@@ -63,7 +87,18 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
 }
 
-
+/**
+ * Burn a token
+ *
+ *  **Note:** In order to burn a token, user must be the creator and the owner of the token
+ *
+ * **Basic usage example:**
+ * ```
+ * burn_design("jenny911038");
+ * ```
+ *
+ * @param token_id ID of the token that needs to burn
+ */
 @nearBindgen
 export function burn_design(token_id: TokenId): void {
 
