@@ -1,6 +1,6 @@
 import { VMContext } from 'near-mock-vm'
 import { u128 } from 'near-sdk-as'
-import { defaultNFTContractMetadata, NFTContractExtra } from '../models/persistent_nft_contract_metadata'
+import { defaultNFTContractMetadata } from '../models/persistent_nft_contract_metadata'
 import { TokenMetadata } from '../models/persistent_tokens_metadata'
 import { TokenRoyalty } from '../models/persistent_tokens_royalty'
 import {
@@ -25,7 +25,6 @@ import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
 import { ONE_NEAR } from '../../../utils'
 
-
 const initContract = (): void => {
     const nft_contract_metadata = defaultNFTContractMetadata()
 
@@ -45,13 +44,11 @@ const mintToken = (accountId: AccountId): Token => {
     token_royalty.percentage = 2500
     token_royalty.split_between.set('address', 2500)
 
-    const token = mint(token_metadata, token_royalty)
-    return token
+    return mint(token_metadata, token_royalty)
 }
 
 describe('- CONTRACT -', () => {
-
-    it('xxx returns token lenght', () => {        
+    it('xxx returns token length', () => {
         const nftTotalSupply = nft_total_supply()
 
         log(nftTotalSupply)
@@ -137,12 +134,12 @@ describe('- CONTRACT -', () => {
         mintToken('hello.testnet')
         const token = mintToken('hello.testnet')
 
-        burn_design(token.id);
+        burn_design(token.id)
 
-        const tokens = nft_supply_for_owner(token.owner_id);
+        const tokens = nft_supply_for_owner(token.owner_id)
 
-        expect(tokens).toStrictEqual('1');
-        log(tokens);
+        expect(tokens).toStrictEqual('1')
+        log(tokens)
     })
 })
 
