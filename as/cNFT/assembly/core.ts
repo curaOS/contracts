@@ -11,6 +11,9 @@ import { assert_one_yocto, assert_eq_token_owner } from './utils/asserts'
  * Get details of a single token
  *
  * **Basic usage example:**
+ *
+ * Assume we need to get details of a token with the token id = `jenny911038`,
+ *
  * ```
  * let token = nft_token("jenny911038");
  * ```
@@ -37,6 +40,9 @@ export function nft_token(token_id: TokenId): Token {
  *  **Note:** User must be the owner of the token
  *
  * **Basic usage example:**
+ *
+ * Assume we need to transfer a token with the token id = `jenny911038` to a user with account id = `alice.test.near`,
+ *
  * ```
  * nft_transfer("jenny911038", "alice.test.near");
  * ```
@@ -93,6 +99,9 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
  *  **Note:** In order to burn a token, user must be the creator and the owner of the token
  *
  * **Basic usage example:**
+ *
+ * Assume we need to burn a token with the token id = `jenny911038`,
+ *
  * ```
  * burn_design("jenny911038");
  * ```

@@ -7,6 +7,7 @@ import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
  *
  *
  * **Basic usage example:**
+ *
  * Assume `alice.test.near` account owns 10 tokens,
  * ```
  * const total_no_of_tokens = nft_supply_for_owner("alice.test.near");
@@ -28,6 +29,7 @@ export function nft_supply_for_owner(account_id: string): string {
  *
  *
  * **Basic usage example:**
+ *
  * Assume marketplace has 9999 tokens,
  * ```
  * const total = nft_total_supply();
@@ -48,6 +50,7 @@ export function nft_total_supply(): string {
  *
  *
  * **Basic usage example:**
+ *
  * Assume we need to get the first 4 tokens,
  * ```
  * const tokens = nft_tokens("0", 4);
@@ -87,6 +90,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
  *
  *
  * **Basic usage example:**
+ *
  * Assume we need to get the first 4 tokens that `alice.test.near` account owns,
  * ```
  * const tokens_for_owner = nft_tokens_for_owner("alice.test.near", "0", 4);

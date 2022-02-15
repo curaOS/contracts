@@ -20,7 +20,8 @@ class NftTransferArgs {
  *
  *
  * **Basic usage example:**
- * Assume we need to set a bid to the token with id "jenny911038",
+ *
+ * Assume we need to set a bid to the token with id = `jenny911038`,
  * ```
  * const bid = new Bid();
  *
@@ -86,7 +87,8 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
  *
  *
  * **Basic usage example:**
- * Assume we set a bid worth of 1 NEAR to the token "jenny911038". And then we need to remove that bid from the token.
+ *
+ * Assume we set a bid worth of 1 NEAR to the token `jenny911038`. And then we need to remove that bid from the token.
  *
  * **Note:** Since the bid is find through account id that signed to the transaction, we just need to provide only the token id.
  * ```
@@ -127,7 +129,8 @@ export function remove_bid(tokenId: string): void {
  *
  *
  * **Basic usage example:**
- * Assume we need to get all the bids that set to the token with token id = "jenny911038",
+ *
+ * Assume we need to get all the bids that set to the token with token id = `jenny911038`,
  * ```
  * const bids_for_the_token = get_bids("jenny911038");
  * ```
@@ -147,7 +150,8 @@ export function get_bids(tokenId: string): BidsByBidder {
  *
  *
  * **Basic usage example:**
- * Assume we need to get all the bids that set by a user with account id = "alice.test.near",
+ *
+ * Assume we need to get all the bids that set by a user with account id = `alice.test.near`,
  * ```
  * const bids_by_user = get_bidder_bids("alice.test.near");
  * ```
@@ -168,7 +172,8 @@ export function get_bidder_bids(accountId: string): Bid[] {
  * **Note:** Only the owner of the token can accept a bid
  *
  * **Basic usage example:**
- * Assume the owner of the token with id = "jenny911038" need to accept a bid that set by a user with account id = "alice.test.near",
+ *
+ * Assume the owner of the token with id = `jenny911038` need to accept a bid that set by a user with account id = `alice.test.near`,
  * ```
  * accept_bid("jenny911038", "alice.test.near");
  * ```
