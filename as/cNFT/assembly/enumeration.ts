@@ -95,7 +95,7 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
  * @param account_id Account ID of the user
  * @param from_index Starting index
  * @param limit Number of tokens needs to be fetched starting from `from_index`
- * @return Array of tokens that user owns 
+ * @return Array of tokens that user owns
  */
 @nearBindgen
 export function nft_tokens_for_owner(

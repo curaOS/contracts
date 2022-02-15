@@ -18,6 +18,10 @@ export {
     nft_tokens_for_owner,
 } from './enumeration'
 
+
+/**
+ * @hidden
+ */
 export {
     set_bid,
     remove_bid,
@@ -26,8 +30,16 @@ export {
     accept_bid,
 } from './market'
 
+
+
+/**
+ * @hidden
+ */
 export { nft_metadata } from './metadata'
 
+/**
+ * @hidden
+ */
 export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
     // Init can be called only once
