@@ -41,6 +41,7 @@ export function init(contract_metadata: NFTContractMetadata, contract_extra: NFT
     // Immiting log event
     const init_log = new NftInitLog()
     init_log.metadata = contract_metadata
+    init_log.extra = contract_extra
     const log = new NftEventLogData<NftInitLog>('nft_init', [init_log])
     logging.log(log)
 }
