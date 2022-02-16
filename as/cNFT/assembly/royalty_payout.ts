@@ -4,6 +4,7 @@ import { persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { Payout, TokenId } from './types'
 import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persistent_nft_contract_metadata'
+import { assert_not_paused } from './utils/asserts'
 
 
 
@@ -14,6 +15,7 @@ export function nft_payout(
     balance: u128,
     max_len_payout: u32 = 0
 ): Payout | null {
+    assert_not_paused()
 
     //return the payout object
     return internal_nft_payout(token_id, balance, max_len_payout);
@@ -26,6 +28,7 @@ export function internal_nft_payout(
     balance: u128,
     max_len_payout: u32 = 0
 ): Payout | null {
+    assert_not_paused()
 
     // if max_len_payout is not passed or 0, get it from NFTContractExtra
     if (max_len_payout == 0) {

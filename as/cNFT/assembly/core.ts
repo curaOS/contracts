@@ -4,7 +4,7 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import { logging, context } from 'near-sdk-as'
-import { assert_one_yocto, assert_eq_token_owner } from './utils/asserts'
+import { assert_one_yocto, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
 
 
 @nearBindgen
@@ -22,6 +22,7 @@ export function nft_token(token_id: TokenId): Token {
 
 @nearBindgen
 export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
+    assert_not_paused()
 
     /* Exactly one yocto is required for the transfer */
 
@@ -66,6 +67,7 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
 @nearBindgen
 export function burn_design(token_id: TokenId): void {
+    assert_not_paused()
 
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
