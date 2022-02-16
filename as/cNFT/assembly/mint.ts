@@ -26,6 +26,32 @@ import {
     PersistentNFTContractMetadata,
 } from './models/persistent_nft_contract_metadata'
 
+
+
+
+/**
+ * Mint a new token.
+ *
+ *
+ * **Basic usage example:**
+ *
+ * ```
+ * const token_metadata = new TokenMetadata()
+ * token_metadata.title = 'sample title'
+ * token_metadata.media = 'sample media'
+ * ...
+ *
+ * const token_royalty = new TokenRoyalty()
+ * token_royalty.percentage = 2500
+ * token_royalty.split_between.set('alice.test.near', 2500)
+ * ...
+ *
+ * const token = mint(token_metadata, token_royalty);
+ * ```
+ * @param tokenMetadata Metadata object of the minted token
+ * @param token_royalty Royalty object of the minted token
+ * @return Minted token
+ */
 @nearBindgen
 export function mint(
     tokenMetadata: TokenMetadata,
