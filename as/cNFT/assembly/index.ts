@@ -26,7 +26,7 @@ export {
     accept_bid,
 } from './market'
 
-export { nft_metadata } from './metadata'
+export { nft_metadata, nft_metadata_extra } from './metadata'
 
 export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
