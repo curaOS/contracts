@@ -5,10 +5,20 @@ import { TokenMetadata } from './persistent_tokens_metadata'
 /* @todo metatada is here cause it's returned in enumeration, remove if possible*/
 @nearBindgen
 export class Token {
+
+    /** ID of the token */
     id: string
+
+    /** ID of the current owner who owns the token */
     owner_id: string
+
+    /** ID of the creator who created or minted this token */
     creator_id: string
+
+    /** ID of the previous owner */
     prev_owner_id: string
+
+    /** Metadata object of the token that describe the token */
     metadata: TokenMetadata
 }
 
