@@ -52,7 +52,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@as-pect/cli@npm:^6.0.0":
+"@as-pect/cli@npm:^6.0.0, @as-pect/cli@npm:^6.2.4":
   version: 6.2.4
   resolution: "@as-pect/cli@npm:6.2.4"
   dependencies:
@@ -157,6 +157,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@cura/contracts@workspace:."
   dependencies:
+    "@as-pect/cli": ^6.2.4
+    asbuild: ^0.2.0
     async: ^3.2.0
     bn.js: ^5.2.0
     chalk: ^4.1.1
