@@ -18,10 +18,6 @@ export {
     nft_tokens_for_owner,
 } from './enumeration'
 
-
-/**
- * @hidden
- */
 export {
     set_bid,
     remove_bid,
@@ -30,15 +26,25 @@ export {
     accept_bid,
 } from './market'
 
-
-
-/**
- * @hidden
- */
 export { nft_metadata } from './metadata'
 
+
+
+
 /**
- * @hidden
+ * Initialize the contract with standard metadata and extra metadata.
+ *
+ * **Note:** This function can be called only once and, it should be called immediately after deploying the contract.
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to initialize the contract with standard metadata details object `MTS1` and extra metadata details object `MTE1`,
+ * ```
+ * init( MTS1, MTE1 );
+ * ```
+ *
+ * @param contract_metadata Standard metadata object of the contract
+ * @param contract_extra Extra metadata object of the contract
  */
 export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
