@@ -4,8 +4,9 @@ import {
     NFTContractMetadata,
     persistent_nft_contract_metadata,
 } from './models/persistent_nft_contract_metadata'
-import { logging, storage } from 'near-sdk-as'
+import { context, logging, storage } from 'near-sdk-as'
 import { NftEventLogData, NftInitLog } from './models/log'
+import { AccountId } from './types'
 
 export { mint } from './mint'
 
@@ -28,13 +29,15 @@ export {
 
 export { nft_metadata, nft_metadata_extra } from './metadata'
 
-export function init(contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
+export function init(owner_id: AccountId, contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
     // Init can be called only once
     assert(storage.get<string>("init") == null, "Already initialized");
 
     persistent_nft_contract_metadata.update_standard(contract_metadata)
     persistent_nft_contract_metadata.update_extra(contract_extra)
+
+    storage.set("owner_id", owner_id);
 
     storage.set("init", "done");
 
@@ -44,4 +47,15 @@ export function init(contract_metadata: NFTContractMetadata, contract_extra: NFT
     init_log.extra = contract_extra
     const log = new NftEventLogData<NftInitLog>('nft_init', [init_log])
     logging.log(log)
+}
+
+export function set_paused(value: boolean = true): boolean {
+    // only admin or contract account can call this method
+    assert(
+        context.sender == storage.get<string>("owner_id") ||
+        context.sender == context.contractName,
+        'You\'re not authorized to call this method'
+    )
+    storage.set("paused", value.toString());
+    return value
 }

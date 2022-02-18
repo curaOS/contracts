@@ -9,6 +9,7 @@ import {
 import {
     assert_eq_attached_deposit,
     assert_mints_per_address,
+    assert_not_paused,
 } from './utils/asserts'
 import { Token } from './models/persistent_tokens'
 import { persistent_tokens } from './models/persistent_tokens'
@@ -31,6 +32,8 @@ export function mint(
     tokenMetadata: TokenMetadata,
     token_royalty: TokenRoyalty
 ): Token {
+    assert_not_paused()
+
     const contract_extra = storage.getSome<NFTContractExtra>(
         PersistentNFTContractMetadata.STORAGE_KEY_EXTRA
     )

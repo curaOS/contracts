@@ -29,7 +29,7 @@ import { nft_metadata_extra } from '../metadata'
 const initContract = (): void => {
     const nft_contract_metadata = defaultNFTContractMetadata()
 
-    init(nft_contract_metadata)
+    init("cura.testnet", nft_contract_metadata)
 }
 
 const mintToken = (accountId: AccountId): Token => {

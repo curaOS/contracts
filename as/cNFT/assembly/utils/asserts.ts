@@ -1,4 +1,4 @@
-import { context, u128 } from 'near-sdk-as'
+import { context, storage, u128 } from 'near-sdk-as'
 import { TokenId } from '../../../utils'
 import { persistent_tokens } from '../models/persistent_tokens'
 import { AccountId } from '../types'
@@ -44,4 +44,8 @@ export function assert_mints_per_address(
         owner_supply < mints_per_address,
         'Limited to ' + mints_per_address.toString() + ' mints per owner'
     )
+}
+
+export function assert_not_paused(): void {
+    assert(storage.get<string>("paused") != "true", "Contract is currently paused");
 }
