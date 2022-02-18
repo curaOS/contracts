@@ -61,10 +61,16 @@ export class NFTContractExtra {
     /** Maximum number of royalties that can payout for each token in the contract */
     default_max_len_payout: u32
 
-
+    /** Number of mints allowed for an account */
     mints_per_address: u32
+
+    /** Address that receives the full minting payment */
     mint_payee_id: AccountId
+
+    /** Account that is set to receive perpetual royalty amount. */
     mint_royalty_id: AccountId
+
+    /** Amount of royalty, in percentage, that is set on each minted token. */
     mint_royalty_amount: u32
 }
 
