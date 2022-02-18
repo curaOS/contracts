@@ -1,3 +1,11 @@
+/**
+ * **Event Log Classes**
+ * 
+ * Classes used for capture data from the change methods in the contract when they are executed. The subgraph will capture these data and then saved it in the graph node.
+ *
+ * @packageDocumentation
+ */
+
 import { NFTContractMetadata } from './persistent_nft_contract_metadata'
 import { Token } from './persistent_tokens'
 import { TokenMetadata } from './persistent_tokens_metadata'
