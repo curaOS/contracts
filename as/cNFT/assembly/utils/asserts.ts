@@ -81,6 +81,10 @@ export function assert_mints_per_address(
     )
 }
 
+
+/**
+ * Check to see if the contract is paused or not. If paused, it throws an error.
+ */
 export function assert_not_paused(): void {
     assert(storage.get<string>("paused") != "true", "Contract is currently paused");
 }

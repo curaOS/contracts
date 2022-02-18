@@ -3,22 +3,35 @@ import { PersistentNFTContractMetadata, NFTContractMetadata, NFTContractExtra } 
 
 
 /**
- * Get NFT Metadata of the contract.
+ * Get Standard Metadata of the contract.
  *
  *
  * **Basic usage example:**
  *
  * ```
- * const meta = nft_metadata();
+ * const metadata = nft_metadata();
  * ```
  *
- * @return Metadata details of the NFT Contract
+ * @return Standard metadata details of the Contract
  */
 @nearBindgen
 export function nft_metadata(): NFTContractMetadata {
        return storage.getSome<NFTContractMetadata>(PersistentNFTContractMetadata.STORAGE_KEY_STANDARD)
 }
 
+
+/**
+ * Get Extra Metadata of the contract.
+ *
+ *
+ * **Basic usage example:**
+ *
+ * ```
+ * const extra_metadata = nft_metadata_extra();
+ * ```
+ *
+ * @return Extra metadata details of the Contract
+ */
 @nearBindgen
 export function nft_metadata_extra(): NFTContractExtra {
        return storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
