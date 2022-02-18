@@ -197,6 +197,7 @@ async function test() {
      */
     await jennyUseContract.init({
         args: {
+            owner_id: "jenny.test.near",
             contract_metadata: CONTRACT_METADATA,
             contract_extra: CONTRACT_EXTRA,
         },

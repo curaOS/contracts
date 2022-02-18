@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 
-import { NFTContractMetadata } from './persistent_nft_contract_metadata'
+import { NFTContractExtra, NFTContractMetadata } from './persistent_nft_contract_metadata'
 import { Token } from './persistent_tokens'
 import { TokenMetadata } from './persistent_tokens_metadata'
 
@@ -44,6 +44,7 @@ export class NftTransferLog {
 @nearBindgen
 export class NftInitLog {
     metadata: NFTContractMetadata
+    extra: NFTContractExtra
     memo: string = ''
 }
 

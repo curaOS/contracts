@@ -24,11 +24,12 @@ import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
 import { ONE_NEAR } from '../../../utils'
+import { nft_metadata_extra } from '../metadata'
 
 const initContract = (): void => {
     const nft_contract_metadata = defaultNFTContractMetadata()
 
-    init(nft_contract_metadata)
+    init("cura.testnet", nft_contract_metadata)
 }
 
 const mintToken = (accountId: AccountId): Token => {
@@ -115,6 +116,15 @@ describe('- CONTRACT -', () => {
         const nftContractMetadata = nft_metadata()
 
         log(nftContractMetadata)
+    })
+
+
+    it('xxx returns nft contract extra', () => {
+        initContract()
+
+        const nftContractExtra = nft_metadata_extra()
+
+        log(nftContractExtra)
     })
 
     it('transfer tokens from xxx', () => {
