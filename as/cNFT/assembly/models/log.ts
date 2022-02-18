@@ -1,6 +1,6 @@
 /**
  * **Event Log Classes**
- * 
+ *
  * Classes used for capture data from the change methods in the contract when they are executed. The subgraph will capture these data and then saved it in the graph node.
  *
  * @packageDocumentation
