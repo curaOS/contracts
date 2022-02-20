@@ -7,7 +7,7 @@ export class TokenMetadata {
     /** Title of the token */
     title: string
 
-    /** Token issued or minted date and time in Unix epoch milliseconds */
+    /** Token issue or mint date and time in Unix epoch milliseconds */
     issued_at: string
 
     /** Number of copies of this set of metadata in existence when token was minted.*/

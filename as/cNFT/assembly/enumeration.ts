@@ -25,18 +25,18 @@ export function nft_supply_for_owner(account_id: string): string {
 
 
 /**
- * Get total number of tokens in whole marketplace.
+ * Get total number of tokens registered in this contract.
  *
  *
  * **Basic usage example:**
  *
- * Assume marketplace has 9999 tokens,
+ * Assume the contract has 9999 tokens registered in it,
  * ```
  * const total = nft_total_supply();
  * console.log(total); // "9999"
  * ```
  *
- * @return Total number of tokens in the marketplace
+ * @return Total number of tokens registered in this contract
  */
 @nearBindgen
 export function nft_total_supply(): string {

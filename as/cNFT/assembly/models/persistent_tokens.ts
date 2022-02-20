@@ -111,7 +111,7 @@ export class PersistentTokens {
      */
 
     /**
-     * Get number of tokens saved in the contract
+     * Get number of tokens tracked in the contract
      *
      * **Basic usage example:**
      *
@@ -246,7 +246,7 @@ export class PersistentTokens {
      * persistent_tokens.remove('alice_23456' , "alice.test.near");
      * ```
      *
-     * @param tokenId Id of the token to remove
+     * @param tokenId Id of the token to remove from
      * @param accountId ID of the account that owns the removing token
      */
     remove(tokenId: TokenId, accountId: AccountId): void {

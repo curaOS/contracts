@@ -11,7 +11,7 @@ export class Bid {
     /** ID of the bidder account */
     bidder: string
 
-    /** ID of the token that need to bid */
+    /** ID of the token receiving the bid */
     recipient: string
 
     /** Percentage of the amount that the current owner is getting when reselling */

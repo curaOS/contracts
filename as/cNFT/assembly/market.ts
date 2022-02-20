@@ -16,7 +16,7 @@ class NftTransferArgs {
 
 
 /**
- * Set a bid to a particular token.
+ * Set a bid on a particular token.
  *
  *
  * **Basic usage example:**
@@ -84,19 +84,19 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
 
 /**
- * Remove a bid that set to a token
+ * Remove the sender bid from a particular token
  *
  *
  * **Basic usage example:**
  *
  * Assume we set a bid worth of 1 NEAR to the token `jenny911038`. And then we need to remove that bid from the token.
  *
- * **Note:** Since the bid is find through account id that signed to the transaction, we just need to provide only the token id.
+ * **Note:** Since the account id affected is always the `context.sender`, we just need to provide only the token id
  * ```
  * remove_bid("jenny911038");
  * ```
  *
- * @param tokenId ID of the token that need to remove the bid
+ * @param tokenId ID of the token to remove the bid from
  */
 @nearBindgen
 export function remove_bid(tokenId: string): void {
@@ -132,7 +132,7 @@ export function remove_bid(tokenId: string): void {
  *
  * **Basic usage example:**
  *
- * Assume we need to get all the bids that set to the token with token id = `jenny911038`,
+ * Assume we need to get all the bids on a token with a token id = `jenny911038`,
  * ```
  * const bids_for_the_token = get_bids("jenny911038");
  * ```
@@ -169,7 +169,7 @@ export function get_bidder_bids(accountId: string): Bid[] {
 
 
 /**
- * Accept a certain bid that owner would like.
+ * Accept a certain bid on a particular token.
  *
  * **Note:** Only the owner of the token can accept a bid
  *

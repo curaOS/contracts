@@ -38,9 +38,9 @@ export { nft_metadata, nft_metadata_extra } from './metadata'
  *
  * **Basic usage example:**
  *
- * Assume we need to initialize the contract with standard metadata details object `MTS1` and extra metadata details object `MTE1`,
+ * Assume we need to initialize the contract with owner_id = `alice.test.near` and standard metadata details object `MTS1` and extra metadata details object `MTE1`,
  * ```
- * init( MTS1, MTE1 );
+ * init( "alice.test.near", MTS1, MTE1 );
  * ```
  *
  * @param owner_id ID of the contract owner

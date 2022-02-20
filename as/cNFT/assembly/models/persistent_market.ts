@@ -119,7 +119,7 @@ export class PersistentMarket {
      * persistent_market.remove("jenny911038" , "alice.test.near");
      * ```
      *
-     * @param tokenId Id of the token that need to remove the bid
+     * @param tokenId Id of the token that need to remove the bid from
      * @param accountId ID of the account who need to remove the bid from the token
      */
     remove(tokenId: TokenId, accountId: AccountId): void {
