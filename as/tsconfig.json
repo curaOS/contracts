@@ -9,7 +9,7 @@
         "excludeExternals": true,
         "stripInternal": true,
         "mode": "file",
-        "categoryOrder": ["models", "*"],
+        "name": "curaOS/Contracts",
         "inputFiles": ["as/cNFT/assembly"]
     }
 }
