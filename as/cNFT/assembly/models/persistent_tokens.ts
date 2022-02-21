@@ -33,6 +33,11 @@ export class PersistentTokens {
         >('_amap' + prefix)
 
         this._oset = new PersistentSet<AccountId>('_oset' + prefix)
+
+        this._mmap = new PersistentUnorderedMap<
+            AccountId,
+            PersistentSet<TokenId>
+            >('_mmap' + prefix)
     }
 
     /**
