@@ -146,7 +146,7 @@ const CONTRACT_EXTRA = {
     mint_price: CONTRACT_MINT_PRICE,
     max_copies: 100,
     default_max_len_payout: 20,
-    mints_per_address: 2,
+    mints_per_address: 50,
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
