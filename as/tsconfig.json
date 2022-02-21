@@ -8,6 +8,8 @@
         "excludeProtected": true,
         "excludeExternals": true,
         "stripInternal": true,
+        "mode": "file",
+        "categoryOrder": ["models", "*"],
         "inputFiles": ["as/cNFT/assembly"]
     }
 }
