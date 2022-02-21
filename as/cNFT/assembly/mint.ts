@@ -33,6 +33,7 @@ import {
 /**
  * Mint a new token.
  *
+ * **Note:** `mint` function will need an attached deposit equal to `mint_price` specified in the `contract extra metadata`.
  *
  * **Basic usage example:**
  *

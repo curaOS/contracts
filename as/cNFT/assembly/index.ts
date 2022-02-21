@@ -34,7 +34,7 @@ export { nft_metadata, nft_metadata_extra } from './metadata'
 /**
  * Initialize the contract with owner details, standard metadata and extra metadata.
  *
- * **Note:** This function can be called only once and, it should be called immediately after deploying the contract.
+ * **Note:** This function can be called only once, and it should be called immediately after deploying the contract.
  *
  * **Basic usage example:**
  *
