@@ -21,21 +21,54 @@ export class PersistentMarket {
     }
 
     /**
-     * @param token_id ID of token to check if bids exists
+     * Check if the relevant token has bids or not
+     *
+     * **Basic usage example:**
+     *
+     * Assume we need to check if the token with token id = `jenny911038` has bids,
+     * ```
+     * const persistent_market = new PersistentMarket('pm')
+     * const is_bids_exists = persistent_market.has("jenny911038");
+     * ```
+     *
+     * @param token_id ID of the token to check
+     * @return `true` if bids exists, `false` otherwise
      */
     has(token_id: TokenId): bool {
         return this._tmap.contains(token_id)
     }
 
     /**
-     * @returns An object of bids for tokenId
+     * Get bids for a given token
+     *
+     * **Basic usage example:**
+     *
+     * Assume we need to get the bids for the token with token id = `jenny911038`,
+     * ```
+     * const persistent_market = new PersistentMarket('pm')
+     * const bids = persistent_market.get("jenny911038");
+     * ```
+     *
+     * @param tokenId ID of the token
+     * @return A Map of TokenId to Bid
      */
     get(tokenId: TokenId): BidsByBidder {
         return this._tmap.getSome(tokenId)
     }
 
     /**
-     * @returns An array of bids by accountId
+     * Get bids created by a given account/user
+     *
+     * **Basic usage example:**
+     *
+     * Assume we need to get the bids created by account/user with account id = `alice.test.near`,
+     * ```
+     * const persistent_market = new PersistentMarket('pm')
+     * const bids = persistent_market.get_by_bidder("alice.test.near");
+     * ```
+     *
+     * @param accountId ID of the account/user to retrieve bids
+     * @return An Array of bids made by the given account/user
      */
     get_by_bidder(accountId: AccountId): Bid[] {
         let keys = this._amap.getSome(accountId).values()
@@ -47,7 +80,21 @@ export class PersistentMarket {
     }
 
     /**
-     * Sets the bid for tokenID
+     * Add a bid to the given token
+     *
+     * **Basic usage example:**
+     *
+     * Assume an account/user with account id = `alice.test.near`, want to add the bid `B1`, to the token with token id = `jenny911038`,
+     * ```
+     * const persistent_market = new PersistentMarket('pm')
+     * persistent_market.add("jenny911038" , "alice.test.near", B1 );
+     * ```
+     *
+     * **Note:** This overwrites any present bids.
+     *
+     * @param tokenId Id of the token
+     * @param accountId ID of the account who sets the bid
+     * @param bid Bid to be added to the token and account/user
      */
     add(tokenId: TokenId, accountId: AccountId, bid: Bid): void {
         this._tmap.set(tokenId, this._addToTokenBidMap(tokenId, accountId, bid))
@@ -56,6 +103,21 @@ export class PersistentMarket {
 
     /**
      * Remove the bid for tokenID
+     */
+
+    /**
+     * Remove a bid from a given token
+     *
+     * **Basic usage example:**
+     *
+     * Assume an account/user with account id = `alice.test.near`, want to remove the bid he made to the token with token id = `jenny911038`,
+     * ```
+     * const persistent_market = new PersistentMarket('pm')
+     * persistent_market.remove("jenny911038" , "alice.test.near");
+     * ```
+     *
+     * @param tokenId Id of the token
+     * @param accountId ID of the account
      */
     remove(tokenId: TokenId, accountId: AccountId): void {
         if (!this.get(tokenId).has(accountId)) {

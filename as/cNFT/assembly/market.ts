@@ -13,6 +13,35 @@ class NftTransferArgs {
     bidder_id: string
 }
 
+
+
+/**
+ * Set a bid on a particular token.
+ *
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to set a bid to the token with id = `jenny911038`,
+ * ```
+ * const bid = new Bid();
+ *
+ * bid.amount = u128.from(1)
+ * bid.bidder = 'alice.test.near'
+ * bid.recipient = "jenny911038"
+ * bid.sell_on_share = 10
+ * bid.currency = 'near'
+ *
+ *
+ * const setted_bid = set_bid(
+ *      "jenny911038",
+ *      bid
+ * );
+ * ```
+ *
+ * @param tokenId ID of the token that need to set a bid
+ * @param bid Bid that need set to the token
+ * @return The bid that set to the token
+ */
 @nearBindgen
 export function set_bid(tokenId: string, bid: Bid): Bid {
     assert_not_paused()
@@ -52,6 +81,23 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     return bid
 }
 
+
+
+/**
+ * Remove the sender bid from a particular token
+ *
+ *
+ * **Basic usage example:**
+ *
+ * Assume we set a bid worth of 1 NEAR to the token `jenny911038`. And then we need to remove that bid from the token.
+ *
+ * **Note:** Since the account id affected is always the `context.sender`, we just need to provide only the token id
+ * ```
+ * remove_bid("jenny911038");
+ * ```
+ *
+ * @param tokenId ID of the token to remove the bid from
+ */
 @nearBindgen
 export function remove_bid(tokenId: string): void {
     assert_not_paused()
@@ -78,16 +124,65 @@ export function remove_bid(tokenId: string): void {
     logging.log(log)
 }
 
+
+
+/**
+ * Get bids for a particular token.
+ *
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to get all the bids on a token with a token id = `jenny911038`,
+ * ```
+ * const bids_for_the_token = get_bids("jenny911038");
+ * ```
+ *
+ * @param tokenId ID of the token that need to get the bids
+ * @return Object of the bids that the token has
+ */
 @nearBindgen
 export function get_bids(tokenId: string): BidsByBidder {
     return persistent_market.get(tokenId)
 }
 
+
+
+/**
+ * Get bids set by a particular user.
+ *
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to get all the bids that set by a user with account id = `alice.test.near`,
+ * ```
+ * const bids_by_user = get_bidder_bids("alice.test.near");
+ * ```
+ *
+ * @param accountId ID of the user that need to get the bids set by him
+ * @return Array of bids that user has
+ */
 @nearBindgen
 export function get_bidder_bids(accountId: string): Bid[] {
     return persistent_market.get_by_bidder(accountId)
 }
 
+
+
+/**
+ * Accept a certain bid on a particular token.
+ *
+ * **Note:** Only the owner of the token can accept a bid
+ *
+ * **Basic usage example:**
+ *
+ * Assume the owner of the token with id = `jenny911038` need to accept a bid that set by a user with account id = `alice.test.near`,
+ * ```
+ * accept_bid("jenny911038", "alice.test.near");
+ * ```
+ *
+ * @param tokenId ID of the token that need to accept the bid
+ * @param bidder ID of the bidder that owner would like to accept the bid
+ */
 @nearBindgen
 export function accept_bid(tokenId: string, bidder: string): void {
     assert_not_paused()

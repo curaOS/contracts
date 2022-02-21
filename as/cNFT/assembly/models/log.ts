@@ -1,4 +1,15 @@
-import { NFTContractExtra, NFTContractMetadata } from './persistent_nft_contract_metadata'
+/**
+ * **Event Log Classes**
+ *
+ * Classes to capture relevant information from contract change methods when executed. External services can consume these logs for any action, like updating an external database (The Graph is a good example).
+ *
+ * @packageDocumentation
+ */
+
+import {
+    NFTContractExtra,
+    NFTContractMetadata,
+} from './persistent_nft_contract_metadata'
 import { Token } from './persistent_tokens'
 import { TokenMetadata } from './persistent_tokens_metadata'
 

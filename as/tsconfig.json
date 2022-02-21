@@ -8,6 +8,8 @@
         "excludeProtected": true,
         "excludeExternals": true,
         "stripInternal": true,
+        "mode": "file",
+        "name": "curaOS/Contracts",
         "inputFiles": ["as/cNFT/assembly"]
     }
 }

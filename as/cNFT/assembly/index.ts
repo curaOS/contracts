@@ -29,6 +29,25 @@ export {
 
 export { nft_metadata, nft_metadata_extra } from './metadata'
 
+
+
+/**
+ * Initialize the contract with owner details, standard metadata and extra metadata.
+ *
+ * **Note:** This function can be called only once, and it should be called immediately after deploying the contract.
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to initialize the contract with owner_id = `alice.test.near` and standard metadata details object `MTS1` and extra metadata details object `MTE1`,
+ * ```
+ * init( "alice.test.near", MTS1, MTE1 );
+ * ```
+ *
+ * @param owner_id ID of the contract owner
+ * @param contract_metadata Standard metadata object of the contract
+ * @param contract_extra Extra metadata object of the contract
+ */
+
 export function init(owner_id: AccountId, contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
 
     // Init can be called only once
@@ -49,6 +68,23 @@ export function init(owner_id: AccountId, contract_metadata: NFTContractMetadata
     logging.log(log)
 }
 
+
+
+/**
+ * Pause the contract change methods, if the owner wants to do that due to some reasons.
+ *
+ * **Note:** This function can be called only by the owner account or the contract account itself.
+ *
+ * **Basic usage example:**
+ *
+ * Assume that the owner need to pause the contract,
+ * ```
+ * set_paused( true );
+ * ```
+ *
+ * @param value Whether to pause the contract or not
+ * @return Current state of the contract
+ */
 export function set_paused(value: boolean = true): boolean {
     // only admin or contract account can call this method
     assert(

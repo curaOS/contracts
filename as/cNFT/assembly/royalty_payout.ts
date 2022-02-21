@@ -6,9 +6,24 @@ import { Payout, TokenId } from './types'
 import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persistent_nft_contract_metadata'
 import { assert_not_paused } from './utils/asserts'
 
-
-
 /** @todo implement better solution **/
+
+/**
+ * Get payout object for a particular token based on a given balance.
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to payout 1 `NEAR` for the first 5 royalties in token with token id = `jenny911038`,
+ * ```
+ * const balance = u128.from(1)
+ * const payout = internal_nft_payout("jenny911038", balance, 5);
+ * ```
+ *
+ * @param token_id ID of the token that need to get the bids
+ * @param balance Amount to pay for the payout royalties in `u128` format
+ * @param max_len_payout Maximum number of royalties for the token
+ * @return Royalty payout object
+ */
 @nearBindgen
 export function nft_payout(
     token_id: TokenId,
@@ -23,6 +38,24 @@ export function nft_payout(
 
 
 
+/**
+ * Get payout object for a particular token based on a given balance.
+ *
+ *  **Note:** This is used as a internal function.
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to payout 1 `NEAR` for the first 5 royalties in token with token id = `jenny911038`,
+ * ```
+ * const balance = u128.from(1)
+ * const payout = internal_nft_payout("jenny911038", balance, 5);
+ * ```
+ *
+ * @param token_id ID of the token that need to get the bids
+ * @param balance Amount to pay for the payout royalties in `u128` format
+ * @param max_len_payout Maximum number of royalties for the token
+ * @return Royalty payout object
+ */
 export function internal_nft_payout(
     token_id: TokenId,
     balance: u128,
