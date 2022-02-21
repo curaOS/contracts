@@ -18,6 +18,7 @@ export class PersistentTokens {
     /** Set is persistent cause it avoids loading the whole Set but just reference */
     private _amap: PersistentUnorderedMap<AccountId, PersistentSet<TokenId>>
     private _oset: PersistentSet<AccountId>
+    private _mmap: PersistentUnorderedMap<AccountId, PersistentSet<TokenId>>
 
     /**
      * @param prefix A prefix to use for every key of this map
@@ -79,6 +80,23 @@ export class PersistentTokens {
         return accountTokenSet.size.toString()
     }
 
+
+    /**
+     *
+     * @param accountId ID of account to retrieve supply
+     * @returns string token supply of AccountId
+     */
+    mints_for_owner(accountId: AccountId): string {
+        let accountMintTokenSet = this._mmap.get(accountId)
+
+        if (accountMintTokenSet == null || accountMintTokenSet.size == 0) {
+            return '0'
+        }
+
+        return accountMintTokenSet.size.toString()
+    }
+
+
     /**
      * @param accountId ID of account to retrieve tokens for
      * @returns an array of tokenId for owner
@@ -105,6 +123,20 @@ export class PersistentTokens {
         this._oset.add(accountId)
 
         return token
+    }
+
+    /**
+     *
+     * @param tokenId Id of the token
+     * @param accountId ID of the account who minted the token
+     */
+    add_mint(tokenId: TokenId, accountId: AccountId): void {
+
+        this._mmap.set(
+            accountId,
+            this._addToAccountMintTokenSet(tokenId, accountId)
+        )
+
     }
 
 
@@ -138,6 +170,49 @@ export class PersistentTokens {
             this._oset.delete(accountId)
         }
     }
+
+
+    /**
+     * Remove minted token from a user's minted token set.
+     * @param tokenId: Id of the token to remove
+     * @param accountId: Account of token to remove
+     */
+    remove_mint(tokenId: TokenId, accountId: AccountId): void {
+
+        this._mmap.set(
+            accountId,
+            this._removeFromAccountMintTokenSet(tokenId, accountId)
+        )
+
+    }
+
+
+    private _addToAccountMintTokenSet(
+        tokenId: TokenId,
+        accountId: AccountId
+    ): PersistentSet<TokenId> {
+        let accountMintTokenSet = this._mmap.get(accountId)
+
+        if (!accountMintTokenSet) {
+            accountMintTokenSet = new PersistentSet<TokenId>('_amts' + accountId)
+        }
+
+        accountMintTokenSet.add(tokenId)
+
+        return accountMintTokenSet
+    }
+
+    private _removeFromAccountMintTokenSet(
+        tokenId: TokenId,
+        accountId: AccountId
+    ): PersistentSet<TokenId> {
+        let accountMintTokenSet = this._mmap.getSome(accountId)
+
+        accountMintTokenSet.delete(tokenId)
+
+        return accountMintTokenSet
+    }
+
 
     private _addToAccountTokenSet(
         tokenId: TokenId,

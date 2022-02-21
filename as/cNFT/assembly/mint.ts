@@ -77,6 +77,7 @@ export function mint(
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
     persistent_tokens.add(tokenId, token, context.sender)
+    persistent_tokens.add_mint(tokenId, context.sender)
 
     persistent_tokens_royalty.add(tokenId, token_royalty)
 

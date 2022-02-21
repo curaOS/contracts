@@ -39,7 +39,7 @@ export function assert_mints_per_address(
     mints_per_address: u32,
     address: AccountId
 ): void {
-    const owner_supply = parseInt(persistent_tokens.supply_for_owner(address))
+    const owner_supply = parseInt(persistent_tokens.mints_for_owner(address))
     assert(
         owner_supply < mints_per_address,
         'Limited to ' + mints_per_address.toString() + ' mints per owner'
