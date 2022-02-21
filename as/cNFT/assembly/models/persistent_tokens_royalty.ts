@@ -3,14 +3,12 @@ import { TokenId, AccountId } from '../types'
 
 @nearBindgen
 export class TokenRoyalty {
-
     /** Map of Account IDs and their royalty values to the respective token  */
     split_between: Map<AccountId, u32>
 
     /** Percentage of the balance to be divided to the royalties */
     percentage: u32
 }
-
 
 /**
  * @hidden
@@ -24,7 +22,9 @@ export function defaultTokenRoyalty(): TokenRoyalty {
 
 @nearBindgen
 export class PeristentTokenRoyalty {
-    /** @todo explain this structure*/
+    /**
+     * TokenRoyaltyMap --> Maps Token to its Royalty settings
+     */
     private _trmap: PersistentUnorderedMap<TokenId, TokenRoyalty>
 
     /**
@@ -35,7 +35,6 @@ export class PeristentTokenRoyalty {
             '_trmap' + prefix
         )
     }
-
 
     /**
      * Add royalty details of a token
@@ -57,7 +56,6 @@ export class PeristentTokenRoyalty {
 
         return tokenRoyalty
     }
-
 
     /**
      * Get token royalty for a given token ID

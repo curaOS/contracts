@@ -1,12 +1,15 @@
 /**
  * **Event Log Classes**
  *
- * Classes used for capture data from the change methods in the contract when they are executed. These logs can be used for external services like `graph node` for better performance.
+ * Classes to capture relevant information from contract change methods when executed. External services can consume these logs for any action, like updating an external database (The Graph is a good example).
  *
  * @packageDocumentation
  */
 
-import { NFTContractExtra, NFTContractMetadata } from './persistent_nft_contract_metadata'
+import {
+    NFTContractExtra,
+    NFTContractMetadata,
+} from './persistent_nft_contract_metadata'
 import { Token } from './persistent_tokens'
 import { TokenMetadata } from './persistent_tokens_metadata'
 

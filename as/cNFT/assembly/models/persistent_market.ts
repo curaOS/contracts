@@ -20,7 +20,6 @@ export class PersistentMarket {
         >('_amap' + prefix)
     }
 
-
     /**
      * Check if the relevant token has bids or not
      *
@@ -32,13 +31,12 @@ export class PersistentMarket {
      * const is_bids_exists = persistent_market.has("jenny911038");
      * ```
      *
-     * @param token_id ID of the token to check it has bids or not
-     * @return `true` if bids exits, `false` if bids not exists
+     * @param token_id ID of the token to check
+     * @return `true` if bids exists, `false` otherwise
      */
     has(token_id: TokenId): bool {
         return this._tmap.contains(token_id)
     }
-
 
     /**
      * Get bids for a given token
@@ -51,13 +49,12 @@ export class PersistentMarket {
      * const bids = persistent_market.get("jenny911038");
      * ```
      *
-     * @param tokenId ID of the token to retrieve bids
-     * @return An object of bids for the given token
+     * @param tokenId ID of the token
+     * @return A Map of TokenId to Bid
      */
     get(tokenId: TokenId): BidsByBidder {
         return this._tmap.getSome(tokenId)
     }
-
 
     /**
      * Get bids created by a given account/user
@@ -70,8 +67,8 @@ export class PersistentMarket {
      * const bids = persistent_market.get_by_bidder("alice.test.near");
      * ```
      *
-     * @param accountId ID of the account/user to retrieve bids made by him
-     * @return An array of bids made by the given account/user
+     * @param accountId ID of the account/user to retrieve bids
+     * @return An Array of bids made by the given account/user
      */
     get_by_bidder(accountId: AccountId): Bid[] {
         let keys = this._amap.getSome(accountId).values()
@@ -81,7 +78,6 @@ export class PersistentMarket {
         }
         return bids
     }
-
 
     /**
      * Add a bid to the given token
@@ -94,9 +90,11 @@ export class PersistentMarket {
      * persistent_market.add("jenny911038" , "alice.test.near", B1 );
      * ```
      *
-     * @param tokenId Id of the token that need to set the bid
-     * @param accountId ID of the account who need to set the bid
-     * @param bid Bid to be added to the token
+     * **Note:** This overwrites any present bids.
+     *
+     * @param tokenId Id of the token
+     * @param accountId ID of the account who sets the bid
+     * @param bid Bid to be added to the token and account/user
      */
     add(tokenId: TokenId, accountId: AccountId, bid: Bid): void {
         this._tmap.set(tokenId, this._addToTokenBidMap(tokenId, accountId, bid))
@@ -106,7 +104,6 @@ export class PersistentMarket {
     /**
      * Remove the bid for tokenID
      */
-
 
     /**
      * Remove a bid from a given token
@@ -119,8 +116,8 @@ export class PersistentMarket {
      * persistent_market.remove("jenny911038" , "alice.test.near");
      * ```
      *
-     * @param tokenId Id of the token that need to remove the bid from
-     * @param accountId ID of the account who need to remove the bid from the token
+     * @param tokenId Id of the token
+     * @param accountId ID of the account
      */
     remove(tokenId: TokenId, accountId: AccountId): void {
         if (!this.get(tokenId).has(accountId)) {
