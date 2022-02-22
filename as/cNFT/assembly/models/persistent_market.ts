@@ -168,9 +168,15 @@ export class PersistentMarket {
         tokenId: TokenId,
         accountId: AccountId
     ): PersistentSet<TokenId> {
-        let _set = this._amap.getSome(accountId)
-        _set.delete(tokenId)
-        return _set
+        let _set = this._amap.get(accountId)
+        if(!_set){
+            _set = new PersistentSet<TokenId>('_abs' + accountId)
+            return  _set
+        }
+        else {
+            _set.delete(tokenId)
+            return _set
+        }
     }
 }
 
