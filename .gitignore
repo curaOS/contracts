@@ -9,3 +9,10 @@ docs/
 
 /neardev/dev-account
 /neardev/dev-account.env
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
