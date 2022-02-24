@@ -2,7 +2,7 @@ import { NearAccount } from "near-workspaces-ava";
 import { NFTContractMetadata } from "../../as/cNFT/assembly/models/persistent_nft_contract_metadata";
 import { Token } from "../../as/cNFT/assembly/models/persistent_tokens";
 import { BID, CONTRACT_EXTRA, CONTRACT_METADATA, CONTRACT_MINT_GAS, CONTRACT_MINT_PRICE, ONE_YOCTO, TOKEN_METADATA, TOKEN_ROYALTY } from "./dummyData";
-
+import { BidsByBidder } from "../../as/cNFT/assembly/models/market"
 
 // Change methods
 
@@ -65,14 +65,21 @@ export async function call_burn_design(contract: NearAccount, user: NearAccount,
 
 
 
-export async function call_set_bid(contract: NearAccount, user: NearAccount, args?: any) {
+export async function call_set_bid(contract: NearAccount, user: NearAccount, args?: any, options?: any) {
+    const rbid = BID()
     if (!args) {
         args = {
-            token_id: '0',
-            bid: BID()
+            tokenId: '0',
+            bid: rbid
         }
     }
-    const result = await user.call(contract, 'set_bid', args)
+    if (!options) {
+        options = {
+            attachedDeposit: parseInt(args.bid.amount),
+        }
+    }
+
+    const result = await user.call(contract, 'set_bid', args, options)
     return { result, args }
 }
 
@@ -146,3 +153,16 @@ export async function view_nft_supply_for_owner(contract: NearAccount, args?: an
     return { result, args }
 }
 
+
+export async function view_get_bids(contract: NearAccount, args?: any) {
+    if (!args) {
+        args = {
+            tokenId: '0',
+        }
+    }
+    const result: BidsByBidder = await contract.view(
+        'get_bids',
+        args
+    )
+    return { result, args }
+}

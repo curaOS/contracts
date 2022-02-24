@@ -71,7 +71,7 @@ export const TOKEN_ROYALTY = {
 
 export function BID() {
     return {
-        amount: randomString(randomInt(0, 100)),
+        amount: randomInt(0, 100).toString(),
         bidder: "cura.test.near",
         recipient: "alice.test.near",
         sell_on_share: randomInt(0, 20),

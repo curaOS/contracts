@@ -99,7 +99,7 @@ workspace.test(
 )
 
 workspace.test(
-    'Should Fail to mint more tokens than allowed',
+    'Should fail to mint more tokens than allowed',
     async (test, { contract, alice, john }) => {
 
         await call_mint(contract, alice)
