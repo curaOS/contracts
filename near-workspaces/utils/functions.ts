@@ -1,12 +1,25 @@
-import { NearAccount } from "near-workspaces-ava";
-import { NFTContractMetadata } from "../../as/cNFT/assembly/models/persistent_nft_contract_metadata";
-import { Token } from "../../as/cNFT/assembly/models/persistent_tokens";
-import { BID, CONTRACT_EXTRA, CONTRACT_METADATA, CONTRACT_MINT_GAS, CONTRACT_MINT_PRICE, ONE_YOCTO, TOKEN_METADATA, TOKEN_ROYALTY } from "./dummyData";
-import { BidsByBidder } from "../../as/cNFT/assembly/models/market"
+import { NearAccount } from 'near-workspaces-ava'
+import { NFTContractMetadata } from '../../as/cNFT/assembly/models/persistent_nft_contract_metadata'
+import { Token } from '../../as/cNFT/assembly/models/persistent_tokens'
+import {
+    BID,
+    CONTRACT_EXTRA,
+    CONTRACT_METADATA,
+    CONTRACT_MINT_GAS,
+    CONTRACT_MINT_PRICE,
+    ONE_YOCTO,
+    TOKEN_METADATA,
+    TOKEN_ROYALTY,
+} from './dummyData'
+import { BidsByBidder } from '../../as/cNFT/assembly/models/market'
 
 // Change methods
 
-export async function call_init(contract: NearAccount, user: NearAccount, args?: any) {
+export async function call_init(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any
+) {
     if (!args) {
         args = {
             owner_id: user.accountId,
@@ -18,29 +31,38 @@ export async function call_init(contract: NearAccount, user: NearAccount, args?:
     return { result, args }
 }
 
-export async function call_mint(contract: NearAccount, user: NearAccount, args?: any, options?: any) {
+export async function call_mint(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any,
+    options?: any
+) {
     if (!args) {
         args = {
             tokenMetadata: TOKEN_METADATA(),
-            token_royalty: TOKEN_ROYALTY
+            token_royalty: TOKEN_ROYALTY,
         }
     }
     if (!options) {
         options = {
             attachedDeposit: CONTRACT_MINT_PRICE,
-            gas: CONTRACT_MINT_GAS
+            gas: CONTRACT_MINT_GAS,
         }
     }
     const result: Token = await user.call(contract, 'mint', args, options)
     return { result, args }
 }
 
-
-export async function call_nft_transfer(contract: NearAccount, user: NearAccount, args?: any, options?: any) {
+export async function call_nft_transfer(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any,
+    options?: any
+) {
     if (!args) {
         args = {
             token_id: '0',
-            receiver_id: 'cura.test.near'
+            receiver_id: 'cura.test.near',
         }
     }
     if (!options) {
@@ -52,30 +74,36 @@ export async function call_nft_transfer(contract: NearAccount, user: NearAccount
     return { result, args }
 }
 
-
-export async function call_burn_design(contract: NearAccount, user: NearAccount, args?: any) {
+export async function call_burn_design(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any
+) {
     if (!args) {
         args = {
-            token_id: '0'
+            token_id: '0',
         }
     }
     const result = await user.call(contract, 'burn_design', args)
     return { result, args }
 }
 
-
-
-export async function call_set_bid(contract: NearAccount, user: NearAccount, args?: any, options?: any) {
+export async function call_set_bid(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any,
+    options?: any
+) {
     const rbid = BID()
     if (!args) {
         args = {
             tokenId: '0',
-            bid: rbid
+            bid: rbid,
         }
     }
     if (!options) {
         options = {
-            attachedDeposit: parseInt(args.bid.amount),
+            attachedDeposit: args.bid.amount,
         }
     }
 
@@ -83,9 +111,11 @@ export async function call_set_bid(contract: NearAccount, user: NearAccount, arg
     return { result, args }
 }
 
-
-
-export async function call_remove_bid(contract: NearAccount, user: NearAccount, args?: any) {
+export async function call_remove_bid(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any
+) {
     if (!args) {
         args = {
             token_id: '0',
@@ -95,9 +125,11 @@ export async function call_remove_bid(contract: NearAccount, user: NearAccount, 
     return { result, args }
 }
 
-
-
-export async function call_accept_bid(contract: NearAccount, user: NearAccount, args?: any) {
+export async function call_accept_bid(
+    contract: NearAccount,
+    user: NearAccount,
+    args?: any
+) {
     if (!args) {
         args = {
             tokenId: '0',
@@ -108,8 +140,6 @@ export async function call_accept_bid(contract: NearAccount, user: NearAccount, 
     return { result, args }
 }
 
-
-
 // View methods
 
 export async function view_nft_token(contract: NearAccount, args?: any) {
@@ -118,41 +148,35 @@ export async function view_nft_token(contract: NearAccount, args?: any) {
             token_id: '0',
         }
     }
-    const result: Token = await contract.view(
-        'nft_token',
-        args
-    )
+    const result: Token = await contract.view('nft_token', args)
     return { result, args }
 }
 
-export async function view_nft_tokens_for_owner(contract: NearAccount, args?: any) {
+export async function view_nft_tokens_for_owner(
+    contract: NearAccount,
+    args?: any
+) {
     if (!args) {
         args = {
             account_id: 'cura.test.near',
         }
     }
-    const result: Token[] = await contract.view(
-        'nft_tokens_for_owner',
-        args
-    )
+    const result: Token[] = await contract.view('nft_tokens_for_owner', args)
     return { result, args }
 }
 
-
-
-export async function view_nft_supply_for_owner(contract: NearAccount, args?: any) {
+export async function view_nft_supply_for_owner(
+    contract: NearAccount,
+    args?: any
+) {
     if (!args) {
         args = {
             account_id: 'cura.test.near',
         }
     }
-    const result: string = await contract.view(
-        'nft_supply_for_owner',
-        args
-    )
+    const result: string = await contract.view('nft_supply_for_owner', args)
     return { result, args }
 }
-
 
 export async function view_get_bids(contract: NearAccount, args?: any) {
     if (!args) {
@@ -160,9 +184,6 @@ export async function view_get_bids(contract: NearAccount, args?: any) {
             tokenId: '0',
         }
     }
-    const result: BidsByBidder = await contract.view(
-        'get_bids',
-        args
-    )
+    const result: BidsByBidder = await contract.view('get_bids', args)
     return { result, args }
 }

@@ -4,7 +4,6 @@ export const ONE_YOCTO = '1'
 export const CONTRACT_MINT_PRICE = ONE_NEAR
 export const CONTRACT_MINT_GAS = '300000000000000'
 
-
 // Utility
 export function randomString(length) {
     let result = ''
@@ -22,7 +21,6 @@ export function randomString(length) {
 export function randomInt(min = 0, max = 10) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
-
 
 // Data
 export const CONTRACT_METADATA = {
@@ -62,19 +60,18 @@ export function TOKEN_METADATA() {
 
 export const TOKEN_ROYALTY = {
     split_between: {
-        "cura.test.near": 10,
-        [CONTRACT_EXTRA.mint_royalty_id]: CONTRACT_EXTRA.mint_royalty_amount
+        'cura.test.near': 10,
+        [CONTRACT_EXTRA.mint_royalty_id]: CONTRACT_EXTRA.mint_royalty_amount,
     },
     percentage: 20,
 }
 
-
 export function BID() {
     return {
         amount: randomInt(0, 100).toString(),
-        bidder: "cura.test.near",
-        recipient: "alice.test.near",
+        bidder: 'cura.test.near',
+        recipient: 'alice.test.near',
         sell_on_share: randomInt(0, 20),
-        currency: "near",
+        currency: 'near',
     }
 }
