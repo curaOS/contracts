@@ -245,15 +245,22 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Set the new bid shares
 
-    // tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
-    // tokenRoyalty.percentage =
-    //     tokenRoyalty.percentage -
-    //     tokenRoyalty.split_between.get(token.prev_owner_id) +
-    //     tokenRoyalty.split_between.get(token.owner_id)
-    // persistent_tokens_royalty.add(tokenId, tokenRoyalty)
+    const owner_royalty = tokenRoyalty.split_between.get(token.owner_id);
+    let prev_owner_royalty = 0;
+
+    if(token.prev_owner_id){
+        prev_owner_royalty = tokenRoyalty.split_between.get(token.prev_owner_id);
+    }
+
+    tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
+    tokenRoyalty.percentage =
+        tokenRoyalty.percentage -
+        prev_owner_royalty +
+        owner_royalty
+    persistent_tokens_royalty.add(tokenId, tokenRoyalty)
 
     // Remove the accepted bid
-    // persistent_market.remove(tokenId, bidder)
+    persistent_market.remove(tokenId, bidder)
 
     // Committing log event
     const accept_bid_log = new NftAcceptBidLog()
