@@ -8,9 +8,11 @@ import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
 import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
 
+
+@nearBindgen
 class NftTransferArgs {
     token_id: string
-    bidder_id: string
+    receiver_id: string
 }
 
 
@@ -217,16 +219,24 @@ export function accept_bid(tokenId: string, bidder: string): void {
     promiseCreator.transfer(payout.get(token.creator_id))
 
     // Transfer bid share to previous owner
-    const promisePrevOwner = ContractPromiseBatch.create(token.prev_owner_id)
-    promisePrevOwner.transfer(payout.get(token.prev_owner_id))
+    if(token.prev_owner_id){
+        const promisePrevOwner = ContractPromiseBatch.create(token.prev_owner_id)
+        promisePrevOwner.transfer(payout.get(token.prev_owner_id))
+        env.promise_return(promisePrevOwner.id)
+    }
 
     env.promise_return(promiseCreator.id)
     env.promise_return(promiseOwner.id)
-    env.promise_return(promisePrevOwner.id)
 
     // Transfer token to bidder
-    const transferArgs: NftTransferArgs = { "token_id": tokenId, "bidder_id": bidder }
-    const promiseTransfer = ContractPromise.create(context.contractName, "nft_transfer", transferArgs, XCC_GAS, context.attachedDeposit)
+    const transferArgs: NftTransferArgs = { token_id: tokenId, receiver_id: bidder }
+    const promiseTransfer = ContractPromise.create(
+        context.contractName,
+        "nft_transfer",
+        transferArgs,
+        XCC_GAS,
+        context.attachedDeposit
+    )
     promiseTransfer.returnAsResult()
 
     if (!tokenRoyalty) {
@@ -235,15 +245,15 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Set the new bid shares
 
-    tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
-    tokenRoyalty.percentage =
-        tokenRoyalty.percentage -
-        tokenRoyalty.split_between.get(token.prev_owner_id) +
-        tokenRoyalty.split_between.get(token.owner_id)
-    persistent_tokens_royalty.add(tokenId, tokenRoyalty)
+    // tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
+    // tokenRoyalty.percentage =
+    //     tokenRoyalty.percentage -
+    //     tokenRoyalty.split_between.get(token.prev_owner_id) +
+    //     tokenRoyalty.split_between.get(token.owner_id)
+    // persistent_tokens_royalty.add(tokenId, tokenRoyalty)
 
     // Remove the accepted bid
-    persistent_market.remove(tokenId, bidder)
+    // persistent_market.remove(tokenId, bidder)
 
     // Committing log event
     const accept_bid_log = new NftAcceptBidLog()
