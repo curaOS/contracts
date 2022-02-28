@@ -14,8 +14,6 @@ import {
     call_set_bid,
 } from '../utils/functions'
 
-const log = (m) => console.log('base.ava.ts: ' + m)
-
 const workspace = Workspace.init(async ({ root }) => ({
     contract: await root.createAndDeploy(
         'cnft',
@@ -42,7 +40,7 @@ workspace.test(
 
         test.deepEqual(nft_metadata, CONTRACT_METADATA)
 
-        log(`✓  Alice returns the correct nft_metadata\n`)
+        test.log(`✓  Alice returns the correct nft_metadata\n`)
     }
 )
 
@@ -55,7 +53,7 @@ workspace.test(
 
         test.deepEqual(nft_metadata_extra, CONTRACT_EXTRA)
 
-        log(`✓  Alice returns the correct nft_metadata_extra\n`)
+        test.log(`✓  Alice returns the correct nft_metadata_extra\n`)
     }
 )
 
@@ -66,7 +64,7 @@ workspace.test(
             await call_init(contract, alice)
         })
 
-        log(`✓  Alice failed to initiate the contract twice\n`)
+        test.log(`✓  Alice failed to initiate the contract twice\n`)
     }
 )
 
@@ -79,7 +77,7 @@ workspace.test(
             })
         })
 
-        log(`✓  John failed to pause the contract\n`)
+        test.log(`✓  John failed to pause the contract\n`)
     }
 )
 
@@ -89,7 +87,7 @@ workspace.test(
         await alice.call(contract, 'set_paused', {
             value: true,
         })
-        log(`✓  Alice paused the contract\n`)
+        test.log(`✓  Alice paused the contract\n`)
 
         await test.throwsAsync(async () => {
             await call_mint(contract, john)
@@ -100,6 +98,6 @@ workspace.test(
             await call_remove_bid(contract, john)
         })
 
-        log(`✓  John failed to call change methods when contract is paused\n`)
+        test.log(`✓  John failed to call change methods when contract is paused\n`)
     }
 )

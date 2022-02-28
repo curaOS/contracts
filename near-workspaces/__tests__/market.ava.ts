@@ -9,8 +9,6 @@ import {
     call_set_bid,
 } from '../utils/functions'
 
-const log = (m) => console.log('market.ava.ts: ' + m)
-
 const workspace = Workspace.init(async ({ root }) => ({
     contract: await root.createAndDeploy(
         'cnft',
@@ -35,6 +33,7 @@ workspace.test(
     'Should bid one a token then fetch it with the right data',
     async (test, { contract, alice, john }) => {
         const { result: minted } = await call_mint(contract, alice)
+
 
         const alice_example_bid = {
             amount: toYocto(randomInt(0, 100).toString()),
@@ -81,7 +80,7 @@ workspace.test(
                 bid: john_example_bid,
             })
         })
-        log(`✓  John failed to bid on non-existant token\n`)
+        test.log(`✓  John failed to bid on non-existant token\n`)
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
@@ -89,7 +88,7 @@ workspace.test(
                 bid: { ...john_example_bid, amount: 0 },
             })
         })
-        log(`✓  John failed to bid 0\n`)
+        test.log(`✓  John failed to bid 0\n`)
 
         const johnBalanceBefore = await john.availableBalance()
         const contractBalanceBefore = await contract.availableBalance()
@@ -104,13 +103,13 @@ workspace.test(
                 currency: 'near',
             },
         })
-        log(`✓  John bid on Alice token successfully\n`)
+        test.log(`✓  John bid on Alice token successfully\n`)
 
         const johnBalanceAfter = await john.availableBalance()
         const contractBalanceAfter = await contract.availableBalance()
 
-        log(johnBalanceAfter)
-        log(contractBalanceAfter)
+        test.log(johnBalanceAfter)
+        test.log(contractBalanceAfter)
 
         // test.assert(
         //     johnBalanceBefore.toBigInt() - johnBalanceAfter.toBigInt() >=
@@ -121,7 +120,7 @@ workspace.test(
         //         contractBalanceBefore.toBigInt() >=
         //         BigInt(john_example_bid.amount)
         // )
-        log(`✓  John bid amount transfered to contract account after bid\n`)
+        test.log(`✓  John bid amount transfered to contract account after bid\n`)
 
         contract.availableBalance()
     }
