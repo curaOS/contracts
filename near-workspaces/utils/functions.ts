@@ -1,14 +1,13 @@
 import { NearAccount } from 'near-workspaces-ava'
-import { NFTContractMetadata } from '../../as/cNFT/assembly/models/persistent_nft_contract_metadata'
 import { Token } from '../../as/cNFT/assembly/models/persistent_tokens'
 import {
-    BID,
+    get_random_bid,
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
     CONTRACT_MINT_GAS,
     CONTRACT_MINT_PRICE,
     ONE_YOCTO,
-    TOKEN_METADATA,
+    get_random_token_metadata,
     TOKEN_ROYALTY,
 } from './dummyData'
 import { BidsByBidder } from '../../as/cNFT/assembly/models/market'
@@ -39,7 +38,7 @@ export async function call_mint(
 ) {
     if (!args) {
         args = {
-            tokenMetadata: TOKEN_METADATA(),
+            tokenMetadata: get_random_token_metadata(),
             token_royalty: TOKEN_ROYALTY,
         }
     }
@@ -94,7 +93,7 @@ export async function call_set_bid(
     args?: any,
     options?: any
 ) {
-    const rbid = BID()
+    const rbid = get_random_bid()
     if (!args) {
         args = {
             tokenId: '0',

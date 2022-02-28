@@ -47,7 +47,7 @@ export const CONTRACT_EXTRA = {
     mint_royalty_amount: 10,
 }
 
-export function TOKEN_METADATA() {
+export function get_random_token_metadata() {
     return {
         title: randomString(randomInt(0, 100)),
         copies: randomInt(1, 10),
@@ -66,7 +66,7 @@ export const TOKEN_ROYALTY = {
     percentage: 20,
 }
 
-export function BID() {
+export function get_random_bid() {
     return {
         amount: randomInt(0, 100).toString(),
         bidder: 'cura.test.near',

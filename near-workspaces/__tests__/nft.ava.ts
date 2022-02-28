@@ -1,22 +1,13 @@
 import { Workspace } from 'near-workspaces-ava'
 import {
-    NFTContractExtra,
-    NFTContractMetadata,
-} from '../../as/cNFT/assembly/models/persistent_nft_contract_metadata'
-import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
-    TOKEN_ROYALTY,
-    TOKEN_METADATA,
+    get_random_token_metadata,
 } from '../utils/dummyData'
 import {
-    call_accept_bid,
     call_burn_design,
-    call_init,
     call_mint,
     call_nft_transfer,
-    call_remove_bid,
-    call_set_bid,
     view_nft_supply_for_owner,
     view_nft_token,
     view_nft_tokens_for_owner,
@@ -105,7 +96,7 @@ workspace.test(
 
         await test.throwsAsync(async () => {
             await call_mint(contract, alice, {
-                tokenMetadata: TOKEN_METADATA(),
+                tokenMetadata: get_random_token_metadata(),
                 token_royalty: {
                     split_between: {
                         'alice.test.near': 10,

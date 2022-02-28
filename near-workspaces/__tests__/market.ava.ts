@@ -1,30 +1,14 @@
-import { BN } from 'bn.js'
 import { toYocto, Workspace } from 'near-workspaces-ava'
-import {
-    NFTContractExtra,
-    NFTContractMetadata,
-} from '../../as/cNFT/assembly/models/persistent_nft_contract_metadata'
-import { Token } from '../../as/cNFT/assembly/models/persistent_tokens'
 import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
-    TOKEN_ROYALTY,
-    TOKEN_METADATA,
-    BID,
+    get_random_token_metadata,
+    get_random_bid,
     randomInt,
 } from '../utils/dummyData'
 import {
-    call_accept_bid,
-    call_burn_design,
-    call_init,
     call_mint,
-    call_nft_transfer,
-    call_remove_bid,
     call_set_bid,
-    view_get_bids,
-    view_nft_supply_for_owner,
-    view_nft_token,
-    view_nft_tokens_for_owner,
 } from '../utils/functions'
 
 const log = (m) => console.log('market.ava.ts: ' + m)
