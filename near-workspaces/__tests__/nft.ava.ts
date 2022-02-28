@@ -15,17 +15,14 @@ import {
 
 const log = (m) => console.log('nft.ava.ts: ' + m)
 
-const workspace = Workspace.init(async ({ root }) => {
-    const alice = await root.createAccount('alice')
-    const john = await root.createAccount('john')
-
-    const contract = await root.createAndDeploy(
+const workspace = Workspace.init(async ({ root }) => ({
+    contract: await root.createAndDeploy(
         'cnft',
         '../build/release/cNFT.wasm',
         {
             method: 'init',
             args: {
-                owner_id: alice.accountId,
+                owner_id: "alice.test.near",
                 contract_metadata: CONTRACT_METADATA,
                 contract_extra: {
                     ...CONTRACT_EXTRA,
@@ -33,12 +30,11 @@ const workspace = Workspace.init(async ({ root }) => {
                 },
             },
         }
-    )
+    ),
+    alice: await root.createAccount('alice'),
+    john: await root.createAccount('john'),
+}));
 
-    log(`✓  Alice initiate the contract successfully\n`)
-
-    return { alice, john, contract }
-})
 
 workspace.test(
     'Should mint one NFT then fetch it',

@@ -2,8 +2,6 @@ import { toYocto, Workspace } from 'near-workspaces-ava'
 import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
-    get_random_token_metadata,
-    get_random_bid,
     randomInt,
 } from '../utils/dummyData'
 import {
@@ -13,17 +11,14 @@ import {
 
 const log = (m) => console.log('market.ava.ts: ' + m)
 
-const workspace = Workspace.init(async ({ root }) => {
-    const alice = await root.createAccount('alice')
-    const john = await root.createAccount('john')
-
-    const contract = await root.createAndDeploy(
+const workspace = Workspace.init(async ({ root }) => ({
+    contract: await root.createAndDeploy(
         'cnft',
         '../build/release/cNFT.wasm',
         {
             method: 'init',
             args: {
-                owner_id: alice.accountId,
+                owner_id: "alice.test.near",
                 contract_metadata: CONTRACT_METADATA,
                 contract_extra: {
                     ...CONTRACT_EXTRA,
@@ -31,12 +26,10 @@ const workspace = Workspace.init(async ({ root }) => {
                 },
             },
         }
-    )
-
-    log(`✓  Alice initiate the contract successfully\n`)
-
-    return { alice, john, contract }
-})
+    ),
+    alice: await root.createAccount('alice'),
+    john: await root.createAccount('john'),
+}));
 
 workspace.test(
     'Should bid one a token then fetch it with the right data',
