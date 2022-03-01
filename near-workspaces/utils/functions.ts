@@ -135,7 +135,7 @@ export async function call_accept_bid(
             bidder: 'cura.test.near',
         }
     }
-    const result = await user.call(contract, 'accept_bid', args)
+    const result = await user.call(contract, 'accept_bid', args, { attachedDeposit: ONE_YOCTO })
     return { result, args }
 }
 
@@ -184,5 +184,16 @@ export async function view_get_bids(contract: NearAccount, args?: any) {
         }
     }
     const result: BidsByBidder = await contract.view('get_bids', args)
+    return { result, args }
+}
+
+
+export async function view_get_bidder_bids(contract: NearAccount, args?: any) {
+    if (!args) {
+        args = {
+            accountId: 'alice',
+        }
+    }
+    const result: BidsByBidder = await contract.view('get_bidder_bids', args)
     return { result, args }
 }
