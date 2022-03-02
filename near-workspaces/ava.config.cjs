@@ -1,1 +1,6 @@
-module.exports = require('near-workspaces-ava/ava.config.cjs');
+const nearConfig = require('near-workspaces-ava/ava.config.cjs')
+
+module.exports = {
+    ...nearConfig,
+    timeout: "2m",
+}

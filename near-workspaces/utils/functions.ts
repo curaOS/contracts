@@ -151,6 +151,27 @@ export async function view_nft_token(contract: NearAccount, args?: any) {
     return { result, args }
 }
 
+
+export async function view_nft_tokens(contract: NearAccount, args?: any) {
+    if (!args) {
+        args = {
+            from_index: '0',
+            limit: 1,
+        }
+    }
+    const result: Token[] = await contract.view('nft_tokens', args)
+    return { result, args }
+}
+
+export async function view_nft_total_supply(contract: NearAccount, args?: any) {
+    if (!args) {
+        args = {
+        }
+    }
+    const result: string = await contract.view('nft_total_supply', args)
+    return { result, args }
+}
+
 export async function view_nft_tokens_for_owner(
     contract: NearAccount,
     args?: any
