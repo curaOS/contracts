@@ -45,7 +45,6 @@ export const CONTRACT_EXTRA = {
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
-    min_bid_amount: 0.1,
 }
 
 export function get_random_token_metadata() {
