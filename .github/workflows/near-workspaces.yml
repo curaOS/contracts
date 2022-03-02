@@ -8,6 +8,10 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: '15'
-            - name: 'Run near-workspaces tests'
+            - name: 'Building cNFT'
+              run: |
+                  yarn install
+                  yarn build-cnft
+            - name: 'Runing near-workspaces test'
               run: |
                   sh test.sh --verbose
