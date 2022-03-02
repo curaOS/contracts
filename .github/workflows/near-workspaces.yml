@@ -1,0 +1,13 @@
+name: Tests
+on: [push]
+jobs:
+    test-contracts:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: '15'
+            - name: 'Run near-workspaces tests'
+              run: |
+                  sh test.sh --verbose
