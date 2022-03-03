@@ -10,7 +10,7 @@ import { AccountId } from './types'
 
 export { mint } from './mint'
 
-export { nft_token, nft_transfer, burn_design, nft_is_approved } from './core'
+export { nft_token, nft_transfer, burn_design } from './core'
 
 export {
     nft_supply_for_owner,
@@ -28,6 +28,8 @@ export {
 } from './market'
 
 export { nft_metadata, nft_metadata_extra } from './metadata'
+
+export { nft_is_approved } from  './approval'
 
 
 
