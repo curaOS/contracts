@@ -4,7 +4,8 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import { logging, context } from 'near-sdk-as'
-import { assert_one_yocto, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
+import {assert_one_yocto, assert_eq_token_owner, assert_not_paused, assert_token_exists} from './utils/asserts'
+import {designs} from "../../NFT/assembly/models";
 
 
 /**
@@ -133,4 +134,48 @@ export function burn_design(token_id: TokenId): void {
 
     const log = new NftEventLogData<NftBurnLog>('nft_burn', [burn_log]);
     logging.log(log);
+}
+
+
+
+/**
+ * Check if the given account ID is approved to perform a transfer behalf of the owner of the particular token
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to check that a user with account id = `alice.test.near`, is approved to perform the transfer for a token with the token id = `jenny911038` and owner_Id = `jenny.test.near`,,
+ *
+ * ```
+ * const is_approved = nft_is_approved("jenny911038", "alice.test.near" ,1);
+ * console.log(is_approved); // true | false
+ * ```
+ *
+ * @param token_id ID of the token
+ * @param approved_account_id ID of the account that need check whether it is approved or not for the given token
+ * @param approval_id Approval ID number for the given `approved_account_id`
+ * @return Whether the account is approved or not
+ */
+@nearBindgen
+export function nft_is_approved(
+    token_id: TokenId,
+    approved_account_id: AccountId,
+    approval_id: string | null = null
+): boolean {
+
+    assert_token_exists(token_id);
+
+    let token = persistent_tokens.get(token_id)
+
+    assert(token.owner_id != approved_account_id, "Owner does not need any approval to perform transactions for the token")
+
+    const approval = token.approvals.has(approved_account_id)
+
+    if (approval) {
+        if (approval_id) {
+            const approvalId = token.approvals.get(approved_account_id)
+            return approvalId == parseInt(approval_id)
+        }
+        return true
+    }
+    return false
 }
