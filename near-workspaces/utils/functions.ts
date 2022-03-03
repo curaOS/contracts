@@ -117,7 +117,7 @@ export async function call_remove_bid(
 ) {
     if (!args) {
         args = {
-            token_id: '0',
+            tokenId: '0',
         }
     }
     const result = await user.call(contract, 'remove_bid', args)

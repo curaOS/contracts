@@ -89,14 +89,31 @@ workspace.test(
         })
         test.log(`✓  Alice paused the contract\n`)
 
+        const pausedErrorReg = new RegExp("\\b" + "paused" + "\\b")
+
         await test.throwsAsync(async () => {
             await call_mint(contract, john)
+        }, { message: pausedErrorReg })
+
+        await test.throwsAsync(async () => {
             await call_nft_transfer(contract, john)
+        }, { message: pausedErrorReg })
+
+        await test.throwsAsync(async () => {
             await call_burn_design(contract, john)
+        }, { message: pausedErrorReg })
+
+        await test.throwsAsync(async () => {
             await call_set_bid(contract, john)
+        }, { message: pausedErrorReg })
+
+        await test.throwsAsync(async () => {
             await call_accept_bid(contract, john)
+        }, { message: pausedErrorReg })
+
+        await test.throwsAsync(async () => {
             await call_remove_bid(contract, john)
-        })
+        }, { message: pausedErrorReg })
 
         test.log(`✓  John failed to call change methods when contract is paused\n`)
     }
