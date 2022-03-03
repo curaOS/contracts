@@ -19,6 +19,12 @@ export class Token {
 
     /** Metadata object of the token that describes the token */
     metadata: TokenMetadata
+
+    /** ID of the accounts, that can approve a transfer behalf of the owner */
+    approvals: Map<string, number>
+
+    /** Number used for the next approval ID */
+    next_approval_id: number
 }
 
 @nearBindgen

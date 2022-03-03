@@ -101,6 +101,10 @@ export function mint(
     token.creator_id = context.sender
     token.owner_id = context.sender
 
+    token.approvals = new Map<string, number>();
+    token.approvals.set(context.contractName, 1)
+    token.next_approval_id = 1;
+
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
     persistent_tokens.add(tokenId, token, context.sender)
