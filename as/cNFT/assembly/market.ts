@@ -197,13 +197,8 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     const token = persistent_tokens.get(tokenId)
 
-    if(token.owner_id != context.predecessor){
-
-        assert(
-            internal_nft_is_approved(tokenId, context.predecessor, "1" ),
-            "You don't have permission to perform this action"
-        )
-    }
+    /* todo: change when adding approval management */
+    assert_eq_token_owner(context.predecessor, token.owner_id)
 
 
     const bid = bids.get(bidder)

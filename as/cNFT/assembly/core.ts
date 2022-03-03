@@ -5,7 +5,6 @@ import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import { logging, context } from 'near-sdk-as'
 import {assert_one_yocto, assert_eq_token_owner, assert_not_paused, assert_token_exists} from './utils/asserts'
-import {designs} from "../../NFT/assembly/models";
 
 
 /**
@@ -62,8 +61,12 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
 
-    /* todo: change when adding approval management */
-    assert_eq_token_owner(context.predecessor, token.owner_id)
+    if(token.owner_id != context.predecessor){
+        assert(
+            internal_nft_is_approved(token_id, context.predecessor, "1" ),
+            "You don't have permission to perform this action"
+        )
+    }
     /* Assert owner is not receiver */
     assert(receiver_id != token.owner_id, "Bidder is already the owner")
 
