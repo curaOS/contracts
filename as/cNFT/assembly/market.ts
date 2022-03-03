@@ -7,6 +7,7 @@ import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { XCC_GAS } from '../../utils'
 import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
+import {internal_nft_is_approved, nft_is_approved} from "./core";
 
 class NftTransferArgs {
     token_id: string
@@ -196,8 +197,14 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     const token = persistent_tokens.get(tokenId)
 
-    /* todo: change when adding approval management */
-    assert_eq_token_owner(context.predecessor, token.owner_id)
+    if(token.owner_id != context.predecessor){
+
+        assert(
+            internal_nft_is_approved(tokenId, context.predecessor, "1" ),
+            "You don't have permission to perform this action"
+        )
+    }
+
 
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
