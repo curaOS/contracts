@@ -17,27 +17,24 @@ const workspace = Workspace.init(async ({ root }) => ({
             },
         }
     ),
-    alice: await root.createAccount('alice'),
-    john: await root.createAccount('john'),
-    user3: await root.createAccount('user3'),
-    user4: await root.createAccount('user4'),
-    user5: await root.createAccount('user5'),
 }));
 
 
 workspace.test(
     'Mint 100 tokens',
-    async (test, { contract, root, ...accounts }) => {
-        const amountPerAccount = 20;
-        const accountsArray = Object.values(accounts);
-        const expectedTotalSupply = amountPerAccount * accountsArray.length;
+    async (test, { contract, root }) => {
+        const totalUsers = 100;
+        const amountPerUser = 1;
 
-        await mintTokens(contract, accountsArray, amountPerAccount)
+        const users = await createUsers(root, totalUsers);
+        const expectedTotalSupply = amountPerUser * users.length;
+
+        await mintTokens(contract, users, amountPerUser)
 
         const { result: totalSupply } = await view_nft_total_supply(contract)
         test.assert(parseInt(totalSupply) == expectedTotalSupply)
 
-        test.log(`Minted ${expectedTotalSupply} tokens`)
+        test.log(`Minted ${expectedTotalSupply} tokens for a total of ${totalUsers} users`)
 
         // find the maximum tokens that can be fetched without gas using `nft_tokens`
         for (let i = 1; i < expectedTotalSupply; i++) {
@@ -67,4 +64,16 @@ async function mintTokens(
             await call_mint(contract, account);
         }
     }))
+}
+
+
+async function createUsers(
+    root: NearAccount,
+    totalUsers: number,
+): Promise<NearAccount[]> {
+    const users: NearAccount[] = new Array(totalUsers);
+    for (let i = 0; i < totalUsers; i++) {
+        users[i] = await root.createAccount('user' + i)
+    }
+    return users
 }
