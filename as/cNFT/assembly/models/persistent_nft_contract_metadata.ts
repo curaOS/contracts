@@ -61,8 +61,8 @@ export class NFTContractExtra {
     /** Amount of royalty, in percentage, that is set on each minted token. */
     mint_royalty_amount: u32
 
-    /** Base64-encoded string of packages script of the contract if there is any */
-    packages_script: string
+    /** Packages scripts of the contract if there is any */
+    packages_script: Map<string, Map<string, string>>
 
     /** Base64-encoded string of the render script of the contract if there is any */
     render_script: string
