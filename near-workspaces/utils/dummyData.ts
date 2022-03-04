@@ -30,11 +30,7 @@ export const CONTRACT_METADATA = {
     icon: '',
     base_uri: 'https://picsum.photos',
     reference: '',
-    reference_hash: '',
-    packages_script: '',
-    render_script: '',
-    style_css: '',
-    parameters: '',
+    reference_hash: ''
 }
 
 export const CONTRACT_EXTRA = {
@@ -45,6 +41,10 @@ export const CONTRACT_EXTRA = {
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
+    packages_script: null,
+    render_script: randomString(200),
+    style_css: randomString(50),
+    parameters: '',
 }
 
 export function get_random_token_metadata() {
