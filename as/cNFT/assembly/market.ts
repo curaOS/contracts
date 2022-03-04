@@ -201,6 +201,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
     /* todo: change when adding approval management */
     assert_eq_token_owner(context.predecessor, token.owner_id)
 
+
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
 

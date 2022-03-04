@@ -29,6 +29,8 @@ export {
 
 export { nft_metadata, nft_metadata_extra } from './metadata'
 
+export { nft_is_approved } from  './approval'
+
 
 
 /**
