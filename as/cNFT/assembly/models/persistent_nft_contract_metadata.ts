@@ -62,7 +62,7 @@ export class NFTContractExtra {
     mint_royalty_amount: u32
 
     /** Packages scripts of the contract if there is any */
-    packages_script: Map<string, Map<string, string>>
+    packages_script: Map<string, Map<string, string>> | null
 
     /** Base64-encoded string of the render script of the contract if there is any */
     render_script: string
@@ -103,7 +103,6 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_payee_id: '',
         mint_royalty_id: '',
         mint_royalty_amount: 0,
-        // @ts-ignore
         packages_script: null,
         render_script: '',
         style_css: '',
