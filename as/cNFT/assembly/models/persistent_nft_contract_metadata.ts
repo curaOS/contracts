@@ -86,11 +86,7 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
         icon: '',
         base_uri: '',
         reference: '',
-        reference_hash: '',
-        packages_script: '',
-        render_script: '',
-        style_css: '',
-        parameters: '',
+        reference_hash: ''
     }
 }
 
@@ -107,6 +103,11 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_payee_id: '',
         mint_royalty_id: '',
         mint_royalty_amount: 0,
+        // @ts-ignore
+        packages_script: null,
+        render_script: '',
+        style_css: '',
+        parameters: '',
     }
 }
 
