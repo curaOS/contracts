@@ -5,7 +5,6 @@ import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './
 import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
-import { XCC_GAS } from '../../utils'
 import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
 
 
@@ -235,7 +234,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
         context.contractName,
         "nft_transfer",
         transferArgs,
-        XCC_GAS,
+        228000000000000,
         context.attachedDeposit
     )
     promiseTransfer.returnAsResult()
