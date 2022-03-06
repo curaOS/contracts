@@ -1,7 +1,8 @@
-import { NEAR, Workspace } from 'near-workspaces-ava'
+import { BN, NEAR, Workspace } from 'near-workspaces-ava'
 import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
+    GAS_PER_1byte,
     randomInt,
 } from '../utils/dummyData'
 import {
@@ -219,5 +220,42 @@ workspace.test(
         //     BigInt(john_example_bid.amount)
         // )
         // test.log(`✔  Alice accepted John bid successfully and received amount\n`)
+    }
+)
+
+
+workspace.test(
+    'Should bid one one token',
+    async (test, { contract, alice, john }) => {
+        const { result: minted } = await call_mint(contract, alice)
+
+        const john_example_bid = {
+            amount: NEAR.parse("1N").toString(),
+            bidder: john.accountId,
+            recipient: minted.id,
+            sell_on_share: randomInt(0, 20),
+            currency: 'near',
+        }
+
+        const storage_usage_before = (await contract.accountView()).storage_usage
+
+        await call_set_bid(contract, john, {
+            tokenId: minted.id,
+            bid: john_example_bid,
+        })
+
+        const storage_usage_after = (await contract.accountView()).storage_usage
+        const storage_used = storage_usage_after - storage_usage_before;
+        const estimated_gas = new BN(GAS_PER_1byte).mul(new BN(storage_used))
+
+        const storage_used_per_1000 = storage_used * 1000
+        const estimated_gas_per_1000 = new BN(GAS_PER_1byte).mul(new BN(storage_used_per_1000))
+        test.log(`-----------------------------------------------------------------------------------------------
+Bytes used per 1 bid: ${storage_used} bytes
+Estimated gas cost per 1 bid: ${NEAR.from(estimated_gas).toHuman()} or ${estimated_gas.toString()} yoctoNEAR
+
+Estimated bytes used per 1000 bid: ${storage_used_per_1000} bytes
+Estimated gas cost per 1000 bid: ${NEAR.from(estimated_gas_per_1000).toHuman()} or ${estimated_gas_per_1000.toString()} yoctoNEAR
+-----------------------------------------------------------------------------------------------`)
     }
 )
