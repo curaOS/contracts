@@ -24,7 +24,7 @@ workspace.test(
     'Mint multiple tokens',
     async (test, { contract, root }) => {
         
-        const totalUsers = 2;
+        const totalUsers = 100;
         const amountPerUser = 1;
         
         const users = await createUsers(root, totalUsers);
