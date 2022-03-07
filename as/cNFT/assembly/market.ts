@@ -50,6 +50,10 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
 
+    let token = persistent_tokens.get(tokenId);
+
+    assert(token.owner_id != bid.bidder, "You can't bid on your own tokens")
+
     // Refund previous bid If user has one
     if(persistent_market.has(tokenId)){
         const bids = persistent_market.get(tokenId);
