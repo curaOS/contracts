@@ -23,7 +23,7 @@ import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
-import { ONE_NEAR } from '../../../utils'
+import {ONE_NEAR, randomInt} from '../../../utils'
 import { nft_metadata_extra } from '../metadata'
 
 const initContract = (): void => {
@@ -38,8 +38,9 @@ const mintToken = (accountId: AccountId): Token => {
     VMContext.setAttached_deposit(ONE_NEAR)
 
     const token_metadata = new TokenMetadata()
-    token_metadata.media = 'media'
-    token_metadata.extra = 'extra'
+    token_metadata.title = 'Sample Token'
+    token_metadata.description = 'Sample token description'
+    token_metadata.copies = <u8>randomInt(1, 10)
 
     const token_royalty = new TokenRoyalty()
     token_royalty.percentage = 2500

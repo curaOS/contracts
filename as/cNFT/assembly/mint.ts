@@ -60,6 +60,7 @@ export function mint(
     token_royalty: TokenRoyalty
 ): Token {
     assert_not_paused()
+    assert(tokenMetadata.title && tokenMetadata.description && tokenMetadata.copies, 'Token should have valid metadata')
 
     const contract_extra = storage.getSome<NFTContractExtra>(
         PersistentNFTContractMetadata.STORAGE_KEY_EXTRA

@@ -3,6 +3,7 @@ import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
     get_random_token_metadata,
+    TOKEN_ROYALTY,
 } from '../utils/dummyData'
 import {
     call_burn_design,
@@ -79,14 +80,13 @@ workspace.test(
         })
         test.log(`✓  Alice failed to mint with wrong deposit\n`)
 
-        /**  @todo fix in the contract **/
-        // await test.throwsAsync(async () => {
-        //     await call_mint(contract, alice, {
-        //         tokenMetadata: {},
-        //         token_royalty: TOKEN_ROYALTY
-        //     })
-        // })
-        // test.log(`✓  Alice failed to mint without tokenMetadata\n`)
+        await test.throwsAsync(async () => {
+            await call_mint(contract, alice, {
+                tokenMetadata: {},
+                token_royalty: TOKEN_ROYALTY
+            })
+        })
+        test.log(`✓  Alice failed to mint without tokenMetadata\n`)
 
         await test.throwsAsync(async () => {
             await call_mint(contract, alice, {
