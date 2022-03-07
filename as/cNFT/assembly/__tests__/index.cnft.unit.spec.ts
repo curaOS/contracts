@@ -159,6 +159,7 @@ const bidOnToken = (
     amount: number
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
+    VMContext.setPredecessor_account_id(accountId)
     VMContext.setAccount_balance(u128.from('1000000000000000000000000000'))
     VMContext.setAttached_deposit(u128.from(amount))
 
