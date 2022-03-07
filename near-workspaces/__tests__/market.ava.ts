@@ -66,17 +66,14 @@ workspace.test(
         // })
         // log(`✔  Alice failed to bid on her own token\n`)
 
-        /**
-         *  @todo fix in contract
-         *  user shouldn't be able to create bid for others
-         * */
-        // await test.throwsAsync(async () => {
-        //     await call_set_bid(contract, john, {
-        //         tokenId: minted.id,
-        //         bid: alice_example_bid
-        //     })
-        // })
-        // log(`✔  John failed to bid using alice account\n`)
+
+        await test.throwsAsync(async () => {
+            await call_set_bid(contract, john, {
+                tokenId: minted.id,
+                bid: alice_example_bid
+            })
+        })
+        test.log(`✔  John failed to bid using alice account\n`)
 
         /**
          *  @todo fix in contract
