@@ -50,6 +50,9 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
 
+    // Set bidder as the signer account to prevent setting bids for other accounts
+    bid.bidder = context.predecessor;
+
     // Refund previous bid If user has one
     if(persistent_market.has(tokenId)){
         const bids = persistent_market.get(tokenId);
