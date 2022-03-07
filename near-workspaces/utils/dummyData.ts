@@ -1,7 +1,9 @@
 // Amounts
 export const ONE_NEAR = '1000000000000000000000000'
+export const ONE_CENT_NEAR = '100000000000000000000000'
 export const ONE_YOCTO = '1'
 export const CONTRACT_MINT_PRICE = ONE_NEAR
+export const CONTRACT_MIN_BID_AMOUNT = ONE_CENT_NEAR
 export const CONTRACT_MINT_GAS = '300000000000000'
 
 // Utility
@@ -45,6 +47,7 @@ export const CONTRACT_EXTRA = {
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
+    min_bid_amount: CONTRACT_MIN_BID_AMOUNT
 }
 
 export function get_random_token_metadata() {

@@ -1,4 +1,4 @@
-import { storage } from 'near-sdk-as'
+import {storage, u128} from 'near-sdk-as'
 import { ONE_NEAR } from '../../../utils'
 import { AccountId } from '../types'
 
@@ -72,6 +72,9 @@ export class NFTContractExtra {
 
     /** Amount of royalty, in percentage, that is set on each minted token. */
     mint_royalty_amount: u32
+
+    /** Minimum amount of a bid that can be placed to a token in contract */
+    min_bid_amount: string
 }
 
 
@@ -107,6 +110,7 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_payee_id: '',
         mint_royalty_id: '',
         mint_royalty_amount: 0,
+        min_bid_amount: u128.div(ONE_NEAR, u128.from(10)).toString()
     }
 }
 
