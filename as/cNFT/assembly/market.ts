@@ -6,7 +6,7 @@ import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
 import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
-
+import { XCC_NFT_TRANSFER_GAS } from '../../utils'
 
 @nearBindgen
 class NftTransferArgs {
@@ -234,7 +234,7 @@ export function accept_bid(tokenId: string, bidder: string): void {
         context.contractName,
         "nft_transfer",
         transferArgs,
-        228000000000000,
+        XCC_NFT_TRANSFER_GAS,
         context.attachedDeposit
     )
     promiseTransfer.returnAsResult()
