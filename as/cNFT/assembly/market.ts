@@ -56,7 +56,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
     let contract_extra = storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
     assert(
-        u128.ge(bid.amount, u128.from(contract_extra.min_bid_amount)),
+        u128.ge(context.attachedDeposit, u128.from(contract_extra.min_bid_amount)),
         "Minimum bid is " +
         asNEAR(u128.from(contract_extra.min_bid_amount))
         + " NEAR"

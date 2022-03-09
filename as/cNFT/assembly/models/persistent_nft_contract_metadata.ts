@@ -110,7 +110,7 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_payee_id: '',
         mint_royalty_id: '',
         mint_royalty_amount: 0,
-        min_bid_amount: u128.div(ONE_NEAR, u128.from(10)).toString()
+        min_bid_amount: '0'
     }
 }
 
