@@ -2,6 +2,8 @@ import { context, storage, u128 } from 'near-sdk-as'
 import { TokenId } from '../../../utils'
 import { persistent_tokens } from '../models/persistent_tokens'
 import { AccountId } from '../types'
+import {persistent_account_mints} from "../mint";
+// import {persistent_account_mints} from "../mint";
 
 export function assert_eq_attached_deposit(amount: u128): void {
     assert(
@@ -39,7 +41,13 @@ export function assert_mints_per_address(
     mints_per_address: u32,
     address: AccountId
 ): void {
-    const owner_supply = parseInt(persistent_tokens.mints_for_owner(address))
+    let owner_supply: number;
+
+    if(!persistent_account_mints.contains(address)){
+        owner_supply = 0;
+    } else {
+        owner_supply = persistent_account_mints.getSome(address)
+    }
     assert(
         owner_supply < mints_per_address,
         'Limited to ' + mints_per_address.toString() + ' mints per owner'

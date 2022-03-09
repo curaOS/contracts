@@ -76,7 +76,6 @@ export function burn_design(token_id: TokenId): void {
 
     /* Deleting token from its owner */
     persistent_tokens.burn(token_id, token.owner_id);
-    persistent_tokens.remove_mint(token_id, token.creator_id)
 
     // Immiting log event
     const burn_log = new NftBurnLog();
