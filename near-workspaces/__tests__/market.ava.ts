@@ -203,21 +203,17 @@ workspace.test(
             })
         })
         test.log(`✔ John failed to accept bid of a token that he doesn't own\n`)
-
-        /** 
-         * @todo finish this after fixing `accept_bid` in contract
-         * 
-         */
-        // const aliceBalanceBefore = await alice.availableBalance()
-        // await call_accept_bid(contract, alice, {
-        //     tokenId: minted.id,
-        //     bidder: john.accountId
-        // })
-        // const aliceBalanceAfter = await alice.availableBalance()
-        // test.assert(
-        //     aliceBalanceBefore.toBigInt() - aliceBalanceAfter.toBigInt() >=
-        //     BigInt(john_example_bid.amount)
-        // )
-        // test.log(`✔  Alice accepted John bid successfully and received amount\n`)
+        
+        const aliceBalanceBefore = await alice.availableBalance()
+        await call_accept_bid(contract, alice, {
+            tokenId: minted.id,
+            bidder: john.accountId
+        })
+        const aliceBalanceAfter = await alice.availableBalance()
+        test.assert(
+            aliceBalanceBefore.toBigInt() - aliceBalanceAfter.toBigInt() >=
+            BigInt(john_example_bid.amount)
+        )
+        test.log(`✔  Alice accepted John bid successfully and received amount\n`)
     }
 )
