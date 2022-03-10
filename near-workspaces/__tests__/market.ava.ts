@@ -54,17 +54,13 @@ workspace.test(
             currency: 'near',
         }
 
-        /**
-         *  @todo fix in contract
-         *  user shouldn't be able to bid on his own token
-         * */
-        // await test.throwsAsync(async () => {
-        //     await call_set_bid(contract, alice, {
-        //         tokenId: minted.id,
-        //         bid: alice_example_bid
-        //     })
-        // })
-        // log(`✔  Alice failed to bid on her own token\n`)
+        await test.throwsAsync(async () => {
+            await call_set_bid(contract, alice, {
+                tokenId: minted.id,
+                bid: alice_example_bid
+            })
+        })
+        test.log(`✔  Alice failed to bid on her own token\n`)
 
         /**
          *  @todo fix in contract

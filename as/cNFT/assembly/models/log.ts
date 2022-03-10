@@ -13,7 +13,10 @@ import {
 import { Token } from './persistent_tokens'
 import { TokenMetadata } from './persistent_tokens_metadata'
 
-// An event log to capture token minting
+/**
+ * Capture details of a token when minting
+ * @event
+ */
 @nearBindgen
 export class NftMintLog {
     owner_id: string
@@ -24,7 +27,11 @@ export class NftMintLog {
     metadata: TokenMetadata[]
 }
 
-// An event log to capture token burning
+
+/**
+ * Capture details of a token when burning
+ * @event
+ */
 @nearBindgen
 export class NftBurnLog {
     owner_id: string
@@ -33,7 +40,10 @@ export class NftBurnLog {
     memo: string = ''
 }
 
-// An event log to capture token transfer
+/**
+ * Capture details of a token when transferring to another account
+ * @event
+ */
 @nearBindgen
 export class NftTransferLog {
     authorized_id: string = ''
@@ -43,7 +53,10 @@ export class NftTransferLog {
     memo: string = ''
 }
 
-// An event log to capture contract metadata
+/**
+ * Capture metadata details of the contract when initializing it
+ * @event
+ */
 @nearBindgen
 export class NftInitLog {
     metadata: NFTContractMetadata
@@ -51,6 +64,10 @@ export class NftInitLog {
     memo: string = ''
 }
 
+
+/**
+ * Capture data of all events
+ */
 @nearBindgen
 export class NftEventLogData<T> {
     standard: string = 'nep171'
@@ -64,6 +81,11 @@ export class NftEventLogData<T> {
     }
 }
 
+
+/**
+ * Capture details of a bid when bid is made
+ * @event
+ */
 @nearBindgen
 export class NftBidLog {
     bidder_id: string
@@ -75,6 +97,11 @@ export class NftBidLog {
     memo: string = ''
 }
 
+
+/**
+ * Capture details of a removed bid
+ * @event
+ */
 @nearBindgen
 export class NftRemoveBidLog {
     bidder_id: string
@@ -82,6 +109,11 @@ export class NftRemoveBidLog {
     memo: string = ''
 }
 
+
+/**
+ * Capture details of an accepted bid
+ * @event
+ */
 @nearBindgen
 export class NftAcceptBidLog {
     bidder_id: string
