@@ -2,10 +2,8 @@ import { context, storage, u128 } from 'near-sdk-as'
 import { TokenId } from '../../../utils'
 import { persistent_tokens } from '../models/persistent_tokens'
 import { AccountId } from '../types'
-import {persistent_account_mints} from "../mint";
+import { persistent_account_mints } from '../mint'
 // import {persistent_account_mints} from "../mint";
-
-
 
 /**
  * Check to see if the attached deposit is equal to the required amount or not. If not, it throws an error.
@@ -19,7 +17,6 @@ export function assert_eq_attached_deposit(amount: u128): void {
     )
 }
 
-
 /**
  * Check to see if the attached deposit is exactly 1 yoctoNEAR or not. If not, it throws an error.
  */
@@ -29,7 +26,6 @@ export function assert_one_yocto(): void {
         'Deposit is one yoctoNEAR'
     )
 }
-
 
 /**
  * Check to see if the attached deposit is at least 1 yoctoNEAR or not. If not, it throws an error.
@@ -41,7 +37,6 @@ export function assert_at_least_one_yocto(): void {
     )
 }
 
-
 /**
  * Check to see if the given token ID has a token associated with it or not. If not, it throws an error.
  *
@@ -50,7 +45,6 @@ export function assert_at_least_one_yocto(): void {
 export function assert_token_exists(token_id: TokenId): void {
     assert(persistent_tokens.has(token_id), "Token doesn't exist")
 }
-
 
 /**
  * Check to see if the given owner of the token has signed the transaction or not. If not, it throws an error.
@@ -65,7 +59,6 @@ export function assert_eq_token_owner(
     assert(predecessor == owner_id, 'You must own token')
 }
 
-
 /**
  * Check to see if the given account ID has tokens more than the given number or not. If exceeded, it throws an error.
  *
@@ -76,10 +69,10 @@ export function assert_mints_per_address(
     mints_per_address: u32,
     address: AccountId
 ): void {
-    let owner_supply: number;
+    let owner_supply: number
 
-    if(!persistent_account_mints.contains(address)){
-        owner_supply = 0;
+    if (!persistent_account_mints.contains(address)) {
+        owner_supply = 0
     } else {
         owner_supply = persistent_account_mints.getSome(address)
     }
@@ -89,10 +82,12 @@ export function assert_mints_per_address(
     )
 }
 
-
 /**
  * Check to see if the contract is paused or not. If paused, it throws an error.
  */
 export function assert_not_paused(): void {
-    assert(storage.get<string>("paused") != "true", "Contract is currently paused");
+    assert(
+        storage.get<string>('paused') != 'true',
+        'Contract is currently paused'
+    )
 }

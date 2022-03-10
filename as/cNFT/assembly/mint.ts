@@ -4,7 +4,8 @@ import {
     logging,
     storage,
     u128,
-    env, PersistentUnorderedMap,
+    env,
+    PersistentUnorderedMap,
 } from 'near-sdk-as'
 import {
     assert_eq_attached_deposit,
@@ -26,10 +27,7 @@ import {
     NFTContractExtra,
     PersistentNFTContractMetadata,
 } from './models/persistent_nft_contract_metadata'
-import {AccountId} from "./types";
-
-
-
+import { AccountId } from './types'
 
 /**
  * Mint a new token.
@@ -102,9 +100,9 @@ export function mint(
     token.creator_id = context.sender
     token.owner_id = context.sender
 
-    token.approvals = new Map<string, number>();
+    token.approvals = new Map<string, number>()
     token.approvals.set(context.contractName, 1)
-    token.next_approval_id = 1;
+    token.next_approval_id = 1
 
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
@@ -112,15 +110,14 @@ export function mint(
 
     persistent_tokens_royalty.add(tokenId, token_royalty)
 
-    let number_of_mints: number;
+    let number_of_mints: number
 
-    if(!persistent_account_mints.contains(context.sender)){
+    if (!persistent_account_mints.contains(context.sender)) {
         number_of_mints = 0
     } else {
         number_of_mints = persistent_account_mints.getSome(context.sender)
     }
-    persistent_account_mints.set(context.sender, number_of_mints+1)
-
+    persistent_account_mints.set(context.sender, number_of_mints + 1)
 
     // Transfer to minting payee
     const promiseBidder = ContractPromiseBatch.create(
@@ -145,5 +142,7 @@ export function mint(
     return token
 }
 
-
-export const persistent_account_mints = new PersistentUnorderedMap<AccountId, number>('am')
+export const persistent_account_mints = new PersistentUnorderedMap<
+    AccountId,
+    number
+>('am')

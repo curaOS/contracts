@@ -56,7 +56,6 @@ export class PersistentTokens {
         >('_amap' + prefix)
 
         this._oset = new PersistentSet<AccountId>('_oset' + prefix)
-
     }
 
     /**
@@ -161,7 +160,6 @@ export class PersistentTokens {
 
         return accountTokenSet.size.toString()
     }
-
 
     /**
      * Get the IDs of tokens saved in the contract for a given account/user
