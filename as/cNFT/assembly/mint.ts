@@ -63,10 +63,13 @@ export function mint(
     const contract_extra = storage.getSome<NFTContractExtra>(
         PersistentNFTContractMetadata.STORAGE_KEY_EXTRA
     )
-    const number_of_tokens = persistent_tokens.number_of_tokens
 
-    /** Assert attached deposit based on custom amount from NFTContractExtra */
-    assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
+    let number_of_mints = assert_mints_per_address(
+        contract_extra.mints_per_address,
+        context.sender
+    )
+
+    const number_of_tokens = persistent_tokens.number_of_tokens
 
     /** Assert number_of_tokens is less than max_copies */
     assert(
@@ -74,7 +77,8 @@ export function mint(
         'Contract max supply reached'
     )
 
-    assert_mints_per_address(contract_extra.mints_per_address, context.sender)
+    /** Assert attached deposit based on custom amount from NFTContractExtra */
+    assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
 
     /** Make sure default perp royalty is included */
     assert(
@@ -110,13 +114,6 @@ export function mint(
 
     persistent_tokens_royalty.add(tokenId, token_royalty)
 
-    let number_of_mints: number
-
-    if (!persistent_account_mints.contains(context.sender)) {
-        number_of_mints = 0
-    } else {
-        number_of_mints = persistent_account_mints.getSome(context.sender)
-    }
     persistent_account_mints.set(context.sender, number_of_mints + 1)
 
     // Transfer to minting payee
@@ -144,5 +141,5 @@ export function mint(
 
 export const persistent_account_mints = new PersistentUnorderedMap<
     AccountId,
-    number
+    u32
 >('am')

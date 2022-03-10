@@ -3,7 +3,6 @@ import { TokenId } from '../../../utils'
 import { persistent_tokens } from '../models/persistent_tokens'
 import { AccountId } from '../types'
 import { persistent_account_mints } from '../mint'
-// import {persistent_account_mints} from "../mint";
 
 /**
  * Check to see if the attached deposit is equal to the required amount or not. If not, it throws an error.
@@ -68,18 +67,18 @@ export function assert_eq_token_owner(
 export function assert_mints_per_address(
     mints_per_address: u32,
     address: AccountId
-): void {
-    let owner_supply: number
+): u32 {
+    let number_of_mints: u32 = 0
 
-    if (!persistent_account_mints.contains(address)) {
-        owner_supply = 0
-    } else {
-        owner_supply = persistent_account_mints.getSome(address)
+    if (persistent_account_mints.contains(address)) {
+        number_of_mints = persistent_account_mints.getSome(address)
     }
     assert(
-        owner_supply < mints_per_address,
+        number_of_mints < mints_per_address,
         'Limited to ' + mints_per_address.toString() + ' mints per owner'
     )
+
+    return number_of_mints
 }
 
 /**
