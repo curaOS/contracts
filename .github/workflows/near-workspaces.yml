@@ -1,0 +1,17 @@
+name: near-workspaces
+on: [push]
+jobs:
+    cNFT:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: '15'
+            - name: 'Building cNFT'
+              run: |
+                  yarn install
+                  yarn build-cnft
+            - name: 'Runing near-workspaces test'
+              run: |
+                  sh test.sh --verbose

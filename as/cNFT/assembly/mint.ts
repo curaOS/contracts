@@ -28,6 +28,33 @@ import {
 } from './models/persistent_nft_contract_metadata'
 import {AccountId} from "./types";
 
+
+
+
+/**
+ * Mint a new token.
+ *
+ * **Note:** `mint` function will need an attached deposit equal to `mint_price` specified in the `contract extra metadata`.
+ *
+ * **Basic usage example:**
+ *
+ * ```
+ * const token_metadata = new TokenMetadata()
+ * token_metadata.title = 'sample title'
+ * token_metadata.media = 'sample media'
+ * ...
+ *
+ * const token_royalty = new TokenRoyalty()
+ * token_royalty.percentage = 2500
+ * token_royalty.split_between.set('alice.test.near', 2500)
+ * ...
+ *
+ * const token = mint(token_metadata, token_royalty);
+ * ```
+ * @param tokenMetadata Metadata object of the minted token
+ * @param token_royalty Royalty object of the minted token
+ * @return Minted token
+ */
 @nearBindgen
 export function mint(
     tokenMetadata: TokenMetadata,
@@ -74,6 +101,10 @@ export function mint(
     /**@todo Not always sender is creator i guess */
     token.creator_id = context.sender
     token.owner_id = context.sender
+
+    token.approvals = new Map<string, number>();
+    token.approvals.set(context.contractName, 1)
+    token.next_approval_id = 1;
 
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 

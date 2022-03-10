@@ -4,9 +4,25 @@ import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import { logging, context } from 'near-sdk-as'
-import { assert_one_yocto, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
+import {assert_one_yocto, assert_not_paused } from './utils/asserts'
+import { internal_nft_is_approved } from "./approval";
 
 
+/**
+ * Get details of a single token
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to get details of a token with the token id = `jenny911038`,
+ *
+ * ```
+ * let token = nft_token("jenny911038");
+ * ```
+ *
+ * @param token_id ID of the token that needs to get details
+ * @return Details of the token if present
+ *
+ */
 @nearBindgen
 export function nft_token(token_id: TokenId): Token {
     // get token
@@ -19,7 +35,22 @@ export function nft_token(token_id: TokenId): Token {
     return token
 }
 
-
+/**
+ * Transfer a token to another account
+ *
+ *  **Note:** User must be the owner of the token
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to transfer a token with the token id = `jenny911038` to a user with account id = `alice.test.near`,
+ *
+ * ```
+ * nft_transfer("jenny911038", "alice.test.near");
+ * ```
+ *
+ * @param token_id ID of the token that needs to transfer
+ * @param receiver_id ID of the receiving account
+ */
 @nearBindgen
 export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
     assert_not_paused()
@@ -31,8 +62,12 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
     /* Getting stored token from tokenId */
     const token = persistent_tokens.get(token_id)
 
-    /* todo: change when adding approval management */
-    assert_eq_token_owner(context.predecessor, token.owner_id)
+    if(token.owner_id != context.predecessor){
+        assert(
+            internal_nft_is_approved(token_id, context.predecessor, "1" ),
+            "You don't have permission to perform this action"
+        )
+    }
     /* Assert owner is not receiver */
     assert(receiver_id != token.owner_id, "Bidder is already the owner")
 
@@ -64,7 +99,23 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
 }
 
-
+/**
+ * Burn a token
+ *
+ * `burn_design` won't completely remove the `token` from the `contract`. Instead of that, it will remove the owner details from the token and the contract for that respective token. So token metadata can be found and token details except `owner_id` can be found in the contract. But any of the change methods won't work for that token other than `remove_bid` method. Users can remove their bid made for that token even after it's burned.
+ *
+ *  **Note:** In order to burn a token, user must be the creator and the owner of the token
+ *
+ * **Basic usage example:**
+ *
+ * Assume we need to burn a token with the token id = `jenny911038`,
+ *
+ * ```
+ * burn_design("jenny911038");
+ * ```
+ *
+ * @param token_id ID of the token that needs to burn
+ */
 @nearBindgen
 export function burn_design(token_id: TokenId): void {
     assert_not_paused()
