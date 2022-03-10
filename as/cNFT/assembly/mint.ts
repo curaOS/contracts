@@ -5,6 +5,7 @@ import {
     storage,
     u128,
     env,
+    PersistentUnorderedMap,
 } from 'near-sdk-as'
 import {
     assert_eq_attached_deposit,
@@ -26,9 +27,7 @@ import {
     NFTContractExtra,
     PersistentNFTContractMetadata,
 } from './models/persistent_nft_contract_metadata'
-
-
-
+import { AccountId } from './types'
 
 /**
  * Mint a new token.
@@ -64,10 +63,13 @@ export function mint(
     const contract_extra = storage.getSome<NFTContractExtra>(
         PersistentNFTContractMetadata.STORAGE_KEY_EXTRA
     )
-    const number_of_tokens = persistent_tokens.number_of_tokens
 
-    /** Assert attached deposit based on custom amount from NFTContractExtra */
-    assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
+    let number_of_mints = assert_mints_per_address(
+        contract_extra.mints_per_address,
+        context.sender
+    )
+
+    const number_of_tokens = persistent_tokens.number_of_tokens
 
     /** Assert number_of_tokens is less than max_copies */
     assert(
@@ -75,7 +77,8 @@ export function mint(
         'Contract max supply reached'
     )
 
-    assert_mints_per_address(contract_extra.mints_per_address, context.sender)
+    /** Assert attached deposit based on custom amount from NFTContractExtra */
+    assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
 
     /** Make sure default perp royalty is included */
     assert(
@@ -101,15 +104,17 @@ export function mint(
     token.creator_id = context.sender
     token.owner_id = context.sender
 
-    token.approvals = new Map<string, number>();
+    token.approvals = new Map<string, number>()
     token.approvals.set(context.contractName, 1)
-    token.next_approval_id = 1;
+    token.next_approval_id = 1
 
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
     persistent_tokens.add(tokenId, token, context.sender)
 
     persistent_tokens_royalty.add(tokenId, token_royalty)
+
+    persistent_account_mints.set(context.sender, number_of_mints + 1)
 
     // Transfer to minting payee
     const promiseBidder = ContractPromiseBatch.create(
@@ -133,3 +138,8 @@ export function mint(
 
     return token
 }
+
+export const persistent_account_mints = new PersistentUnorderedMap<
+    AccountId,
+    u32
+>('am')
