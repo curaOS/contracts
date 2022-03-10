@@ -5,7 +5,7 @@ import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './
 import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
-import {asNEAR, ONE_NEAR, XCC_GAS} from '../../utils'
+import {asNEAR, XCC_GAS} from '../../utils'
 import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
 import {
     NFTContractExtra,
@@ -64,7 +64,8 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 
     let token = persistent_tokens.get(tokenId);
 
-    assert(token.owner_id != context.predecessor, "You can't bid on your own tokens")
+    assert(context.predecessor == bid.bidder, "Predecessor has to be bidder");
+    assert(token.owner_id != context.predecessor, "You can't bid on your own tokens");
 
     // Refund previous bid If user has one
     if(persistent_market.has(tokenId)){
