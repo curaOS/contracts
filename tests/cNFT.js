@@ -127,6 +127,7 @@ const CONTRACT_TOKENS_GAS =
     nearAPI.utils.format.parseNearAmount('0.00000000030') // 1000 Tgas
 const ONE_NEAR = nearAPI.utils.format.parseNearAmount('1')
 const CONTRACT_MINT_PRICE = ONE_NEAR
+const MINIMUM_BID_PRICE = nearAPI.utils.format.parseNearAmount('0.1')
 
 // Example data
 const CONTRACT_METADATA = {
@@ -150,6 +151,7 @@ const CONTRACT_EXTRA = {
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
+    min_bid_amount: MINIMUM_BID_PRICE
 }
 
 const TOKEN_ROYALTY = {

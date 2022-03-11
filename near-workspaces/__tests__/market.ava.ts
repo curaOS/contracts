@@ -24,7 +24,7 @@ const workspace = Workspace.init(async ({ root }) => ({
                 contract_metadata: CONTRACT_METADATA,
                 contract_extra: {
                     ...CONTRACT_EXTRA,
-                    ...{ mints_per_address: 2, max_copies: 3 },
+                    ...{ mints_per_address: 2, max_copies: 3, min_bid_amount: NEAR.parse("0.1N").toString() },
                 },
             },
         }
@@ -54,17 +54,13 @@ workspace.test(
             currency: 'near',
         }
 
-        /**
-         *  @todo fix in contract
-         *  user shouldn't be able to bid on his own token
-         * */
-        // await test.throwsAsync(async () => {
-        //     await call_set_bid(contract, alice, {
-        //         tokenId: minted.id,
-        //         bid: alice_example_bid
-        //     })
-        // })
-        // log(`✔  Alice failed to bid on her own token\n`)
+        await test.throwsAsync(async () => {
+            await call_set_bid(contract, alice, {
+                tokenId: minted.id,
+                bid: alice_example_bid
+            })
+        })
+        test.log(`✔  Alice failed to bid on her own token\n`)
 
         /**
          *  @todo fix in contract
@@ -77,18 +73,14 @@ workspace.test(
         //     })
         // })
         // log(`✔  John failed to bid using alice account\n`)
-
-        /**
-         *  @todo fix in contract
-         *  https://github.com/curaOS/contracts/issues/94
-         * */
-        // await test.throwsAsync(async () => {
-        //     await call_set_bid(contract, john, {
-        //         tokenId: minted.id,
-        //         bid: {... john_example_bid, amount: NEAR.parse("0.05N") }
-        //     })
-        // })
-        // log(`✔  John failed to bid less than `min_bid_amount`\n`)
+        
+        await test.throwsAsync(async () => {
+            await call_set_bid(contract, john, {
+                tokenId: minted.id,
+                bid: {... john_example_bid, amount: NEAR.parse("0.05N") }
+            })
+        })
+        test.log(`✔  John failed to bid less than min_bid_amount\n`)
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
