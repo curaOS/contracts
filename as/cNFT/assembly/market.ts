@@ -1,25 +1,41 @@
-import {context, ContractPromise, ContractPromiseBatch, env, logging, storage, u128} from 'near-sdk-as'
+import {
+    context,
+    ContractPromise,
+    ContractPromiseBatch,
+    env,
+    logging,
+    storage,
+    u128,
+} from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
-import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
+import {
+    NftEventLogData,
+    NftBidLog,
+    NftRemoveBidLog,
+    NftAcceptBidLog,
+} from './models/log'
 import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
-import {asNEAR, XCC_GAS} from '../../utils'
-import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
-import { XCC_NFT_TRANSFER_GAS } from '../../utils'
+import { asNEAR, XCC_NFT_TRANSFER_GAS } from '../../utils'
+import {
+    assert_eq_attached_deposit,
+    assert_one_yocto,
+    assert_token_exists,
+    assert_eq_token_owner,
+    assert_not_paused,
+} from './utils/asserts'
 import {
     NFTContractExtra,
-    PersistentNFTContractMetadata
-} from "./models/persistent_nft_contract_metadata";
+    PersistentNFTContractMetadata,
+} from './models/persistent_nft_contract_metadata'
 
 @nearBindgen
 class NftTransferArgs {
     token_id: string
     receiver_id: string
 }
-
-
 
 /**
  * Set a bid on a particular token.
@@ -56,30 +72,38 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
 
-    let contract_extra = storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
+    let contract_extra = storage.getSome<NFTContractExtra>(
+        PersistentNFTContractMetadata.STORAGE_KEY_EXTRA
+    )
     assert(
-        u128.ge(context.attachedDeposit, u128.from(contract_extra.min_bid_amount)),
-        "Minimum bid is " +
-        asNEAR(u128.from(contract_extra.min_bid_amount))
-        + " NEAR"
+        u128.ge(
+            context.attachedDeposit,
+            u128.from(contract_extra.min_bid_amount)
+        ),
+        'Minimum bid is ' +
+            asNEAR(u128.from(contract_extra.min_bid_amount)) +
+            ' NEAR'
     )
 
-    let token = persistent_tokens.get(tokenId);
+    let token = persistent_tokens.get(tokenId)
 
-    assert(context.predecessor == bid.bidder, "Predecessor has to be bidder");
-    assert(token.owner_id != context.predecessor, "You can't bid on your own tokens");
+    assert(context.predecessor == bid.bidder, 'Predecessor has to be bidder')
+    assert(
+        token.owner_id != context.predecessor,
+        "You can't bid on your own tokens"
+    )
 
     // Refund previous bid If user has one
-    if(persistent_market.has(tokenId)){
-        const bids = persistent_market.get(tokenId);
+    if (persistent_market.has(tokenId)) {
+        const bids = persistent_market.get(tokenId)
 
-        if(bids.has(bid.bidder)) {
+        if (bids.has(bid.bidder)) {
             const prevBid = bids.get(bid.bidder)
 
             const promiseBidder = ContractPromiseBatch.create(prevBid.bidder)
-            promiseBidder.transfer(prevBid.amount);
+            promiseBidder.transfer(prevBid.amount)
 
-            env.promise_return(promiseBidder.id);
+            env.promise_return(promiseBidder.id)
         }
     }
 
@@ -100,8 +124,6 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     return bid
 }
 
-
-
 /**
  * Remove the sender bid from a particular token
  *
@@ -121,16 +143,15 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 export function remove_bid(tokenId: string): void {
     assert_not_paused()
 
-    const bids = persistent_market.get(tokenId);
+    const bids = persistent_market.get(tokenId)
 
     const bid = bids.get(context.sender)
 
     // Transfer bid amount back to the bidder
     const promiseBidder = ContractPromiseBatch.create(bid.bidder)
-    promiseBidder.transfer(bid.amount);
+    promiseBidder.transfer(bid.amount)
 
-    env.promise_return(promiseBidder.id);
-
+    env.promise_return(promiseBidder.id)
 
     persistent_market.remove(tokenId, context.sender)
 
@@ -139,11 +160,11 @@ export function remove_bid(tokenId: string): void {
     remove_bid_log.bidder_id = context.sender
     remove_bid_log.token_ids = [tokenId]
 
-    const log = new NftEventLogData<NftRemoveBidLog>('nft_remove_bid', [remove_bid_log])
+    const log = new NftEventLogData<NftRemoveBidLog>('nft_remove_bid', [
+        remove_bid_log,
+    ])
     logging.log(log)
 }
-
-
 
 /**
  * Get bids for a particular token.
@@ -164,8 +185,6 @@ export function get_bids(tokenId: string): BidsByBidder {
     return persistent_market.get(tokenId)
 }
 
-
-
 /**
  * Get bids set by a particular user.
  *
@@ -184,8 +203,6 @@ export function get_bids(tokenId: string): BidsByBidder {
 export function get_bidder_bids(accountId: string): Bid[] {
     return persistent_market.get_by_bidder(accountId)
 }
-
-
 
 /**
  * Accept a certain bid on a particular token.
@@ -218,7 +235,6 @@ export function accept_bid(tokenId: string, bidder: string): void {
     /* todo: change when adding approval management */
     assert_eq_token_owner(context.predecessor, token.owner_id)
 
-
     const bid = bids.get(bidder)
     const tokenRoyalty = persistent_tokens_royalty.get(tokenId)
 
@@ -237,8 +253,10 @@ export function accept_bid(tokenId: string, bidder: string): void {
     promiseCreator.transfer(payout.get(token.creator_id))
 
     // Transfer bid share to previous owner
-    if(token.prev_owner_id){
-        const promisePrevOwner = ContractPromiseBatch.create(token.prev_owner_id)
+    if (token.prev_owner_id) {
+        const promisePrevOwner = ContractPromiseBatch.create(
+            token.prev_owner_id
+        )
         promisePrevOwner.transfer(payout.get(token.prev_owner_id))
         env.promise_return(promisePrevOwner.id)
     }
@@ -247,10 +265,13 @@ export function accept_bid(tokenId: string, bidder: string): void {
     env.promise_return(promiseOwner.id)
 
     // Transfer token to bidder
-    const transferArgs: NftTransferArgs = { token_id: tokenId, receiver_id: bidder }
+    const transferArgs: NftTransferArgs = {
+        token_id: tokenId,
+        receiver_id: bidder,
+    }
     const promiseTransfer = ContractPromise.create(
         context.contractName,
-        "nft_transfer",
+        'nft_transfer',
         transferArgs,
         XCC_NFT_TRANSFER_GAS,
         context.attachedDeposit
@@ -263,18 +284,16 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Set the new bid shares
 
-    const owner_royalty = tokenRoyalty.split_between.get(token.owner_id);
-    let prev_owner_royalty = 0;
+    const owner_royalty = tokenRoyalty.split_between.get(token.owner_id)
+    let prev_owner_royalty = 0
 
-    if(token.prev_owner_id){
-        prev_owner_royalty = tokenRoyalty.split_between.get(token.prev_owner_id);
+    if (token.prev_owner_id) {
+        prev_owner_royalty = tokenRoyalty.split_between.get(token.prev_owner_id)
     }
 
     tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
     tokenRoyalty.percentage =
-        tokenRoyalty.percentage -
-        prev_owner_royalty +
-        owner_royalty
+        tokenRoyalty.percentage - prev_owner_royalty + owner_royalty
     persistent_tokens_royalty.add(tokenId, tokenRoyalty)
 
     // Remove the accepted bid
@@ -285,6 +304,8 @@ export function accept_bid(tokenId: string, bidder: string): void {
     accept_bid_log.bidder_id = bidder
     accept_bid_log.token_ids = [tokenId]
 
-    const log = new NftEventLogData<NftAcceptBidLog>('nft_accept_bid', [accept_bid_log])
+    const log = new NftEventLogData<NftAcceptBidLog>('nft_accept_bid', [
+        accept_bid_log,
+    ])
     logging.log(log)
 }
