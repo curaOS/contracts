@@ -225,7 +225,7 @@ workspace.test(
 
 
 workspace.test(
-    'Should bid one one token',
+    'Should bid on one token',
     async (test, { contract, alice, john }) => {
         const { result: minted } = await call_mint(contract, alice)
 
