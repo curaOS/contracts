@@ -14,40 +14,39 @@ import {
 } from '../utils/functions'
 
 const workspace = Workspace.init(async ({ root }) => ({
-    contract: await root.createAndDeploy(
-        'cnft',
-        '../build/release/cNFT.wasm',
-        {
-            method: 'init',
-            args: {
-                owner_id: "alice.test.near",
-                contract_metadata: CONTRACT_METADATA,
-                contract_extra: {
-                    ...CONTRACT_EXTRA,
-                    ...{ mints_per_address: 2, max_copies: 3, min_bid_amount: NEAR.parse("0.1N").toString() },
+    contract: await root.createAndDeploy('cnft', '../build/release/cNFT.wasm', {
+        method: 'init',
+        args: {
+            owner_id: 'alice.test.near',
+            contract_metadata: CONTRACT_METADATA,
+            contract_extra: {
+                ...CONTRACT_EXTRA,
+                ...{
+                    mints_per_address: 2,
+                    max_copies: 3,
+                    min_bid_amount: NEAR.parse('0.1N').toString(),
                 },
             },
-        }
-    ),
+        },
+    }),
     alice: await root.createAccount('alice'),
     john: await root.createAccount('john'),
-}));
+}))
 
 workspace.test(
     'Should bid one a token then fetch it with the right data',
     async (test, { contract, alice, john }) => {
         const { result: minted } = await call_mint(contract, alice)
 
-
         const alice_example_bid = {
-            amount: NEAR.parse(randomInt(1, 10) + "N").toString(),
+            amount: NEAR.parse(randomInt(1, 10) + 'N').toString(),
             bidder: alice.accountId,
             recipient: minted.id,
             sell_on_share: randomInt(0, 20),
             currency: 'near',
         }
         const john_example_bid = {
-            amount: NEAR.parse("1N").toString(),
+            amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
             recipient: minted.id,
             sell_on_share: randomInt(0, 20),
@@ -57,7 +56,7 @@ workspace.test(
         await test.throwsAsync(async () => {
             await call_set_bid(contract, alice, {
                 tokenId: minted.id,
-                bid: alice_example_bid
+                bid: alice_example_bid,
             })
         })
         test.log(`✔  Alice failed to bid on her own token\n`)
@@ -73,11 +72,11 @@ workspace.test(
         //     })
         // })
         // log(`✔  John failed to bid using alice account\n`)
-        
+
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
                 tokenId: minted.id,
-                bid: {... john_example_bid, amount: NEAR.parse("0.05N") }
+                bid: { ...john_example_bid, amount: NEAR.parse('0.05N') },
             })
         })
         test.log(`✔  John failed to bid less than min_bid_amount\n`)
@@ -104,21 +103,24 @@ workspace.test(
 
         test.assert(
             johnBalanceBefore.toBigInt() - johnBalanceAfter.toBigInt() >=
-            BigInt(john_example_bid.amount)
+                BigInt(john_example_bid.amount)
         )
-        test.assert(contractBalanceAfter.toBigInt() > contractBalanceBefore.toBigInt())
-        test.log(`✔  John bid amount transfered to contract account after bid\n`)
+        test.assert(
+            contractBalanceAfter.toBigInt() > contractBalanceBefore.toBigInt()
+        )
+        test.log(
+            `✔  John bid amount transfered to contract account after bid\n`
+        )
 
         const { result: tokenBids } = await view_get_bids(contract, {
-            tokenId: minted.id
+            tokenId: minted.id,
         })
         // @ts-ignore
         test.deepEqual(tokenBids, { [john.accountId]: john_example_bid })
         test.log(`✔ get_bids returned the right data \n`)
 
-
         const { result: johnBids } = await view_get_bidder_bids(contract, {
-            accountId: john.accountId
+            accountId: john.accountId,
         })
         test.deepEqual(johnBids[0], john_example_bid)
         test.log(`✔ get_bidder_bids returned the right data \n`)
@@ -131,7 +133,7 @@ workspace.test(
         const { result: minted } = await call_mint(contract, alice)
 
         const john_example_bid = {
-            amount: NEAR.parse("1N").toString(),
+            amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
             recipient: minted.id,
             sell_on_share: randomInt(0, 20),
@@ -144,32 +146,29 @@ workspace.test(
         })
         test.log(`✔  John bid on Alice token successfully\n`)
 
-
         const johnBalanceBefore = await john.availableBalance()
         await call_remove_bid(contract, john, {
-            tokenId: minted.id
+            tokenId: minted.id,
         })
         const johnBalanceAfter = await john.availableBalance()
 
         test.assert(johnBalanceAfter.toBigInt() > johnBalanceBefore.toBigInt())
         test.log(`✔ John removed his bid successfully\n`)
 
-
         const { result: tokenBids } = await view_get_bids(contract, {
-            tokenId: minted.id
+            tokenId: minted.id,
         })
-        test.false(tokenBids.hasOwnProperty(john.accountId));
+        test.false(tokenBids.hasOwnProperty(john.accountId))
         test.log(`✔ get_bids doesn't return the removed bid \n`)
 
         const { result: johnBids } = await view_get_bidder_bids(contract, {
-            accountId: john.accountId
+            accountId: john.accountId,
         })
-        test.assert(Object.keys(johnBids).length == 0, "heloooooooooooooooo")
+        test.assert(Object.keys(johnBids).length == 0, 'heloooooooooooooooo')
         test.log(`✔ get_bidder_bids doesn't return the removed bid \n`)
         test.log()
     }
 )
-
 
 workspace.test(
     'Should bid one a token then accept it',
@@ -177,7 +176,7 @@ workspace.test(
         const { result: minted } = await call_mint(contract, alice)
 
         const john_example_bid = {
-            amount: NEAR.parse("1N").toString(),
+            amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
             recipient: minted.id,
             sell_on_share: randomInt(0, 20),
@@ -191,21 +190,24 @@ workspace.test(
         await test.throwsAsync(async () => {
             await call_accept_bid(contract, alice, {
                 tokenId: minted.id,
-                bidder: john.accountId
+                bidder: john.accountId,
             })
         })
         test.log(`✔ John failed to accept bid of a token that he doesn't own\n`)
-        
+
         const aliceBalanceBefore = await alice.availableBalance()
         await call_accept_bid(contract, alice, {
             tokenId: minted.id,
-            bidder: john.accountId
+            bidder: john.accountId,
         })
+
         const aliceBalanceAfter = await alice.availableBalance()
         test.assert(
             aliceBalanceBefore.toBigInt() - aliceBalanceAfter.toBigInt() >=
-            BigInt(john_example_bid.amount)
+                BigInt(john_example_bid.amount)
         )
-        test.log(`✔  Alice accepted John bid successfully and received amount\n`)
+        test.log(
+            `✔  Alice accepted John bid successfully and received amount\n`
+        )
     }
 )
