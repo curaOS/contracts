@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "test": "near-workspaces-ava",
-    "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
+    "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs",
+    "test:testnet:base": "near-workspaces-ava './__tests__/base.ava.ts' --verbose --config ./ava.testnet.config.cjs"
   },
   "devDependencies": {
     "near-workspaces-ava": "1.0.0"
