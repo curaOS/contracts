@@ -8,7 +8,7 @@ import {
     CONTRACT_MINT_PRICE,
     ONE_YOCTO,
     get_random_token_metadata,
-    TOKEN_ROYALTY,
+    TOKEN_ROYALTY, ACCEPT_BID_GAS,
 } from './dummyData'
 import { BidsByBidder } from '../../as/cNFT/assembly/models/market'
 
@@ -137,6 +137,7 @@ export async function call_accept_bid(
     }
     const result = await user.call(contract, 'accept_bid', args, {
         attachedDeposit: ONE_YOCTO,
+        gas: ACCEPT_BID_GAS
     })
 
     return { result, args }

@@ -3,6 +3,7 @@ export const ONE_NEAR = '1000000000000000000000000'
 export const ONE_YOCTO = '1'
 export const CONTRACT_MINT_PRICE = ONE_NEAR
 export const CONTRACT_MINT_GAS = '300000000000000'
+export const ACCEPT_BID_GAS = '300000000000000'
 
 // Utility
 export function randomString(length) {
