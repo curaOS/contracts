@@ -4,6 +4,7 @@ export const ONE_YOCTO = '1'
 export const CONTRACT_MINT_PRICE = ONE_NEAR
 export const CONTRACT_MINT_GAS = '300000000000000'
 export const CONTRACT_ACCEPT_BID_GAS = '200000000000000'
+export const GAS_PER_1byte = '10000000000000000000'
 
 // Utility
 export function randomString(length) {
