@@ -14,25 +14,32 @@ import {
     view_get_bids,
 } from '../utils/functions'
 
-const workspace = Workspace.init(async ({ root }) => ({
-    contract: await root.createAndDeploy('cnft', '../build/release/cNFT.wasm', {
-        method: 'init',
-        args: {
-            owner_id: 'alice.test.near',
-            contract_metadata: CONTRACT_METADATA,
-            contract_extra: {
-                ...CONTRACT_EXTRA,
-                ...{
-                    mints_per_address: 2,
-                    max_copies: 3,
-                    min_bid_amount: NEAR.parse('0.1N').toString(),
+const workspace = Workspace.init(
+    // { network: 'testnet', rootAccount: '[account].testnet' },
+    async ({ root }) => ({
+        contract: await root.createAndDeploy(
+            'cnft',
+            '../build/release/cNFT.wasm',
+            {
+                method: 'init',
+                args: {
+                    owner_id: 'alice.test.near',
+                    contract_metadata: CONTRACT_METADATA,
+                    contract_extra: {
+                        ...CONTRACT_EXTRA,
+                        ...{
+                            mints_per_address: 2,
+                            max_copies: 3,
+                            min_bid_amount: NEAR.parse('0.1N').toString(),
+                        },
+                    },
                 },
-            },
-        },
-    }),
-    alice: await root.createAccount('alice'),
-    john: await root.createAccount('john'),
-}))
+            }
+        ),
+        alice: await root.createAccount('alice'),
+        john: await root.createAccount('john'),
+    })
+)
 
 workspace.test(
     'Should bid one a token then fetch it with the right data',
