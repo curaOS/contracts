@@ -12,6 +12,6 @@ jobs:
               run: |
                   yarn install
                   yarn build-cnft
-            - name: 'Runing near-workspaces test'
+            - name: 'Running near-workspaces test'
               run: |
                   sh test.sh --verbose
