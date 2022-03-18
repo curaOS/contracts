@@ -266,8 +266,8 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Transfer token to bidder
     const transferArgs: NftTransferArgs = {
-        token_id: tokenId,
-        receiver_id: bidder,
+        "token_id": tokenId,
+        "receiver_id": bidder,
     }
     const promiseTransfer = ContractPromise.create(
         context.contractName,
@@ -284,9 +284,12 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Set the new bid shares
 
-    const owner_royalty = tokenRoyalty.split_between.get(token.owner_id)
-    let prev_owner_royalty = 0
+    let owner_royalty = 0
+    if (tokenRoyalty.split_between.has(token.owner_id)) {
+        owner_royalty = tokenRoyalty.split_between.get(token.owner_id)
+    }
 
+    let prev_owner_royalty = 0
     if (token.prev_owner_id) {
         prev_owner_royalty = tokenRoyalty.split_between.get(token.prev_owner_id)
     }

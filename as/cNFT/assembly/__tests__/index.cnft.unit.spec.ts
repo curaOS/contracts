@@ -18,6 +18,7 @@ import {
     get_bids,
     get_bidder_bids,
     remove_bid,
+    accept_bid,
 } from '../index'
 import { Token } from '../models/persistent_tokens'
 import { AccountId } from '../types'
@@ -202,7 +203,7 @@ describe('- MARKET -', () => {
         expect(bid.recipient).toStrictEqual('0')
     })
     it('xxx sets a bid & removes it', () => {
-      
+
         initContract()
         mintToken('yellow.testnet')
 
@@ -237,6 +238,19 @@ describe('- MARKET -', () => {
                 expect(bids[i].amount).toStrictEqual(u128.from(TWO_TENTH_NEAR))
             }
         }
+    })
+    it('xxx accepts a bid', () => {
+
+        initContract()
+        let token = mintToken('yellow.testnet')
+
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+
+        VMContext.setSigner_account_id('yellow.testnet')
+        VMContext.setPredecessor_account_id('yellow.testnet')
+        VMContext.setAttached_deposit(u128.from(1))
+
+        accept_bid(token.id, 'hello.testnet')
     })
 
     /** @todo add test for accept_bid */

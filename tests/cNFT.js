@@ -2,6 +2,8 @@ const nearAPI = require('near-api-js')
 const BN = require('bn.js')
 const fs = require('fs').promises
 const assert = require('assert').strict
+const CONTRACT_ACCEPT_BID_GAS = '300000000000000'
+const ONE_YOCTO = '1'
 
 function getConfig(env) {
     switch (env) {
@@ -344,6 +346,20 @@ async function test() {
     console.log('get_bidder_bids returns the right data')
 
     // 4. To Be Continued :-)
+
+    await jennyUseContract.accept_bid({
+        args:{
+            tokenId:jennyTokens[0].id,
+            bidder: rBid.bidder
+        },
+        gas: CONTRACT_ACCEPT_BID_GAS,
+        amount: ONE_YOCTO
+    })
+    let newToken = await jennyUseContract.nft_token({
+        token_id: jennyTokens[0].id
+    })
+    assert.equal(newToken.owner_id, rBid.bidder)
+    console.log('accept_bid works well')
 }
 
 test()
