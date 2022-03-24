@@ -1,6 +1,6 @@
 import {storage, u128} from 'near-sdk-as'
 import { ONE_NEAR } from '../../../utils'
-import { AccountId } from '../types'
+import {AccountId, PackagesScripts} from '../types'
 
 
 /** @hidden */
@@ -62,7 +62,7 @@ export class NFTContractExtra {
     mint_royalty_amount: u32
 
     /** Packages scripts of the contract if there is any */
-    packages_script: Map<string, Map<string, string>> | null
+    packages_script: PackagesScripts | null
 
     /** Base64-encoded string of the render script of the contract if there is any */
     render_script: string
@@ -75,7 +75,7 @@ export class NFTContractExtra {
 
     /** Minimum amount of a bid that can be placed to a token in contract */
     min_bid_amount: string
-
+}
 
 /**
  * @hidden
