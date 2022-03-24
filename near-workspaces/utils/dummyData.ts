@@ -3,6 +3,7 @@ export const ONE_NEAR = '1000000000000000000000000'
 export const ONE_YOCTO = '1'
 export const CONTRACT_MINT_PRICE = ONE_NEAR
 export const CONTRACT_MINT_GAS = '300000000000000'
+export const GAS_PER_1byte = '10000000000000000000'
 
 // Utility
 export function randomString(length) {
@@ -45,6 +46,7 @@ export const CONTRACT_EXTRA = {
     render_script: randomString(200),
     style_css: randomString(50),
     parameters: '',
+    min_bid_amount: '0',
 }
 
 export function get_random_token_metadata() {

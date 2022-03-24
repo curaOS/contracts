@@ -1,4 +1,4 @@
-import { storage } from 'near-sdk-as'
+import {storage, u128} from 'near-sdk-as'
 import { ONE_NEAR } from '../../../utils'
 import { AccountId } from '../types'
 
@@ -72,7 +72,9 @@ export class NFTContractExtra {
 
     /** Base64-encoded string of Parameters of the contract if there is any */
     parameters: string
-}
+
+    /** Minimum amount of a bid that can be placed to a token in contract */
+    min_bid_amount: string
 
 
 /**
@@ -107,6 +109,7 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         render_script: '',
         style_css: '',
         parameters: '',
+        min_bid_amount: '0'
     }
 }
 

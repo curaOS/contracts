@@ -1,12 +1,16 @@
-import { context, ContractPromise, ContractPromiseBatch, env, logging, u128 } from 'near-sdk-as'
+import {context, ContractPromise, ContractPromiseBatch, env, logging, storage, u128} from 'near-sdk-as'
 import { Bid, BidsByBidder } from './models/market'
 import { persistent_market } from './models/persistent_market'
 import { NftEventLogData, NftBidLog, NftRemoveBidLog, NftAcceptBidLog } from './models/log'
 import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
-import { XCC_GAS } from '../../utils'
+import {asNEAR, XCC_GAS} from '../../utils'
 import { assert_eq_attached_deposit, assert_one_yocto, assert_token_exists, assert_eq_token_owner, assert_not_paused } from './utils/asserts'
+import {
+    NFTContractExtra,
+    PersistentNFTContractMetadata
+} from "./models/persistent_nft_contract_metadata";
 
 class NftTransferArgs {
     token_id: string
@@ -49,6 +53,19 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     assert(bid.amount > u128.Zero, "Bid can't be zero")
     assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
+
+    let contract_extra = storage.getSome<NFTContractExtra>(PersistentNFTContractMetadata.STORAGE_KEY_EXTRA)
+    assert(
+        u128.ge(context.attachedDeposit, u128.from(contract_extra.min_bid_amount)),
+        "Minimum bid is " +
+        asNEAR(u128.from(contract_extra.min_bid_amount))
+        + " NEAR"
+    )
+
+    let token = persistent_tokens.get(tokenId);
+
+    assert(context.predecessor == bid.bidder, "Predecessor has to be bidder");
+    assert(token.owner_id != context.predecessor, "You can't bid on your own tokens");
 
     // Refund previous bid If user has one
     if(persistent_market.has(tokenId)){
