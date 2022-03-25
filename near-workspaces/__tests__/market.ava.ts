@@ -210,8 +210,9 @@ workspace.test(
         })
 
         const aliceBalanceAfter = await alice.availableBalance()
+
         test.assert(
-            aliceBalanceBefore.toBigInt() - aliceBalanceAfter.toBigInt() >=
+            aliceBalanceAfter.toBigInt() - aliceBalanceBefore.toBigInt() >=
                 BigInt(john_example_bid.amount)
         )
         test.log(
