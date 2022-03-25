@@ -5,6 +5,7 @@ import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
     CONTRACT_MINT_GAS,
+    CONTRACT_ACCEPT_BID_GAS,
     CONTRACT_MINT_PRICE,
     ONE_YOCTO,
     get_random_token_metadata,
@@ -135,7 +136,11 @@ export async function call_accept_bid(
             bidder: 'cura.test.near',
         }
     }
-    const result = await user.call(contract, 'accept_bid', args, { attachedDeposit: ONE_YOCTO })
+    const result = await user.call(contract, 'accept_bid', args, {
+        attachedDeposit: ONE_YOCTO,
+        gas: CONTRACT_ACCEPT_BID_GAS,
+    })
+
     return { result, args }
 }
 
@@ -151,7 +156,6 @@ export async function view_nft_token(contract: NearAccount, args?: any) {
     return { result, args }
 }
 
-
 export async function view_nft_tokens(contract: NearAccount, args?: any) {
     if (!args) {
         args = {
@@ -165,8 +169,7 @@ export async function view_nft_tokens(contract: NearAccount, args?: any) {
 
 export async function view_nft_total_supply(contract: NearAccount, args?: any) {
     if (!args) {
-        args = {
-        }
+        args = {}
     }
     const result: string = await contract.view('nft_total_supply', args)
     return { result, args }
@@ -207,7 +210,6 @@ export async function view_get_bids(contract: NearAccount, args?: any) {
     const result: BidsByBidder = await contract.view('get_bids', args)
     return { result, args }
 }
-
 
 export async function view_get_bidder_bids(contract: NearAccount, args?: any) {
     if (!args) {

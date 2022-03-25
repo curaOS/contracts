@@ -10,6 +10,8 @@ docs/
 /neardev/dev-account
 /neardev/dev-account.env
 
+near-workspaces/.near-credentials
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

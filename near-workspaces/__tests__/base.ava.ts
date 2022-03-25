@@ -14,48 +14,46 @@ import {
     call_set_bid,
 } from '../utils/functions'
 
-const workspace = Workspace.init(async ({ root }) => ({
-    contract: await root.createAndDeploy(
-        'cnft',
-        '../build/release/cNFT.wasm',
-        {
-            method: 'init',
-            args: {
-                owner_id: "alice.test.near",
-                contract_metadata: CONTRACT_METADATA,
-                contract_extra: CONTRACT_EXTRA,
-            },
-        }
-    ),
-    alice: await root.createAccount('alice'),
-    john: await root.createAccount('john'),
-}));
+const workspace = Workspace.init(async ({ root }) => {
+    const alice = await root.createAccount('alice')
 
-workspace.test(
-    'Alice calls nft_metadata',
-    async (test, { contract, alice }) => {
-        const nft_metadata: NFTContractMetadata = await contract.view(
-            'nft_metadata'
-        )
-
-        test.deepEqual(nft_metadata, CONTRACT_METADATA)
-
-        test.log(`✓  Alice returns the correct nft_metadata\n`)
+    return {
+        contract: await root.createAndDeploy(
+            'cnft',
+            '../build/release/cNFT.wasm',
+            {
+                method: 'init',
+                args: {
+                    owner_id: alice,
+                    contract_metadata: CONTRACT_METADATA,
+                    contract_extra: CONTRACT_EXTRA,
+                },
+            }
+        ),
+        alice,
+        john: await root.createAccount('john'),
     }
-)
+})
 
-workspace.test(
-    'Alice calls nft_metadata_extra',
-    async (test, { contract, alice }) => {
-        const nft_metadata_extra: NFTContractExtra = await contract.view(
-            'nft_metadata_extra'
-        )
+workspace.test('Alice calls nft_metadata', async (test, { contract }) => {
+    const nft_metadata: NFTContractMetadata = await contract.view(
+        'nft_metadata'
+    )
 
-        test.deepEqual(nft_metadata_extra, CONTRACT_EXTRA)
+    test.deepEqual(nft_metadata, CONTRACT_METADATA)
 
-        test.log(`✓  Alice returns the correct nft_metadata_extra\n`)
-    }
-)
+    test.log(`✓  Alice returns the correct nft_metadata\n`)
+})
+
+workspace.test('Alice calls nft_metadata_extra', async (test, { contract }) => {
+    const nft_metadata_extra: NFTContractExtra = await contract.view(
+        'nft_metadata_extra'
+    )
+
+    test.deepEqual(nft_metadata_extra, CONTRACT_EXTRA)
+
+    test.log(`✓  Alice returns the correct nft_metadata_extra\n`)
+})
 
 workspace.test(
     'Alice fails to initiate the contract twice',
@@ -89,32 +87,52 @@ workspace.test(
         })
         test.log(`✓  Alice paused the contract\n`)
 
-        const pausedErrorReg = new RegExp("\\b" + "paused" + "\\b")
+        const pausedErrorReg = new RegExp('\\b' + 'paused' + '\\b')
 
-        await test.throwsAsync(async () => {
-            await call_mint(contract, john)
-        }, { message: pausedErrorReg })
+        await test.throwsAsync(
+            async () => {
+                await call_mint(contract, john)
+            },
+            { message: pausedErrorReg }
+        )
 
-        await test.throwsAsync(async () => {
-            await call_nft_transfer(contract, john)
-        }, { message: pausedErrorReg })
+        await test.throwsAsync(
+            async () => {
+                await call_nft_transfer(contract, john)
+            },
+            { message: pausedErrorReg }
+        )
 
-        await test.throwsAsync(async () => {
-            await call_burn_design(contract, john)
-        }, { message: pausedErrorReg })
+        await test.throwsAsync(
+            async () => {
+                await call_burn_design(contract, john)
+            },
+            { message: pausedErrorReg }
+        )
 
-        await test.throwsAsync(async () => {
-            await call_set_bid(contract, john)
-        }, { message: pausedErrorReg })
+        await test.throwsAsync(
+            async () => {
+                await call_set_bid(contract, john)
+            },
+            { message: pausedErrorReg }
+        )
 
-        await test.throwsAsync(async () => {
-            await call_accept_bid(contract, john)
-        }, { message: pausedErrorReg })
+        await test.throwsAsync(
+            async () => {
+                await call_accept_bid(contract, john)
+            },
+            { message: pausedErrorReg }
+        )
 
-        await test.throwsAsync(async () => {
-            await call_remove_bid(contract, john)
-        }, { message: pausedErrorReg })
+        await test.throwsAsync(
+            async () => {
+                await call_remove_bid(contract, john)
+            },
+            { message: pausedErrorReg }
+        )
 
-        test.log(`✓  John failed to call change methods when contract is paused\n`)
+        test.log(
+            `✓  John failed to call change methods when contract is paused\n`
+        )
     }
 )

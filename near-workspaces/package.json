@@ -2,7 +2,10 @@
   "private": true,
   "scripts": {
     "test": "near-workspaces-ava",
-    "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
+    "test:base": "near-workspaces-ava './__tests__/base.ava.ts' --verbose",
+    "test:market": "near-workspaces-ava './__tests__/market.ava.ts' --verbose",
+    "test:mint": "near-workspaces-ava './__tests__/mint.ava.ts' --verbose",
+    "test:nft": "near-workspaces-ava './__tests__/nft.ava.ts' --verbose"
   },
   "devDependencies": {
     "near-workspaces-ava": "1.0.0"

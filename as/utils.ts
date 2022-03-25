@@ -42,7 +42,7 @@ export type Timestamp = u64
  */
 
 export const ONE_NEAR = u128.from('1000000000000000000000000')
-export const XCC_GAS: Gas = 20_000_000_000_000
+export const XCC_NFT_TRANSFER_GAS = 30000000000000
 export const MIN_ACCOUNT_BALANCE: u128 = u128.mul(ONE_NEAR, u128.from(3))
 export const ONE_HUNDRED_PERCENT: u16 = 10000
 
