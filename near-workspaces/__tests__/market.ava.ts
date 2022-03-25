@@ -196,7 +196,7 @@ workspace.test(
         })
 
         await test.throwsAsync(async () => {
-            await call_accept_bid(contract, alice, {
+            await call_accept_bid(contract, john, {
                 tokenId: minted.id,
                 bidder: john.accountId,
             })
