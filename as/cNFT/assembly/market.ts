@@ -284,19 +284,18 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     // Set the new bid shares
 
-    let owner_royalty = 0
-    if (tokenRoyalty.split_between.has(token.owner_id)) {
-        owner_royalty = tokenRoyalty.split_between.get(token.owner_id)
-    }
+    tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
 
+    const owner_royalty = tokenRoyalty.split_between.get(token.owner_id)
     let prev_owner_royalty = 0
+
     if (token.prev_owner_id) {
         prev_owner_royalty = tokenRoyalty.split_between.get(token.prev_owner_id)
     }
 
-    tokenRoyalty.split_between.set(token.owner_id, bid.sell_on_share)
     tokenRoyalty.percentage =
         tokenRoyalty.percentage - prev_owner_royalty + owner_royalty
+
     persistent_tokens_royalty.add(tokenId, tokenRoyalty)
 
     // Remove the accepted bid
