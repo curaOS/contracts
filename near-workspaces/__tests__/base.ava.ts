@@ -14,18 +14,26 @@ import {
     call_set_bid,
 } from '../utils/functions'
 
-const workspace = Workspace.init(async ({ root }) => ({
-    contract: await root.createAndDeploy('cnft', '../build/release/cNFT.wasm', {
-        method: 'init',
-        args: {
-            owner_id: 'testnet-try-0',
-            contract_metadata: CONTRACT_METADATA,
-            contract_extra: CONTRACT_EXTRA,
-        },
-    }),
-    alice: await root.createAccount('alice'),
-    john: await root.createAccount('john'),
-}))
+const workspace = Workspace.init(async ({ root }) => {
+    const alice = await root.createAccount('alice')
+
+    return {
+        contract: await root.createAndDeploy(
+            'cnft',
+            '../build/release/cNFT.wasm',
+            {
+                method: 'init',
+                args: {
+                    owner_id: alice,
+                    contract_metadata: CONTRACT_METADATA,
+                    contract_extra: CONTRACT_EXTRA,
+                },
+            }
+        ),
+        alice,
+        john: await root.createAccount('john'),
+    }
+})
 
 workspace.test('Alice calls nft_metadata', async (test, { contract }) => {
     const nft_metadata: NFTContractMetadata = await contract.view(
