@@ -140,10 +140,6 @@ const CONTRACT_METADATA = {
     base_uri: 'https://picsum.photos',
     reference: '',
     reference_hash: '',
-    packages_script: '',
-    render_script: '',
-    style_css: '',
-    parameters: '',
 }
 const CONTRACT_EXTRA = {
     mint_price: CONTRACT_MINT_PRICE,
@@ -153,6 +149,10 @@ const CONTRACT_EXTRA = {
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
+    packages_script: '',
+    render_script: '',
+    style_css: '',
+    parameters: '',
     min_bid_amount: MINIMUM_BID_PRICE
 }
 
@@ -201,7 +201,7 @@ async function test() {
      */
     await jennyUseContract.init({
         args: {
-            owner_id: "jenny.test.near",
+            owner_id: 'jenny.test.near',
             contract_metadata: CONTRACT_METADATA,
             contract_extra: CONTRACT_EXTRA,
         },

@@ -1,4 +1,4 @@
-import {storage, u128} from 'near-sdk-as'
+import { storage} from 'near-sdk-as'
 import { ONE_NEAR } from '../../../utils'
 import { AccountId } from '../types'
 
@@ -11,6 +11,7 @@ const NFT_NAME = 'Nft'
 
 /** @hidden */
 const NFT_SYMBOL = 'NFT'
+
 
 @nearBindgen
 export class NFTContractMetadata {
@@ -35,18 +36,6 @@ export class NFTContractMetadata {
 
     /** Base64-encoded sha256 hash of JSON from reference field. Required if `reference` is included. */
     reference_hash: string
-
-    /** Base64-encoded string of packages script of the contract if there is any */
-    packages_script: string
-
-    /** Base64-encoded string of the render script of the contract if there is any */
-    render_script: string
-
-    /** Base64-encoded string of CSS styles of the contract if there is any */
-    style_css: string
-
-    /** Base64-encoded string of Parameters of the contract if there is any */
-    parameters: string
 }
 
 @nearBindgen
@@ -73,10 +62,21 @@ export class NFTContractExtra {
     /** Amount of royalty, in percentage, that is set on each minted token. */
     mint_royalty_amount: u32
 
+    /** Base64-encoded string of packages script of the contract if there is any */
+    packages_script: string
+
+    /** Base64-encoded string of the render script of the contract if there is any */
+    render_script: string
+
+    /** Base64-encoded string of CSS styles of the contract if there is any */
+    style_css: string
+
+    /** Base64-encoded string of Parameters of the contract if there is any */
+    parameters: string
+
     /** Minimum amount of a bid that can be placed to a token in contract */
     min_bid_amount: string
 }
-
 
 /**
  * @hidden
@@ -89,11 +89,7 @@ export function defaultNFTContractMetadata(): NFTContractMetadata {
         icon: '',
         base_uri: '',
         reference: '',
-        reference_hash: '',
-        packages_script: '',
-        render_script: '',
-        style_css: '',
-        parameters: '',
+        reference_hash: ''
     }
 }
 
@@ -110,6 +106,10 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_payee_id: '',
         mint_royalty_id: '',
         mint_royalty_amount: 0,
+        packages_script: '',
+        render_script: '',
+        style_css: '',
+        parameters: '',
         min_bid_amount: '0'
     }
 }
