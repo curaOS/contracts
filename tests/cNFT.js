@@ -147,13 +147,7 @@ const CONTRACT_EXTRA = {
     mint_payee_id: 'jenny.test.near',
     mint_royalty_id: 'jenny.test.near',
     mint_royalty_amount: 10,
-    packages_script: {
-        'p5.js': {
-            version: '1.0.0',
-            decentralized_storage: '[arweave/filecoin URL]',
-            centralized_storage: '[npm URL]',
-        },
-    },
+    packages_script: '',
     render_script: '',
     style_css: '',
     parameters: '',

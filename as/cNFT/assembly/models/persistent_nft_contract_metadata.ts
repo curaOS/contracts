@@ -1,6 +1,6 @@
-import {storage, u128} from 'near-sdk-as'
+import { storage} from 'near-sdk-as'
 import { ONE_NEAR } from '../../../utils'
-import {AccountId, PackagesScripts} from '../types'
+import { AccountId } from '../types'
 
 
 /** @hidden */
@@ -11,6 +11,7 @@ const NFT_NAME = 'Nft'
 
 /** @hidden */
 const NFT_SYMBOL = 'NFT'
+
 
 @nearBindgen
 export class NFTContractMetadata {
@@ -61,8 +62,8 @@ export class NFTContractExtra {
     /** Amount of royalty, in percentage, that is set on each minted token. */
     mint_royalty_amount: u32
 
-    /** Packages scripts of the contract if there is any */
-    packages_script: PackagesScripts | null
+    /** Base64-encoded string of packages script of the contract if there is any */
+    packages_script: string
 
     /** Base64-encoded string of the render script of the contract if there is any */
     render_script: string
@@ -105,7 +106,7 @@ export function defaultNFTContractExtra(): NFTContractExtra {
         mint_payee_id: '',
         mint_royalty_id: '',
         mint_royalty_amount: 0,
-        packages_script: null,
+        packages_script: '',
         render_script: '',
         style_css: '',
         parameters: '',
