@@ -18,7 +18,7 @@ import {
 import { internal_nft_payout } from './royalty_payout'
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
 import { persistent_tokens } from './models/persistent_tokens'
-import { asNEAR, XCC_NFT_TRANSFER_GAS } from '../../utils'
+import { asNEAR, XCC_NFT_TRANSFER_GAS, ONE_HUNDRED_PERCENT } from '../../utils'
 import {
     assert_eq_attached_deposit,
     assert_one_yocto,
@@ -75,6 +75,9 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     let contract_extra = storage.getSome<NFTContractExtra>(
         PersistentNFTContractMetadata.STORAGE_KEY_EXTRA
     )
+
+    assert(contract_extra.mint_royalty_amount + bid.sell_on_share < ONE_HUNDRED_PERCENT, "Sell on share amount too high")
+
     assert(
         u128.ge(
             context.attachedDeposit,
