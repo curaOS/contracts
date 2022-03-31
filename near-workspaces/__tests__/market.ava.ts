@@ -3,6 +3,7 @@ import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
     GAS_PER_1byte,
+    ONE_NEAR,
     randomInt,
 } from '../utils/dummyData'
 import {
@@ -15,7 +16,7 @@ import {
 } from '../utils/functions'
 
 const workspace = Workspace.init(
-    // { network: 'testnet', rootAccount: '[account].testnet' },
+    //{ network: 'testnet', rootAccount: '[account].testnet' },
     async ({ root }) => ({
         contract: await root.createAndDeploy(
             'cnft',
@@ -69,17 +70,13 @@ workspace.test(
         })
         test.log(`✔  Alice failed to bid on her own token\n`)
 
-        /**
-         *  @todo fix in contract
-         *  user shouldn't be able to create bid for others
-         * */
-        // await test.throwsAsync(async () => {
-        //     await call_set_bid(contract, john, {
-        //         tokenId: minted.id,
-        //         bid: alice_example_bid
-        //     })
-        // })
-        // log(`✔  John failed to bid using alice account\n`)
+        await test.throwsAsync(async () => {
+            await call_set_bid(contract, john, {
+                tokenId: minted.id,
+                bid: alice_example_bid,
+            })
+        })
+        test.log(`✔  John failed to bid using alice account\n`)
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
@@ -99,6 +96,14 @@ workspace.test(
 
         const johnBalanceBefore = await john.availableBalance()
         const contractBalanceBefore = await contract.availableBalance()
+
+        await test.throwsAsync(async () => {
+            await call_set_bid(contract, john, {
+                tokenId: minted.id,
+                bid: { ...john_example_bid, sell_on_share: 10100 },
+            })
+        })
+        test.log(`✔  John failed to bid with a not allowed sell on share\n`)
 
         await call_set_bid(contract, john, {
             tokenId: minted.id,
@@ -221,20 +226,35 @@ workspace.test(
     }
 )
 
+workspace.test('Retrieve NFT payout', async (test, { contract, alice }) => {
+    const { result: minted } = await call_mint(contract, alice)
+
+    const payout = await contract.view('nft_payout', {
+        token_id: minted.id,
+        balance: ONE_NEAR,
+        max_len_payout: 10,
+    })
+
+    test.log(payout)
+
+    test.log(`✔  NFT payout has correct amounts\n`)
+})
+
 workspace.test(
     'Should bid on one token',
     async (test, { contract, alice, john }) => {
         const { result: minted } = await call_mint(contract, alice)
 
         const john_example_bid = {
-            amount: NEAR.parse("1N").toString(),
+            amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
             recipient: minted.id,
             sell_on_share: randomInt(0, 20),
             currency: 'near',
         }
 
-        const storage_usage_before = (await contract.accountView()).storage_usage
+        const storage_usage_before = (await contract.accountView())
+            .storage_usage
 
         await call_set_bid(contract, john, {
             tokenId: minted.id,
@@ -242,17 +262,23 @@ workspace.test(
         })
 
         const storage_usage_after = (await contract.accountView()).storage_usage
-        const storage_used = storage_usage_after - storage_usage_before;
+        const storage_used = storage_usage_after - storage_usage_before
         const estimated_gas = new BN(GAS_PER_1byte).mul(new BN(storage_used))
 
         const storage_used_per_1000 = storage_used * 1000
-        const estimated_gas_per_1000 = new BN(GAS_PER_1byte).mul(new BN(storage_used_per_1000))
+        const estimated_gas_per_1000 = new BN(GAS_PER_1byte).mul(
+            new BN(storage_used_per_1000)
+        )
         test.log(`-----------------------------------------------------------------------------------------------
 Bytes used per 1 bid: ${storage_used} bytes
-Estimated gas cost per 1 bid: ${NEAR.from(estimated_gas).toHuman()} or ${estimated_gas.toString()} yoctoNEAR
+Estimated gas cost per 1 bid: ${NEAR.from(
+            estimated_gas
+        ).toHuman()} or ${estimated_gas.toString()} yoctoNEAR
 
 Estimated bytes used per 1000 bid: ${storage_used_per_1000} bytes
-Estimated gas cost per 1000 bid: ${NEAR.from(estimated_gas_per_1000).toHuman()} or ${estimated_gas_per_1000.toString()} yoctoNEAR
+Estimated gas cost per 1000 bid: ${NEAR.from(
+            estimated_gas_per_1000
+        ).toHuman()} or ${estimated_gas_per_1000.toString()} yoctoNEAR
 -----------------------------------------------------------------------------------------------`)
     }
 )
