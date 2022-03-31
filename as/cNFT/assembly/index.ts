@@ -29,9 +29,9 @@ export {
 
 export { nft_metadata, nft_metadata_extra } from './metadata'
 
-export { nft_is_approved } from  './approval'
+export { nft_is_approved } from './approval'
 
-
+export { nft_payout } from './royalty_payout'
 
 /**
  * Initialize the contract with owner details, standard metadata and extra metadata.
@@ -50,17 +50,20 @@ export { nft_is_approved } from  './approval'
  * @param contract_extra Extra metadata object of the contract
  */
 
-export function init(owner_id: AccountId, contract_metadata: NFTContractMetadata, contract_extra: NFTContractExtra = defaultNFTContractExtra()): void {
-
+export function init(
+    owner_id: AccountId,
+    contract_metadata: NFTContractMetadata,
+    contract_extra: NFTContractExtra = defaultNFTContractExtra()
+): void {
     // Init can be called only once
-    assert(storage.get<string>("init") == null, "Already initialized");
+    assert(storage.get<string>('init') == null, 'Already initialized')
 
     persistent_nft_contract_metadata.update_standard(contract_metadata)
     persistent_nft_contract_metadata.update_extra(contract_extra)
 
-    storage.set("owner_id", owner_id);
+    storage.set('owner_id', owner_id)
 
-    storage.set("init", "done");
+    storage.set('init', 'done')
 
     // Immiting log event
     const init_log = new NftInitLog()
@@ -69,8 +72,6 @@ export function init(owner_id: AccountId, contract_metadata: NFTContractMetadata
     const log = new NftEventLogData<NftInitLog>('nft_init', [init_log])
     logging.log(log)
 }
-
-
 
 /**
  * Pause the contract change methods, if the owner wants to do that due to some reasons.
@@ -90,10 +91,10 @@ export function init(owner_id: AccountId, contract_metadata: NFTContractMetadata
 export function set_paused(value: boolean = true): boolean {
     // only admin or contract account can call this method
     assert(
-        context.sender == storage.get<string>("owner_id") ||
-        context.sender == context.contractName,
-        'You\'re not authorized to call this method'
+        context.sender == storage.get<string>('owner_id') ||
+            context.sender == context.contractName,
+        "You're not authorized to call this method"
     )
-    storage.set("paused", value.toString());
+    storage.set('paused', value.toString())
     return value
 }
