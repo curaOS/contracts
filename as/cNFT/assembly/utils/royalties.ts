@@ -1,8 +1,6 @@
 import { u128 } from 'near-sdk-as'
 import { Balance } from '../types'
-
-/** @hidden */
-const ONE_HUNDRED_PERCENT: u16 = 10000
+import { ONE_HUNDRED_PERCENT } from '../../../utils'
 
 /**
  * Get the amount that need to pay for a royalty account when the token value and royalty percentage is given. Return value is in `u128` format.
