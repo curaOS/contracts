@@ -115,7 +115,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     // Committing log event
     const bid_log = new NftBidLog()
     bid_log.bidder_id = bid.bidder
-    bid_log.token_ids = [bid.recipient]
+    bid_log.token_ids = [tokenId]
     bid_log.amount = bid.amount.toString()
     bid_log.recipient = bid.recipient
     bid_log.sell_on_share = bid.sell_on_share.toString()
