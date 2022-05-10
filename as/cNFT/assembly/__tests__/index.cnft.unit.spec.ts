@@ -166,7 +166,8 @@ describe('- CONTRACT -', () => {
 const bidOnToken = (
     accountId: AccountId,
     tokenId: string,
-    amount: string
+    amount: string,
+    recipient: AccountId
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
     VMContext.setAccount_balance(u128.from('1000000000000000000000000000'))
@@ -176,7 +177,7 @@ const bidOnToken = (
     const bid = new Bid()
     bid.amount = u128.from(amount)
     bid.bidder = accountId
-    bid.recipient = accountId
+    bid.recipient = recipient
     bid.sell_on_share = 10
     bid.currency = 'near'
 
@@ -187,7 +188,7 @@ describe('- MARKET -', () => {
     it('xxx sets a bid & returns it', () => {
         initContract()
         mintToken('yellow.testnet')
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
         const bids = get_bids('0')
         expect(bids.has('hello.testnet')).toBeTruthy(
@@ -197,13 +198,13 @@ describe('- MARKET -', () => {
         const bid = bids.get('hello.testnet')
         expect(bid.amount).toStrictEqual(u128.from(ONE_TENTH_NEAR))
         expect(bid.bidder).toStrictEqual('hello.testnet')
-        expect(bid.recipient).toStrictEqual('0')
+        expect(bid.recipient).toStrictEqual('yellow.testnet')
     })
     it('xxx sets a bid & removes it', () => {
         initContract()
         mintToken('yellow.testnet')
 
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
         remove_bid('0')
 
@@ -217,8 +218,8 @@ describe('- MARKET -', () => {
         mintToken('yellow.testnet')
         mintToken('yellow.testnet')
 
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
-        bidOnToken('hello.testnet', '1', TWO_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
+        bidOnToken('hello.testnet', '1', TWO_TENTH_NEAR, 'yellow.testnet')
 
         const bids = get_bidder_bids('hello.testnet')
 
@@ -238,7 +239,7 @@ describe('- MARKET -', () => {
         initContract()
         let token = mintToken('yellow.testnet')
 
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
         VMContext.setSigner_account_id('yellow.testnet')
         VMContext.setPredecessor_account_id('yellow.testnet')
