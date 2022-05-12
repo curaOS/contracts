@@ -121,7 +121,9 @@ export async function call_remove_bid(
             tokenId: '0',
         }
     }
-    const result = await user.call(contract, 'remove_bid', args)
+    const result = await user.call(contract, 'remove_bid', args, {
+        attachedDeposit: ONE_YOCTO,
+    })
     return { result, args }
 }
 
