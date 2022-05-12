@@ -206,6 +206,7 @@ describe('- MARKET -', () => {
 
         bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
+        VMContext.setAttached_deposit(u128.from(1))
         remove_bid('0')
 
         const bids = get_bids('0')

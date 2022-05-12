@@ -145,6 +145,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 @nearBindgen
 export function remove_bid(tokenId: string): void {
     assert_not_paused()
+    assert_one_yocto()
 
     const bids = persistent_market.get(tokenId)
 
