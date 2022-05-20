@@ -28,7 +28,6 @@ import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
 import { nft_metadata_extra } from '../metadata'
-import { asNEAR } from '../../../utils'
 
 const ONE_NEAR = '1000000000000000000000000'
 const ONE_TENTH_NEAR = '100000000000000000000000'
@@ -149,10 +148,16 @@ describe('- CONTRACT -', () => {
         log(tokens)
     })
 
+    /** You can burn a token only if account sending the request
+     * is both the owner and creator of the token.
+     * On mint we set the creator id to the royalty id so only in
+     * the case token is minted by creator it can be burned
+     */
     it('xxx burn token', () => {
         initContract()
-        mintToken('hello.testnet')
-        const token = mintToken('hello.testnet')
+
+        mintToken('address')
+        const token = mintToken('address')
 
         burn_design(token.id)
 
