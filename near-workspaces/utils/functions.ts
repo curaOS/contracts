@@ -1,4 +1,4 @@
-import { NearAccount } from 'near-workspaces-ava'
+import { NearAccount, TransactionResult } from 'near-workspaces-ava'
 import { Token } from '../../as/cNFT/assembly/models/persistent_tokens'
 import {
     get_random_bid,
@@ -49,8 +49,18 @@ export async function call_mint(
             gas: CONTRACT_MINT_GAS,
         }
     }
-    const result: Token = await user.call(contract, 'mint', args, options)
-    return { result, args }
+    const txResult: TransactionResult = await user.call_raw(
+        contract,
+        'mint',
+        args,
+        options
+    )
+
+    return {
+        result: txResult.parseResult<Token>(),
+        args,
+        gasBurnt: txResult.gas_burnt,
+    }
 }
 
 export async function call_nft_transfer(
@@ -121,7 +131,9 @@ export async function call_remove_bid(
             tokenId: '0',
         }
     }
-    const result = await user.call(contract, 'remove_bid', args)
+    const result = await user.call(contract, 'remove_bid', args, {
+        attachedDeposit: ONE_YOCTO,
+    })
     return { result, args }
 }
 
@@ -136,12 +148,16 @@ export async function call_accept_bid(
             bidder: 'cura.test.near',
         }
     }
-    const result = await user.call(contract, 'accept_bid', args, {
+    const txResult = await user.call_raw(contract, 'accept_bid', args, {
         attachedDeposit: ONE_YOCTO,
         gas: CONTRACT_ACCEPT_BID_GAS,
     })
 
-    return { result, args }
+    return {
+        result: txResult.parseResult(),
+        args,
+        gasBurnt: txResult.gas_burnt,
+    }
 }
 
 // View methods

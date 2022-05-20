@@ -115,7 +115,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     // Committing log event
     const bid_log = new NftBidLog()
     bid_log.bidder_id = bid.bidder
-    bid_log.token_ids = [bid.recipient]
+    bid_log.token_ids = [tokenId]
     bid_log.amount = bid.amount.toString()
     bid_log.recipient = bid.recipient
     bid_log.sell_on_share = bid.sell_on_share.toString()
@@ -145,6 +145,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
 @nearBindgen
 export function remove_bid(tokenId: string): void {
     assert_not_paused()
+    assert_one_yocto()
 
     const bids = persistent_market.get(tokenId)
 
@@ -247,25 +248,14 @@ export function accept_bid(tokenId: string, bidder: string): void {
         return
     }
 
-    // Transfer bid share to owner
-    const promiseOwner = ContractPromiseBatch.create(token.owner_id)
-    promiseOwner.transfer(payout.get(token.owner_id))
+    let payoutKeys = payout.keys()
+    let payoutSize = payout.size;
 
-    // Transfer bid share to creator
-    const promiseCreator = ContractPromiseBatch.create(token.creator_id)
-    promiseCreator.transfer(payout.get(token.creator_id))
-
-    // Transfer bid share to previous owner
-    if (token.prev_owner_id) {
-        const promisePrevOwner = ContractPromiseBatch.create(
-            token.prev_owner_id
-        )
-        promisePrevOwner.transfer(payout.get(token.prev_owner_id))
-        env.promise_return(promisePrevOwner.id)
+    for (let i = 0; i < payoutSize; i++) {
+        let promisePayout = ContractPromiseBatch.create(payoutKeys[i])
+        promisePayout.transfer(payout.get(payoutKeys[i]))
+        env.promise_return(promisePayout.id)
     }
-
-    env.promise_return(promiseCreator.id)
-    env.promise_return(promiseOwner.id)
 
     // Transfer token to bidder
     const transferArgs: NftTransferArgs = {

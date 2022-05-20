@@ -1,4 +1,4 @@
-import { BN, NEAR, Workspace } from 'near-workspaces-ava'
+import { BN, getNetworkFromEnv, NEAR, Workspace } from 'near-workspaces-ava'
 import {
     CONTRACT_EXTRA,
     CONTRACT_METADATA,
@@ -14,9 +14,10 @@ import {
     view_get_bidder_bids,
     view_get_bids,
 } from '../utils/functions'
+import { formatNearAmount } from 'near-api-js/lib/utils/format'
 
 const workspace = Workspace.init(
-    //{ network: 'testnet', rootAccount: '[account].testnet' },
+    // { network: 'testnet', rootAccount: '[account].testnet' },
     async ({ root }) => ({
         contract: await root.createAndDeploy(
             'cnft',
@@ -184,14 +185,14 @@ workspace.test(
 )
 
 workspace.test(
-    'Should bid one a token then accept it',
+    'Should bid on a token then accept it',
     async (test, { contract, alice, john }) => {
         const { result: minted } = await call_mint(contract, alice)
 
         const john_example_bid = {
             amount: NEAR.parse('1N').toString(),
-            bidder: john.accountId,
-            recipient: minted.id,
+            bidder: john,
+            recipient: alice,
             sell_on_share: randomInt(0, 20),
             currency: 'near',
         }
@@ -208,6 +209,12 @@ workspace.test(
         })
         test.log(`✔ John failed to accept bid of a token that he doesn't own\n`)
 
+        const payout = await contract.view('nft_payout', {
+            token_id: minted.id,
+            balance: NEAR.parse('1N').toString(),
+            max_len_payout: 10,
+        })
+
         const aliceBalanceBefore = await alice.availableBalance()
         await call_accept_bid(contract, alice, {
             tokenId: minted.id,
@@ -216,16 +223,39 @@ workspace.test(
 
         const aliceBalanceAfter = await alice.availableBalance()
 
+        /**
+         * Make sure the costs of tx run is lower than 0.01N
+         * Notice that in case of sandbox it seems that the costs
+         * are higher and the threshold is at 0.1N for minting
+         * and accepting a bid
+         */
+        const maxCostForTxs =
+            getNetworkFromEnv() == 'testnet' ? '0.01 N' : '0.1N'
+        const actualPaymentToAlice = aliceBalanceAfter.sub(aliceBalanceBefore)
+        const txsFees = NEAR.from(payout[alice.accountId]).sub(
+            actualPaymentToAlice
+        )
+
         test.assert(
-            aliceBalanceAfter.toBigInt() - aliceBalanceBefore.toBigInt() >=
-                BigInt(john_example_bid.amount)
+            BigInt(txsFees.toString()) <
+                BigInt(NEAR.parse(maxCostForTxs).toString())
         )
         test.log(
-            `✔  Alice accepted John bid successfully and received amount\n`
+            `✔  Alice accepted John bid successfully and received amount of ${formatNearAmount(
+                actualPaymentToAlice.toString(),
+                5
+            )} N\n`
+        )
+
+        test.log(
+            `✔  Fees paid for mint and accepting of bid from Alice amount to  ${formatNearAmount(
+                txsFees.toString(),
+                5
+            )} N\n`
         )
     }
 )
-
+0
 workspace.test('Retrieve NFT payout', async (test, { contract, alice }) => {
     const { result: minted } = await call_mint(contract, alice)
 

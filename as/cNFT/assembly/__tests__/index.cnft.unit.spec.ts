@@ -1,6 +1,9 @@
 import { VMContext } from 'near-mock-vm'
 import { u128 } from 'near-sdk-as'
-import {defaultNFTContractExtra, defaultNFTContractMetadata} from '../models/persistent_nft_contract_metadata'
+import {
+    defaultNFTContractExtra,
+    defaultNFTContractMetadata,
+} from '../models/persistent_nft_contract_metadata'
 import { TokenMetadata } from '../models/persistent_tokens_metadata'
 import { TokenRoyalty } from '../models/persistent_tokens_royalty'
 import {
@@ -25,7 +28,7 @@ import { AccountId } from '../types'
 import { nft_payout } from '../royalty_payout'
 import { Bid } from '../models/market'
 import { nft_metadata_extra } from '../metadata'
-import {asNEAR} from "../../../utils";
+import { asNEAR } from '../../../utils'
 
 const ONE_NEAR = '1000000000000000000000000'
 const ONE_TENTH_NEAR = '100000000000000000000000'
@@ -37,11 +40,7 @@ const initContract = (): void => {
 
     nft_extra_metadata.min_bid_amount = ONE_TENTH_NEAR
 
-    init(
-        "cura.testnet",
-        nft_contract_metadata,
-        nft_extra_metadata,
-    )
+    init('cura.testnet', nft_contract_metadata, nft_extra_metadata)
 }
 
 const mintToken = (accountId: AccountId): Token => {
@@ -130,7 +129,6 @@ describe('- CONTRACT -', () => {
         log(nftContractMetadata)
     })
 
-
     it('xxx returns nft contract extra', () => {
         initContract()
 
@@ -168,7 +166,8 @@ describe('- CONTRACT -', () => {
 const bidOnToken = (
     accountId: AccountId,
     tokenId: string,
-    amount: string
+    amount: string,
+    recipient: AccountId
 ): Bid => {
     VMContext.setSigner_account_id(accountId)
     VMContext.setAccount_balance(u128.from('1000000000000000000000000000'))
@@ -178,7 +177,7 @@ const bidOnToken = (
     const bid = new Bid()
     bid.amount = u128.from(amount)
     bid.bidder = accountId
-    bid.recipient = tokenId
+    bid.recipient = recipient
     bid.sell_on_share = 10
     bid.currency = 'near'
 
@@ -187,10 +186,9 @@ const bidOnToken = (
 
 describe('- MARKET -', () => {
     it('xxx sets a bid & returns it', () => {
-
         initContract()
         mintToken('yellow.testnet')
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
         const bids = get_bids('0')
         expect(bids.has('hello.testnet')).toBeTruthy(
@@ -200,15 +198,15 @@ describe('- MARKET -', () => {
         const bid = bids.get('hello.testnet')
         expect(bid.amount).toStrictEqual(u128.from(ONE_TENTH_NEAR))
         expect(bid.bidder).toStrictEqual('hello.testnet')
-        expect(bid.recipient).toStrictEqual('0')
+        expect(bid.recipient).toStrictEqual('yellow.testnet')
     })
     it('xxx sets a bid & removes it', () => {
-
         initContract()
         mintToken('yellow.testnet')
 
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
+        VMContext.setAttached_deposit(u128.from(1))
         remove_bid('0')
 
         const bids = get_bids('0')
@@ -217,13 +215,12 @@ describe('- MARKET -', () => {
         )
     })
     it('xxx sets multiple bids & return bidder bids', () => {
-
         initContract()
         mintToken('yellow.testnet')
         mintToken('yellow.testnet')
 
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
-        bidOnToken('hello.testnet', '1', TWO_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
+        bidOnToken('hello.testnet', '1', TWO_TENTH_NEAR, 'yellow.testnet')
 
         const bids = get_bidder_bids('hello.testnet')
 
@@ -240,11 +237,10 @@ describe('- MARKET -', () => {
         }
     })
     it('xxx accepts a bid', () => {
-
         initContract()
         let token = mintToken('yellow.testnet')
 
-        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR)
+        bidOnToken('hello.testnet', '0', ONE_TENTH_NEAR, 'yellow.testnet')
 
         VMContext.setSigner_account_id('yellow.testnet')
         VMContext.setPredecessor_account_id('yellow.testnet')

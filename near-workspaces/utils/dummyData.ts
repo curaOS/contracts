@@ -65,7 +65,7 @@ export const TOKEN_ROYALTY = {
     split_between: {
         [CONTRACT_EXTRA.mint_royalty_id]: CONTRACT_EXTRA.mint_royalty_amount,
     },
-    percentage: 1000,
+    percentage: CONTRACT_EXTRA.mint_royalty_amount,
 }
 
 export function get_random_bid() {
