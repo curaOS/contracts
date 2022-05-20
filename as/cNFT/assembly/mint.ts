@@ -101,7 +101,7 @@ export function mint(
     token.id = tokenId
 
     /**@todo Not always sender is creator i guess */
-    token.creator_id = context.sender
+    token.creator_id = contract_extra.mint_royalty_id
     token.owner_id = context.sender
 
     token.approvals = new Map<string, number>()
