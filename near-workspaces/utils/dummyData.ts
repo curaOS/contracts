@@ -41,7 +41,7 @@ export const CONTRACT_EXTRA = {
     default_max_len_payout: 20,
     mints_per_address: 1,
     mint_payee_id: 'jenny.test.near',
-    mint_royalty_id: 'jenny.test.near',
+    mint_royalty_id: 'alice.test.near',
     mint_royalty_amount: 1000,
     packages_script: '',
     render_script: randomString(200),
