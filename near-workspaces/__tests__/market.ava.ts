@@ -52,14 +52,14 @@ workspace.test(
             amount: NEAR.parse(randomInt(1, 10) + 'N').toString(),
             bidder: alice.accountId,
             recipient: minted.id,
-            sell_on_share: randomInt(0, 20),
+            sell_on_share: randomInt(0, 9000),
             currency: 'near',
         }
         const john_example_bid = {
             amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
             recipient: minted.id,
-            sell_on_share: randomInt(0, 20),
+            sell_on_share: randomInt(0, 9000),
             currency: 'near',
         }
 
@@ -70,6 +70,17 @@ workspace.test(
             })
         })
         test.log(`✔  Alice failed to bid on her own token\n`)
+
+        await test.throwsAsync(async () => {
+          await call_set_bid(contract, john, {
+            tokenId: minted.id,
+            bid: {
+              ...john_example_bid,
+              sell_on_share: randomInt(9100, 20000)
+            },
+          })
+        })
+        test.log(`✔  John failed to set out of bounds resale fee\n`)
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
@@ -93,7 +104,7 @@ workspace.test(
                 bid: john_example_bid,
             })
         })
-        test.log(`✔ John failed to bid on non-existant token\n`)
+        test.log(`✔ John failed to bid on non-existent token\n`)
 
         const johnBalanceBefore = await john.availableBalance()
         const contractBalanceBefore = await contract.availableBalance()
