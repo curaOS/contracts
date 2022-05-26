@@ -113,7 +113,7 @@ export function nft_tokens_for_owner(
     // first key
     const start = <u32>parseInt(from_index)
     // last key
-    const end = <u32>(limit == 0 ? keys.length : limit + start)
+    const end = <u32>((limit == 0 || <i32>limit > keys.length) ? keys.length : limit + start)
 
     // empty token array
     let tokens: Token[] = []

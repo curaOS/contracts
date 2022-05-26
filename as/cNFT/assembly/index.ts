@@ -8,7 +8,7 @@ import { context, logging, storage } from 'near-sdk-as'
 import { NftEventLogData, NftInitLog } from './models/log'
 import { AccountId } from './types'
 
-export { mint } from './mint'
+export { nft_mint } from './mint'
 
 export { nft_token, nft_transfer, burn_design } from './core'
 

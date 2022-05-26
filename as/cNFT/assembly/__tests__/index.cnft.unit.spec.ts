@@ -12,7 +12,7 @@ import {
     nft_token,
     nft_supply_for_owner,
     nft_tokens_for_owner,
-    mint,
+    nft_mint,
     nft_metadata,
     init,
     nft_transfer,
@@ -55,7 +55,7 @@ const mintToken = (accountId: AccountId): Token => {
     token_royalty.percentage = 2500
     token_royalty.split_between.set('address', 2500)
 
-    return mint(token_metadata, token_royalty)
+    return nft_mint(token_metadata, token_royalty)
 }
 
 describe('- CONTRACT -', () => {
