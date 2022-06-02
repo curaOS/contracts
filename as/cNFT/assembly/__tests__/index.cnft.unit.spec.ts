@@ -38,6 +38,9 @@ const initContract = (): void => {
     let nft_extra_metadata = defaultNFTContractExtra()
 
     nft_extra_metadata.min_bid_amount = ONE_TENTH_NEAR
+    nft_extra_metadata.mint_payee_id = 'payee'
+    nft_extra_metadata.mint_royalty_id = 'address'
+    nft_extra_metadata.mint_royalty_amount = 2500
 
     init('cura.testnet', nft_contract_metadata, nft_extra_metadata)
 }
