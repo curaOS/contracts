@@ -51,7 +51,7 @@ export async function call_mint(
     }
     const txResult: TransactionResult = await user.call_raw(
         contract,
-        'mint',
+        'nft_mint',
         args,
         options
     )
