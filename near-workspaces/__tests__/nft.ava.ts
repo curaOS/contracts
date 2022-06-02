@@ -190,7 +190,7 @@ workspace.test(
             token_id: minted.id,
             receiver_id: john.accountId,
         })
-        test.log(`✓  Alice transfered her token to John\n`)
+        test.log(`✓  Alice transferred her token to John\n`)
 
         const { result: fetched } = await view_nft_token(contract, {
             token_id: minted.id,
