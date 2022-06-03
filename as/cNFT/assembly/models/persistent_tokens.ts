@@ -6,7 +6,7 @@ import { TokenMetadata } from './persistent_tokens_metadata'
 @nearBindgen
 export class Token {
     /** ID of the token */
-    id: string
+    token_id: string
 
     /** ID of the current owner who owns the token */
     owner_id: string

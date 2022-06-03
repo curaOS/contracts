@@ -51,21 +51,21 @@ workspace.test(
         const alice_example_bid = {
             amount: NEAR.parse(randomInt(1, 10) + 'N').toString(),
             bidder: alice.accountId,
-            recipient: minted.id,
+            recipient: minted.token_id,
             sell_on_share: randomInt(0, 9000),
             currency: 'near',
         }
         const john_example_bid = {
             amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
-            recipient: minted.id,
+            recipient: minted.token_id,
             sell_on_share: randomInt(0, 9000),
             currency: 'near',
         }
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, alice, {
-                tokenId: minted.id,
+                tokenId: minted.token_id,
                 bid: alice_example_bid,
             })
         })
@@ -73,7 +73,7 @@ workspace.test(
 
         await test.throwsAsync(async () => {
           await call_set_bid(contract, john, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
             bid: {
               ...john_example_bid,
               sell_on_share: randomInt(9100, 20000)
@@ -84,7 +84,7 @@ workspace.test(
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
-                tokenId: minted.id,
+                tokenId: minted.token_id,
                 bid: alice_example_bid,
             })
         })
@@ -92,7 +92,7 @@ workspace.test(
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
-                tokenId: minted.id,
+                tokenId: minted.token_id,
                 bid: { ...john_example_bid, amount: NEAR.parse('0.05N') },
             })
         })
@@ -111,14 +111,14 @@ workspace.test(
 
         await test.throwsAsync(async () => {
             await call_set_bid(contract, john, {
-                tokenId: minted.id,
+                tokenId: minted.token_id,
                 bid: { ...john_example_bid, sell_on_share: 10100 },
             })
         })
         test.log(`✔  John failed to bid with a not allowed sell on share\n`)
 
         await call_set_bid(contract, john, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
             bid: john_example_bid,
         })
         test.log(`✔ John bid on Alice token successfully\n`)
@@ -138,7 +138,7 @@ workspace.test(
         )
 
         const { result: tokenBids } = await view_get_bids(contract, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
         })
         // @ts-ignore
         test.deepEqual(tokenBids, { [john.accountId]: john_example_bid })
@@ -160,20 +160,20 @@ workspace.test(
         const john_example_bid = {
             amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
-            recipient: minted.id,
+            recipient: minted.token_id,
             sell_on_share: randomInt(0, 20),
             currency: 'near',
         }
 
         await call_set_bid(contract, john, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
             bid: john_example_bid,
         })
         test.log(`✔  John bid on Alice token successfully\n`)
 
         const johnBalanceBefore = await john.availableBalance()
         await call_remove_bid(contract, john, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
         })
         const johnBalanceAfter = await john.availableBalance()
 
@@ -181,7 +181,7 @@ workspace.test(
         test.log(`✔ John removed his bid successfully\n`)
 
         const { result: tokenBids } = await view_get_bids(contract, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
         })
         test.false(tokenBids.hasOwnProperty(john.accountId))
         test.log(`✔ get_bids doesn't return the removed bid \n`)
@@ -208,27 +208,27 @@ workspace.test(
             currency: 'near',
         }
         await call_set_bid(contract, john, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
             bid: john_example_bid,
         })
 
         await test.throwsAsync(async () => {
             await call_accept_bid(contract, john, {
-                tokenId: minted.id,
+                tokenId: minted.token_id,
                 bidder: john.accountId,
             })
         })
         test.log(`✔ John failed to accept bid of a token that he doesn't own\n`)
 
         const payout = await contract.view('nft_payout', {
-            token_id: minted.id,
+            token_id: minted.token_id,
             balance: NEAR.parse('1N').toString(),
             max_len_payout: 10,
         })
 
         const aliceBalanceBefore = await alice.availableBalance()
         await call_accept_bid(contract, alice, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
             bidder: john.accountId,
         })
 
@@ -271,7 +271,7 @@ workspace.test('Retrieve NFT payout', async (test, { contract, alice }) => {
     const { result: minted } = await call_mint(contract, alice)
 
     const payout = await contract.view('nft_payout', {
-        token_id: minted.id,
+        token_id: minted.token_id,
         balance: ONE_NEAR,
         max_len_payout: 10,
     })
@@ -289,7 +289,7 @@ workspace.test(
         const john_example_bid = {
             amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
-            recipient: minted.id,
+            recipient: minted.token_id,
             sell_on_share: randomInt(0, 20),
             currency: 'near',
         }
@@ -298,7 +298,7 @@ workspace.test(
             .storage_usage
 
         await call_set_bid(contract, john, {
-            tokenId: minted.id,
+            tokenId: minted.token_id,
             bid: john_example_bid,
         })
 

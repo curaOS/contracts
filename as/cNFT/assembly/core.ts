@@ -79,7 +79,7 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
     token.owner_id = receiver_id
 
     /* Deleting token from previous owner */
-    persistent_tokens.remove(token.id, token.prev_owner_id)
+    persistent_tokens.remove(token.token_id, token.prev_owner_id)
 
     /* Storing token with the new owner's accountId */
     persistent_tokens.add(token_id, token, receiver_id)
@@ -89,7 +89,7 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
     transfer_log.old_owner_id = token.prev_owner_id
     transfer_log.new_owner_id = token.owner_id
-    transfer_log.token_ids = [token.id]
+    transfer_log.token_ids = [token.token_id]
 
     const log = new NftEventLogData<NftTransferLog>('nft_transfer', [
         transfer_log,
@@ -135,7 +135,7 @@ export function burn_design(token_id: TokenId): void {
 
     burn_log.owner_id = token.owner_id
     burn_log.authorized_id = context.sender
-    burn_log.token_ids = [token.id]
+    burn_log.token_ids = [token.token_id]
 
     const log = new NftEventLogData<NftBurnLog>('nft_burn', [burn_log])
     logging.log(log)

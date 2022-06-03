@@ -100,7 +100,7 @@ export function nft_mint(
     /** Assert tokenId doesn't already exists */
     assert(!persistent_tokens.has(tokenId), 'Token already exists')
 
-    token.id = tokenId
+    token.token_id = tokenId
 
     /**@todo Not always sender is creator i guess */
     token.creator_id = contract_extra.mint_royalty_id

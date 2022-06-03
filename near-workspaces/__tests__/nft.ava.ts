@@ -42,11 +42,11 @@ workspace.test(
         test.log(`✓  Alice minted a token successfully\n`)
 
         const { result: fetched } = await view_nft_token(contract, {
-            token_id: minted?.id,
+            token_id: minted?.token_id,
         })
 
         // compare mint output to nft_token output
-        test.deepEqual(fetched.id, minted.id)
+        test.deepEqual(fetched.token_id, minted.token_id)
         test.deepEqual(fetched.owner_id, minted.owner_id)
         test.deepEqual(fetched.creator_id, minted.creator_id)
         test.deepEqual(fetched.prev_owner_id, minted.prev_owner_id)
@@ -129,15 +129,15 @@ workspace.test(
         const { result: minted } = await call_mint(contract, alice)
 
         await test.throwsAsync(async () => {
-            await call_burn_design(contract, john, { token_id: minted.id })
+            await call_burn_design(contract, john, { token_id: minted.token_id })
         })
         test.log(`✓  John can't burn Alice token\n`)
 
-        await call_burn_design(contract, alice, { token_id: minted.id })
+        await call_burn_design(contract, alice, { token_id: minted.token_id })
         test.log(`✓  Alice can burn her own token\n`)
 
         const { result: fetched } = await view_nft_token(contract, {
-            token_id: minted.id,
+            token_id: minted.token_id,
         })
         test.deepEqual(fetched.owner_id, '')
         test.log(`✓  Alice can fetch updated token after burn\n`)
@@ -165,7 +165,7 @@ workspace.test(
 
         await test.throwsAsync(async () => {
             await call_nft_transfer(contract, john, {
-                token_id: minted.id,
+                token_id: minted.token_id,
                 receiver_id: john.accountId,
             })
         })
@@ -176,7 +176,7 @@ workspace.test(
                 contract,
                 alice,
                 {
-                    token_id: minted.id,
+                    token_id: minted.token_id,
                     receiver_id: john.accountId,
                 },
                 {
@@ -187,13 +187,13 @@ workspace.test(
         test.log(`✓  Alice failed to transfer her token without one yocto deposit\n`)
 
         await call_nft_transfer(contract, alice, {
-            token_id: minted.id,
+            token_id: minted.token_id,
             receiver_id: john.accountId,
         })
         test.log(`✓  Alice transferred her token to John\n`)
 
         const { result: fetched } = await view_nft_token(contract, {
-            token_id: minted.id,
+            token_id: minted.token_id,
         })
         test.deepEqual(fetched.owner_id, john.accountId)
         test.deepEqual(fetched.prev_owner_id, alice.accountId)

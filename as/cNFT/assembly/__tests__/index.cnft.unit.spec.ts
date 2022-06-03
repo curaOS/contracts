@@ -71,7 +71,7 @@ describe('- CONTRACT -', () => {
     it('xxx returns persistent token', () => {
         initContract()
         const token = mintToken('prova.testnet')
-        const nftToken = nft_token(token.id)
+        const nftToken = nft_token(token.token_id)
 
         log(nftToken)
     })
@@ -119,7 +119,7 @@ describe('- CONTRACT -', () => {
     it('xxx returns token payout', () => {
         initContract()
         const token = mintToken('hello.testnet')
-        const tokenPayout = nft_payout(token.id, u128.from('10000000000'), 1000)
+        const tokenPayout = nft_payout(token.token_id, u128.from('10000000000'), 1000)
         log(tokenPayout)
     })
 
@@ -144,9 +144,9 @@ describe('- CONTRACT -', () => {
         const token = mintToken('hello.testnet')
 
         VMContext.setAttached_deposit(u128.from(1))
-        nft_transfer(token.id, 'yellow.testnet')
+        nft_transfer(token.token_id, 'yellow.testnet')
 
-        let tokens = nft_token(token.id)
+        let tokens = nft_token(token.token_id)
 
         log(tokens)
     })
@@ -162,7 +162,7 @@ describe('- CONTRACT -', () => {
         mintToken('address')
         const token = mintToken('address')
 
-        burn_design(token.id)
+        burn_design(token.token_id)
 
         const tokens = nft_supply_for_owner(token.owner_id)
 
@@ -254,7 +254,7 @@ describe('- MARKET -', () => {
         VMContext.setPredecessor_account_id('yellow.testnet')
         VMContext.setAttached_deposit(u128.from(1))
 
-        accept_bid(token.id, 'hello.testnet')
+        accept_bid(token.token_id, 'hello.testnet')
     })
 
     /** @todo add test for accept_bid */
