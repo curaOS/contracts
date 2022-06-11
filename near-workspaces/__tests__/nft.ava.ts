@@ -53,7 +53,7 @@ workspace.test(
 
         // compare mint input to nft_token output
         test.deepEqual(fetched.metadata.title, args.tokenMetadata.title)
-        test.deepEqual(fetched.metadata.copies, args.tokenMetadata.copies)
+        test.deepEqual(fetched.metadata.copies,1)
         test.deepEqual(fetched.metadata.extra, args.tokenMetadata.extra)
         test.deepEqual(
             fetched.metadata.description,

@@ -53,7 +53,6 @@ export const CONTRACT_EXTRA = {
 export function get_random_token_metadata() {
     return {
         title: randomString(randomInt(0, 100)),
-        copies: randomInt(1, 10),
         description: randomString(randomInt(0, 1000)),
         extra: randomString(randomInt(0, 100)),
         media: `https://picsum.photos/seed/${randomString(6)}/300/300`,
