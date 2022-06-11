@@ -10,7 +10,14 @@ import { AccountId } from './types'
 
 export { nft_mint } from './mint'
 
-export { nft_token, nft_transfer, burn_design } from './core'
+export {
+    nft_token,
+    nft_transfer,
+    burn_design,
+    nft_transfer_call,
+    nft_on_transfer,
+    nft_resolve_transfer
+} from './core'
 
 export {
     nft_supply_for_owner,
@@ -29,21 +36,14 @@ export {
 
 export { nft_metadata, nft_metadata_extra } from './metadata'
 
-export { nft_is_approved } from './approval'
+export { nft_is_approved, nft_approve, nft_revoke, nft_revoke_all } from './approval'
 
-export { nft_payout } from './royalty_payout'
+export { nft_payout, nft_transfer_payout } from './royalty_payout'
 
 /**
  * Initialize the contract with owner details, standard metadata and extra metadata.
  *
  * **Note:** This function can be called only once, and it should be called immediately after deploying the contract.
- *
- * **Basic usage example:**
- *
- * Assume we need to initialize the contract with owner_id = `alice.test.near` and standard metadata details object `MTS1` and extra metadata details object `MTE1`,
- * ```
- * init( "alice.test.near", MTS1, MTE1 );
- * ```
  *
  * @param owner_id ID of the contract owner
  * @param contract_metadata Standard metadata object of the contract
@@ -70,7 +70,7 @@ export function init(
     init_log.metadata = contract_metadata
     init_log.extra = contract_extra
     const log = new NftEventLogData<NftInitLog>('nft_init', [init_log])
-    logging.log(log)
+    logging.log('EVENT_JSON:' + log.toJSON())
 }
 
 /**
@@ -78,21 +78,14 @@ export function init(
  *
  * **Note:** This function can be called only by the owner account or the contract account itself.
  *
- * **Basic usage example:**
- *
- * Assume that the owner need to pause the contract,
- * ```
- * set_paused( true );
- * ```
- *
  * @param value Whether to pause the contract or not
  * @return Current state of the contract
  */
 export function set_paused(value: boolean = true): boolean {
     // only admin or contract account can call this method
     assert(
-        context.sender == storage.get<string>('owner_id') ||
-            context.sender == context.contractName,
+        context.predecessor == storage.get<string>('owner_id') ||
+            context.predecessor == context.contractName,
         "You're not authorized to call this method"
     )
     storage.set('paused', value.toString())

@@ -61,9 +61,9 @@ export function nft_total_supply(): string {
  * @return Array of tokens within the range specified by `from_index` and `limit`
  */
 @nearBindgen
-export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
+export function nft_tokens(from_index: string = '0', limit: u32 = 50): Token[] {
     // first key
-    const start = <u32>parseInt(from_index)
+    const start = <u32>parseInt(from_index) // u128
     // last key
     const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit + start)
 
@@ -99,13 +99,13 @@ export function nft_tokens(from_index: string = '0', limit: u8 = 0): Token[] {
  * @param account_id Account ID of the user
  * @param from_index Starting index
  * @param limit Number of tokens needs to be fetched starting from `from_index`
- * @return Array of tokens that user owns
+ * @return Paginated of tokens that user owns
  */
 @nearBindgen
 export function nft_tokens_for_owner(
     account_id: string,
     from_index: string = '0',
-    limit: u8 = 0
+    limit: u64 = 50
 ): Token[] {
     // get an array of tokenId for owner
     const keys = persistent_tokens.tokens_for_owner(account_id)

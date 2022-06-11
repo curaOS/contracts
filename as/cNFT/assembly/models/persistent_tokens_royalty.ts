@@ -21,7 +21,7 @@ export function defaultTokenRoyalty(): TokenRoyalty {
 }
 
 @nearBindgen
-export class PeristentTokenRoyalty {
+export class PersistentTokenRoyalty {
     /**
      * TokenRoyaltyMap --> Maps Token to its Royalty settings
      */
@@ -76,4 +76,4 @@ export class PeristentTokenRoyalty {
     }
 }
 
-export const persistent_tokens_royalty = new PeristentTokenRoyalty('ptr')
+export const persistent_tokens_royalty = new PersistentTokenRoyalty('ptr')

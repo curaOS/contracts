@@ -3,7 +3,7 @@ import { TokenId } from './types'
 import { Token, persistent_tokens } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
 import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
-import { logging, context } from 'near-sdk-as'
+import { logging, context, ContractPromise } from "near-sdk-as";
 import { assert_one_yocto, assert_not_paused } from './utils/asserts'
 import { internal_nft_is_approved } from './approval'
 
@@ -138,5 +138,72 @@ export function burn_design(token_id: TokenId): void {
     burn_log.token_ids = [token.token_id]
 
     const log = new NftEventLogData<NftBurnLog>('nft_burn', [burn_log])
-    logging.log(log)
+    logging.log('EVENT_JSON:' + log.toJSON())
+}
+
+/**
+ * Transfer token and call a method on a receiver contract. A successful
+ * workflow will end in a success execution outcome to the callback on the NFT
+ * contract at the method `nft_resolve_transfer`.
+ *
+ * **Note:** This is not currently implemented.
+ *
+ * @param receiver_id The valid NEAR account receiving the token.
+ * @param token_id The token to send.
+ * @param `approval_id` Expected approval ID.
+ * @param memo A message for indexers or providing information for a transfer.
+ * @param msg Information for the receiving contract that can indicate a function to call and the parameters to pass to that function.
+ *
+ */
+export function nft_transfer_call(
+  receiver_id: AccountId,
+  token_id: TokenId,
+  msg: string,
+  approval_id: string = '',
+  memo: string = '',
+): ContractPromise | null {
+    assert(false, 'Transfer and call use case not currently supported.')
+    return null
+}
+
+/**
+ * Take some action after receiving a non-fungible token. This is implemented on receiver of transfer call.
+ *
+ * **Note:** This is not currently implemented.
+ *
+ * @param sender_id the sender of nft_transfer_call.
+ * @param previous_owner_id The account that owned the NFT prior to it being transferred to this contract.
+ * @param token_id The `token_id` argument given to `nft_transfer_call`
+ * @param msg Information necessary for this contract to know how to process the request. This may include method names and/or arguments.
+ *
+ */
+export function nft_on_transfer(
+  sender_id: string,
+  previous_owner_id: string,
+  token_id: string,
+  msg: string
+): ContractPromise | null {
+    assert(false, 'Currently only internal market allowed.')
+    return null // return token to the sender
+}
+
+/**
+ * Finalize an `nft_transfer_call` chain of cross-contract calls.
+ *
+ * **Note:** This is not currently implemented.
+ *
+ * @param owner_id The original owner of the NFT.
+ * @param receiver_id The `receiver_id` argument given to `nft_transfer_call`.
+ * @param token_id The `token_id` argument given to `nft_transfer_call`.
+ * @param approved_account_ids  Record of original approved accounts in this argument.
+ *
+ */
+export function nft_resolve_transfer(
+  owner_id: string,
+  receiver_id: string,
+  token_id: string,
+  approved_account_ids: Map<string, number> | null = null
+): boolean {
+    assert(false, "Only this contract can call, and it ain't calling for sure.")
+    return false
 }

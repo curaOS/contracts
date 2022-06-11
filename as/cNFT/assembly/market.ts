@@ -122,7 +122,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     bid_log.currency = bid.currency
 
     const log = new NftEventLogData<NftBidLog>('nft_bid', [bid_log])
-    logging.log(log)
+    logging.log('EVENT_JSON:' + log.toJSON())
 
     return bid
 }
@@ -167,7 +167,7 @@ export function remove_bid(tokenId: string): void {
     const log = new NftEventLogData<NftRemoveBidLog>('nft_remove_bid', [
         remove_bid_log,
     ])
-    logging.log(log)
+    logging.log('EVENT_JSON:' + log.toJSON())
 }
 
 /**
@@ -302,5 +302,5 @@ export function accept_bid(tokenId: string, bidder: string): void {
     const log = new NftEventLogData<NftAcceptBidLog>('nft_accept_bid', [
         accept_bid_log,
     ])
-    logging.log(log)
+    logging.log('EVENT_JSON:' + log.toJSON())
 }

@@ -1,8 +1,8 @@
 import { storage, u128 } from 'near-sdk-as'
 import { royalty_to_payout } from './utils/royalties'
-import { persistent_tokens } from './models/persistent_tokens'
+import { persistent_tokens } from "./models/persistent_tokens";
 import { persistent_tokens_royalty } from './models/persistent_tokens_royalty'
-import { Payout, TokenId } from './types'
+import { Payout, TokenId, AccountId } from './types'
 import { NFTContractExtra, PersistentNFTContractMetadata } from './models/persistent_nft_contract_metadata'
 import { assert_not_paused } from './utils/asserts'
 
@@ -60,7 +60,7 @@ export function internal_nft_payout(
     token_id: TokenId,
     balance: u128,
     max_len_payout: u32 = 0
-): Payout | null {
+): Payout {
     assert_not_paused()
 
     // if max_len_payout is not passed or 0, get it from NFTContractExtra
@@ -73,13 +73,14 @@ export function internal_nft_payout(
 
     let token_royalty = persistent_tokens_royalty.get(token_id)
 
+    let payout: Payout = new Map()
+
     if (token == null || token_royalty == null) {
-        return null
+        return payout
     }
 
     let owner_id = token.owner_id
     let total_perpetual = 0
-    let payout: Payout = new Map()
     let royalty = token_royalty
 
     let royalty_sb_keys = token_royalty.split_between.keys()
@@ -101,4 +102,35 @@ export function internal_nft_payout(
 
     //return the payout object
     return payout
+}
+
+
+/**
+ * Transfer NFT and return payout.
+ *
+ *  **Note:** This is not implemented.
+ *
+ * **Basic usage example:**
+ *
+ * @param receiver_id ID of the receiving account
+ * @param token_id ID of the token to transfer
+ * @param approval_id Approval ID number for the given `approved_account_id`
+ * @param balance Amount to pay for the payout royalties in `u128` format
+ * @param max_len_payout Maximum number of royalties for the token
+ * @param memo A message for indexers or providing information for a transfer
+ *
+ * @return Royalty payout object
+ */
+export function nft_transfer_payout(
+  receiver_id: AccountId,
+  token_id: TokenId,
+  balance: string, // above is u128
+  approval_id:  string | null = null,
+  max_len_payout: u32 = 0,
+  memo: string = ''
+): Payout {
+    assert(false, 'Functionality not implemented.')
+    // let payout: Payout = new Map()
+
+    return new Map()
 }

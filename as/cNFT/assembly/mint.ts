@@ -47,7 +47,7 @@ import { AccountId } from './types'
  * token_royalty.split_between.set('alice.test.near', 2500)
  * ...
  *
- * const token = mint(token_metadata, token_royalty);
+ * const token = mint(token_metadata, token_royalty, 'account_id');
  * ```
  * @param tokenMetadata Metadata object of the minted token
  * @param token_royalty Royalty object of the minted token
@@ -58,8 +58,10 @@ import { AccountId } from './types'
 export function nft_mint(
     tokenMetadata: TokenMetadata,
     token_royalty: TokenRoyalty,
-    receiver_id: string = context.sender,
+    receiver_id: string = context.predecessor,
 ): Token {
+    /** Asserts */
+
     assert_not_paused()
 
     const contract_extra = storage.getSome<NFTContractExtra>(
@@ -68,7 +70,7 @@ export function nft_mint(
 
     let number_of_mints = assert_mints_per_address(
         contract_extra.mints_per_address,
-        context.sender
+        context.predecessor
     )
 
     const number_of_tokens = persistent_tokens.number_of_tokens
@@ -82,6 +84,8 @@ export function nft_mint(
     /** Assert attached deposit based on custom amount from NFTContractExtra */
     assert_eq_attached_deposit(u128.fromString(contract_extra.mint_price))
 
+    assert(token_royalty.split_between.size < 7, "Too many royalty recipients; max 6 allowed.")
+
     /** Make sure default perp royalty is included */
     assert(
         !contract_extra.mint_royalty_id ||
@@ -92,17 +96,18 @@ export function nft_mint(
         'Default perpetual royalty needs to be included in minted token.'
     )
 
+    /** Create and populate token */
+
     let token = new Token()
 
-    /** @todo Generate valid token id */
     const tokenId = number_of_tokens.toString()
 
-    /** Assert tokenId doesn't already exists */
+    /** Assert tokenId doesn't already exists, although it's trivial in this case */
     assert(!persistent_tokens.has(tokenId), 'Token already exists')
 
     token.token_id = tokenId
 
-    /**@todo Not always sender is creator i guess */
+    /** If you are supposed to receive perp royalties you are probably the creator */
     token.creator_id = contract_extra.mint_royalty_id
     token.owner_id = receiver_id
 
@@ -110,15 +115,21 @@ export function nft_mint(
     token.approvals.set(context.contractName, 1)
     token.next_approval_id = 1
 
+    tokenMetadata.issued_at = context.blockTimestamp.toString()
+    tokenMetadata.copies = 1
+
+    /** Update all stores */
+
     persistent_tokens_metadata.add(tokenId, tokenMetadata)
 
-    persistent_tokens.add(tokenId, token, context.sender)
+    persistent_tokens.add(tokenId, token, context.predecessor)
 
     persistent_tokens_royalty.add(tokenId, token_royalty)
 
-    persistent_account_mints.set(context.sender, number_of_mints + 1)
+    persistent_account_mints.set(context.predecessor, number_of_mints + 1)
 
-    // Transfer to minting payee
+    /** Send tokens to mint payment recipient */
+
     const promiseBidder = ContractPromiseBatch.create(
         contract_extra.mint_payee_id
     )
@@ -126,7 +137,8 @@ export function nft_mint(
 
     env.promise_return(promiseBidder.id)
 
-    // Immiting log event
+    /** Mint Event */
+
     const mint_log = new NftMintLog()
 
     mint_log.owner_id = context.sender
@@ -136,7 +148,7 @@ export function nft_mint(
 
     const log = new NftEventLogData<NftMintLog>('nft_mint', [mint_log])
 
-    logging.log(log)
+    logging.log('EVENT_JSON:' + log.toJSON())
 
     return token
 }
