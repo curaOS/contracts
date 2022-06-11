@@ -105,7 +105,7 @@ export function nft_tokens(from_index: string = '0', limit: u32 = 50): Token[] {
 export function nft_tokens_for_owner(
     account_id: string,
     from_index: string = '0',
-    limit: u64 = 50
+    limit: u32 = 50
 ): Token[] {
     // get an array of tokenId for owner
     const keys = persistent_tokens.tokens_for_owner(account_id)
