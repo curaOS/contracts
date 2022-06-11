@@ -94,7 +94,8 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
     const log = new NftEventLogData<NftTransferLog>('nft_transfer', [
         transfer_log,
     ])
-    logging.log(log)
+
+    logging.log('EVENT_JSON:' + log.toJSON())
 }
 
 /**
