@@ -49,9 +49,16 @@ export function nft_token(token_id: TokenId): Token {
  *
  * @param token_id ID of the token that needs to transfer
  * @param receiver_id ID of the receiving account
+ * @param approval_id Approval ID number for the given `receiver_id`
+ * @param memo Optional memo to be attached to the transaction
  */
 @nearBindgen
-export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
+export function nft_transfer(
+    token_id: TokenId,
+    receiver_id: AccountId,
+    approval_id: u64 = 0,
+    memo: string | null = null
+): void {
     assert_not_paused()
 
     /* Exactly one yocto is required for the transfer */
