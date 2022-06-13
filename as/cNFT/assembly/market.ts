@@ -54,7 +54,7 @@ class NftTransferArgs {
  * bid.currency = 'near'
  *
  *
- * const setted_bid = set_bid(
+ * const placed_bid = set_bid(
  *      "jenny911038",
  *      bid
  * );
@@ -236,7 +236,6 @@ export function accept_bid(tokenId: string, bidder: string): void {
 
     const token = persistent_tokens.get(tokenId)
 
-    /* todo: change when adding approval management */
     assert_eq_token_owner(context.predecessor, token.owner_id)
 
     const bid = bids.get(bidder)
