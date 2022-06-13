@@ -125,7 +125,7 @@ export function nft_transfer_payout(
   receiver_id: AccountId,
   token_id: TokenId,
   balance: string, // above is u128
-  approval_id:  string | null = null,
+  approval_id:  u64 = 0,
   max_len_payout: u32 = 0,
   memo: string = ''
 ): Payout {

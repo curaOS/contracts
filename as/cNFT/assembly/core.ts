@@ -63,7 +63,7 @@ export function nft_transfer(token_id: TokenId, receiver_id: AccountId): void {
 
     if (token.owner_id != context.predecessor) {
         assert(
-            internal_nft_is_approved(token_id, context.predecessor, '1'),
+            internal_nft_is_approved(token_id, context.predecessor, 1),
             "You don't have permission to perform this action"
         )
     }
@@ -160,7 +160,7 @@ export function nft_transfer_call(
   receiver_id: AccountId,
   token_id: TokenId,
   msg: string,
-  approval_id: string = '',
+  approval_id: u64 = 0,
   memo: string = '',
 ): ContractPromise | null {
     assert(false, 'Transfer and call use case not currently supported.')

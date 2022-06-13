@@ -24,7 +24,7 @@ import { persistent_tokens } from "./models/persistent_tokens";
 export function nft_is_approved(
     token_id: TokenId,
     approved_account_id: AccountId,
-    approval_id: string | null = null
+    approval_id: u64 = 0
 ): boolean {
 
     return internal_nft_is_approved(
@@ -48,7 +48,7 @@ export function nft_is_approved(
 export function internal_nft_is_approved(
     token_id: TokenId,
     approved_account_id: AccountId,
-    approval_id: string | null = null
+    approval_id: u64 = 0
 ): boolean {
 
     assert_token_exists(token_id);
@@ -60,7 +60,7 @@ export function internal_nft_is_approved(
     if (approval) {
         if (approval_id) {
             const approvalId = token.approvals.get(approved_account_id)
-            return approvalId == parseInt(approval_id)
+            return approvalId == approval_id
         }
         return true
     }

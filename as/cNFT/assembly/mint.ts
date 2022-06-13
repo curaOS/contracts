@@ -111,7 +111,7 @@ export function nft_mint(
     token.creator_id = contract_extra.mint_royalty_id
     token.owner_id = receiver_id
 
-    token.approvals = new Map<string, number>()
+    token.approvals = new Map<string, u64>()
     token.approvals.set(context.contractName, 1)
     token.next_approval_id = 1
 
