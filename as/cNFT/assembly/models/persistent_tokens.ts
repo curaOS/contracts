@@ -25,6 +25,9 @@ export class Token {
 
     /** Number used for the next approval ID */
     next_approval_id: u64
+
+    /** Map of accounts to token payout percentage */
+    royalty: Map<AccountId, u32>
 }
 
 @nearBindgen

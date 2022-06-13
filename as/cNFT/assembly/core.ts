@@ -6,6 +6,7 @@ import { NftEventLogData, NftTransferLog, NftBurnLog } from './models/log'
 import { logging, context, ContractPromise } from "near-sdk-as";
 import { assert_one_yocto, assert_not_paused } from './utils/asserts'
 import { internal_nft_is_approved } from './approval'
+import { persistent_tokens_royalty } from "./models/persistent_tokens_royalty";
 
 /**
  * Get details of a single token
@@ -29,6 +30,10 @@ export function nft_token(token_id: TokenId): Token {
 
     // get metadata and add it to the token
     token.metadata = persistent_tokens_metadata.get(token_id)
+
+    // get royalty and add it to the token
+    let token_royalty = persistent_tokens_royalty.get(token_id)
+    token.royalty = token_royalty ? token_royalty.split_between : new Map()
 
     // return the token
     return token

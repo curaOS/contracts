@@ -1,5 +1,6 @@
 import { persistent_tokens, Token } from './models/persistent_tokens'
 import { persistent_tokens_metadata } from './models/persistent_tokens_metadata'
+import { persistent_tokens_royalty } from "./models/persistent_tokens_royalty";
 
 
 /**
@@ -77,6 +78,8 @@ export function nft_tokens(from_index: string = '0', limit: u32 = 50): Token[] {
         // get token and add it the tokens array
         let token = persistent_tokens.get(keys[i])
         token.metadata = persistent_tokens_metadata.get(keys[i])
+        let token_royalty = persistent_tokens_royalty.get(keys[i])
+        token.royalty = token_royalty ? token_royalty.split_between : new Map()
         tokens.push(token)
     }
 
@@ -122,6 +125,9 @@ export function nft_tokens_for_owner(
         // get token and add it the tokens array
         let token = persistent_tokens.get(keys[i])
         token.metadata = persistent_tokens_metadata.get(keys[i])
+        let token_royalty = persistent_tokens_royalty.get(keys[i])
+        token.royalty = token_royalty ? token_royalty.split_between : new Map()
+
         tokens.push(token)
     }
 
