@@ -55,11 +55,11 @@ export function internal_nft_is_approved(
 
     let token = persistent_tokens.get(token_id)
 
-    const approval = token.approvals.has(approved_account_id)
+    const approval = token.approved_account_ids.has(approved_account_id)
 
     if (approval) {
         if (approval_id) {
-            const approvalId = token.approvals.get(approved_account_id)
+            const approvalId = token.approved_account_ids.get(approved_account_id)
             return approvalId == approval_id
         }
         return true
