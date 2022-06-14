@@ -66,6 +66,30 @@ export function nft_transfer(
 ): void {
     assert_not_paused()
 
+    return internal_nft_transfer(
+      token_id,
+      receiver_id,
+      approval_id,
+      memo
+    )
+}
+
+/**
+ * Internal transfer function that doesn't go through standard transfer
+ *
+ * **Note:** This is used as an internal function.
+ *
+ * @param token_id ID of the token that needs to transfer
+ * @param receiver_id ID of the receiving account
+ * @param approval_id Approval ID number for the given `receiver_id`
+ * @param memo Optional memo to be attached to the transaction
+ */
+export function internal_nft_transfer(
+    token_id: TokenId,
+    receiver_id: AccountId,
+    approval_id: u64 = 0,
+    memo: string | null = null
+) {
     /* Exactly one yocto is required for the transfer */
 
     assert_one_yocto()
@@ -75,8 +99,8 @@ export function nft_transfer(
 
     if (token.owner_id != context.predecessor) {
         assert(
-            internal_nft_is_approved(token_id, context.predecessor, 1),
-            "You don't have permission to perform this action"
+          internal_nft_is_approved(token_id, context.predecessor, 1),
+          "You don't have permission to perform this action"
         )
     }
     /* Assert owner is not receiver */
