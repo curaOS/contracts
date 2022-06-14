@@ -63,10 +63,10 @@ export function nft_transfer(
     receiver_id: AccountId,
     approval_id: u64 = 0,
     memo: string | null = null
-): void {
+) : void {
     assert_not_paused()
 
-    return internal_nft_transfer(
+    internal_nft_transfer(
       token_id,
       receiver_id,
       approval_id,
@@ -89,7 +89,7 @@ export function internal_nft_transfer(
     receiver_id: AccountId,
     approval_id: u64 = 0,
     memo: string | null = null
-) {
+) : void {
     /* Exactly one yocto is required for the transfer */
 
     assert_one_yocto()
