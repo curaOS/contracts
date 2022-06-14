@@ -49,6 +49,8 @@ export function nft_total_supply(): string {
 /**
  * Get all tokens within a range.
  *
+ * **Note:** From index should be u12, but it's a useless headache for our use cases.
+ * It gets passed in as string anyway but we max it out at u64. Easy to change later.
  *
  * **Basic usage example:**
  *
@@ -64,9 +66,9 @@ export function nft_total_supply(): string {
 @nearBindgen
 export function nft_tokens(from_index: string = '0', limit: u32 = 50): Token[] {
     // first key
-    const start = <u32>parseInt(from_index) // u128
+    const start = <u32>parseInt(from_index)
     // last key
-    const end = <u32>(limit == 0 ? parseInt(nft_total_supply()) : limit + start)
+    const end = limit + start
 
     // get an array of tokenId from tokens_metadata
     const keys = persistent_tokens_metadata.keys(start, end)
@@ -116,12 +118,12 @@ export function nft_tokens_for_owner(
     // first key
     const start = <u32>parseInt(from_index)
     // last key
-    const end = <u32>((limit == 0 || <i32>limit > keys.length) ? keys.length : limit + start)
+    const end = limit + start
 
     // empty token array
     let tokens: Token[] = []
 
-    for (let i = start; i < end; i++) {
+    for (let i = start; i < min(<u32>keys.length, end); i++) {
         // get token and add it the tokens array
         let token = persistent_tokens.get(keys[i])
         token.metadata = persistent_tokens_metadata.get(keys[i])
