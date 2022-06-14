@@ -161,7 +161,7 @@ workspace.test(
             amount: NEAR.parse('1N').toString(),
             bidder: john.accountId,
             recipient: minted.token_id,
-            sell_on_share: randomInt(0, 20),
+            sell_on_share: randomInt(0, 100),
             currency: 'near',
         }
 
@@ -169,7 +169,24 @@ workspace.test(
             tokenId: minted.token_id,
             bid: john_example_bid,
         })
-        test.log(`✔  John bid on Alice token successfully\n`)
+        test.log(`✔  John places first bid on Alice token successfully\n`)
+
+        await call_set_bid(contract, john, {
+          tokenId: minted.token_id,
+          bid: {
+            ...john_example_bid,
+            amount: NEAR.parse('2N').toString(),
+            sell_on_share: 150,
+          },
+        })
+
+        const { result: tokenBidsBeforeRemove } = await view_get_bids(contract, {
+          tokenId: minted.token_id,
+        })
+
+        test.assert(tokenBidsBeforeRemove[john_example_bid.bidder].amount == NEAR.parse('2N').toString())
+        test.assert(tokenBidsBeforeRemove[john_example_bid.bidder].sell_on_share == 150)
+        test.log(`✔  John replaces bid on Alice token successfully\n`)
 
         const johnBalanceBefore = await john.availableBalance()
         await call_remove_bid(contract, john, {
@@ -183,6 +200,9 @@ workspace.test(
         const { result: tokenBids } = await view_get_bids(contract, {
             tokenId: minted.token_id,
         })
+
+        test.log(tokenBids)
+
         test.false(tokenBids.hasOwnProperty(john.accountId))
         test.log(`✔ get_bids doesn't return the removed bid \n`)
 
