@@ -69,6 +69,7 @@ export function set_bid(tokenId: string, bid: Bid): Bid {
     assert_not_paused()
 
     assert(bid.amount > u128.Zero, "Bid can't be zero")
+    assert(bid.currency.toLowerCase() == 'near', "Only NEAR allowed at the moment")
     assert_eq_attached_deposit(bid.amount)
     assert_token_exists(tokenId)
 
