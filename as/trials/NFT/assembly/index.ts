@@ -31,7 +31,7 @@ import {
     assert_one_yocto,
     assert_at_least_one_yocto,
 } from './asserts'
-import { AccountId, royalty_to_payout } from '../../utils'
+import { AccountId, royalty_to_payout } from '../../../utils'
 import { xcc_generator_generate } from './xcc_generator'
 import {
     refund_deposit,

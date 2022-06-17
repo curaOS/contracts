@@ -7,11 +7,11 @@
         "curasc": "index.js"
     },
     "scripts": {
-        "build-ft": "asb -d ./as/FT",
-        "build-market": "asb -d ./as/Market",
-        "build-nft": "asb -d ./as/NFT",
+        "build-ft": "asb -d as/trials/FT",
+        "build-market": "asb -d as/trials/Market",
+        "build-nft": "asb -d as/trials/NFT",
         "build-cnft": "asb -d ./as/cNFT",
-        "build-generator": "asb -d ./as/Generator",
+        "build-generator": "asb -d as/trials/Generator",
         "test": "asp -f unit.spec",
         "doc": "rm -rf docs; typedoc --tsconfig ./as/tsconfig.json"
     },

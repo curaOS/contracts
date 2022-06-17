@@ -4,7 +4,7 @@ import {
     PersistentUnorderedMap,
     u128,
 } from 'near-sdk-as'
-import { YSN_ADDRESS } from '../../accounts'
+import { YSN_ADDRESS } from '../../../accounts'
 import { TokenMetadata } from './metadata'
 import { Royalty } from './royalties'
 

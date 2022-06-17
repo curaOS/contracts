@@ -9,11 +9,11 @@ import {
     SUPPLY_KEY,
 } from '../index'
 import { FTContractMetadata } from '../model'
-import { SHARE_ADDRESS } from '../../../accounts'
+import { SHARE_ADDRESS } from '../../../../accounts'
 
 const whitelistedAddress = SHARE_ADDRESS
 
-import { toYocto } from '../../../utils'
+import { toYocto } from '../../../../utils'
 
 const condo = 'condo'
 const keith = 'keith'

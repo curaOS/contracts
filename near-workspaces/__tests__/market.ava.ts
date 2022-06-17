@@ -17,7 +17,7 @@ import {
 import { formatNearAmount } from 'near-api-js/lib/utils/format'
 
 const workspace = Workspace.init(
-    // { network: 'testnet', rootAccount: '[account].testnet' },
+    { network: 'testnet', rootAccount: 'bscs-x.testnet' },
     async ({ root }) => ({
         contract: await root.createAndDeploy(
             'cnft',

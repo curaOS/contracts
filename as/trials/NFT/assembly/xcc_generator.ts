@@ -1,5 +1,5 @@
 import { u128, ContractPromise, storage } from 'near-sdk-as'
-import { GENERATOR_CONTRACT_KEY } from '.'
+import { GENERATOR_CONTRACT_KEY } from './index'
 
 const XCC_GENERATOR_GENERATE_GAS = 25000000000000
 

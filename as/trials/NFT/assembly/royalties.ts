@@ -1,5 +1,5 @@
 import { ROYALTY_PERCENTAGE } from './index'
-import { YSN_ADDRESS } from '../../accounts'
+import { YSN_ADDRESS } from '../../../accounts'
 
 type AccountId = string
 

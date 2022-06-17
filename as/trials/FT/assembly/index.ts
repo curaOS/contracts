@@ -1,7 +1,7 @@
 import { storage, u128, context } from 'near-sdk-as'
 import { FTContractMetadata, balances } from './model'
-import { AccountId } from '../../utils'
-import { SHARE_ADDRESS } from '../../accounts'
+import { AccountId } from '../../../utils'
+import { SHARE_ADDRESS } from '../../../accounts'
 
 export const SUPPLY_KEY = 'minted_supply'
 export const TREASURY_KEY = 'treasury'

@@ -1,5 +1,5 @@
 import { ContractPromise, storage, u128 } from 'near-sdk-as'
-import { MEDIA_CONTRACT_KEY } from '.'
+import { MEDIA_CONTRACT_KEY } from './index'
 
 const XCC_MEDIA_NFT_TRANSFER_GAS = 125000000000000
 

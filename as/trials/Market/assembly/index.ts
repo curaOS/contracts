@@ -13,7 +13,7 @@ import {
   Ask,
 } from "./models";
 import { xcc_media_nft_transfer } from "./xcc_media";
-import { split_share, ONE_HUNDRED_PERCENT } from "../../utils";
+import { split_share, ONE_HUNDRED_PERCENT } from "../../../utils";
 
 /** Get functions */
 

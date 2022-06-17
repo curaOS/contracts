@@ -1,5 +1,5 @@
 import { u128, ContractPromise, context, storage } from 'near-sdk-as'
-import { MARKET_CONTRACT_KEY } from '.'
+import { MARKET_CONTRACT_KEY } from './index'
 
 const XCC_MARKET_SET_BID_SHARES_GAS = 25000000000000
 const XCC_MARKET_ACCEPT_BID_SHARES_GAS = 150000000000000
