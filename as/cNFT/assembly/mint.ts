@@ -141,7 +141,7 @@ export function nft_mint(
 
     const mint_log = new NftMintLog()
 
-    mint_log.owner_id = context.sender
+    mint_log.owner_id = receiver_id
     mint_log.token_ids = [tokenId]
     mint_log.tokens = [token]
     mint_log.metadata = [tokenMetadata]
